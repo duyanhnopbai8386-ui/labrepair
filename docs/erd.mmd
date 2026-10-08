@@ -1,0 +1,51 @@
+erDiagram
+    COMPUTER_ROOMS ||--o{ EQUIPMENTS : "bố trí trong"
+    EQUIPMENT_CATEGORIES ||--o{ EQUIPMENTS : "phân loại"
+    EQUIPMENTS ||--o{ INCIDENT_REPORTS : "phát sinh sự cố"
+    USERS ||--o{ INCIDENT_REPORTS : "người báo cáo (reported_by)"
+    USERS ||--o{ INCIDENT_REPORTS : "kỹ thuật viên xử lý (assigned_to)"
+
+    COMPUTER_ROOMS {
+        int id PK
+        string room_code UK "Mã phòng"
+        string room_name "Tên phòng máy"
+        string location "Vị trí"
+        int capacity "Sức chứa"
+    }
+
+    EQUIPMENT_CATEGORIES {
+        int id PK
+        string category_code UK "Mã danh mục"
+        string category_name "Tên danh mục"
+        string description "Mô tả"
+    }
+
+    EQUIPMENTS {
+        int id PK
+        string equipment_code UK "Mã thiết bị"
+        string name "Tên thiết bị"
+        string type "Loại thiết bị"
+        string serial_number "Số Serial"
+        string room_code FK "Thuộc phòng máy"
+        string status "Trạng thái"
+    }
+
+    USERS {
+        int id PK
+        string email UK "Email"
+        string full_name "Họ và tên"
+        string phone "Số điện thoại"
+        string role "ADMIN, TECHNICIAN, TEACHER, STUDENT"
+        string status "ACTIVE, INACTIVE"
+    }
+
+    INCIDENT_REPORTS {
+        int id PK
+        int equipment_id FK "Thiết bị sự cố"
+        int reported_by_user_id FK "Người báo cáo"
+        int assigned_technician_id FK "Kỹ thuật viên"
+        string description "Mô tả lỗi"
+        string priority "Ưu tiên"
+        string status "Trạng thái xử lý"
+        datetime created_at "Thời gian"
+    }

@@ -1,0 +1,75 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Equipment {
+    - Integer id
+    - String equipmentCode
+    - String name
+    - String type
+    - String serialNumber
+    - String roomCode
+    - String status
+}
+
+class Computer {
+    - String cpu
+    - Integer ramGb
+    - Integer storageGb
+}
+
+class Monitor {
+    - Double screenSizeInch
+    - String resolution
+}
+
+class Projector {
+    - Integer brightnessLumens
+    - String nativeResolution
+}
+
+class ComputerRoom {
+    - Integer id
+    - String roomCode
+    - String roomName
+    - String location
+    - Integer capacity
+}
+
+class EquipmentCategory {
+    - Integer id
+    - String categoryCode
+    - String categoryName
+    - String description
+}
+
+class User {
+    - Integer id
+    - String email
+    - String fullName
+    - String phone
+    - String role
+    - String status
+}
+
+class IncidentReport {
+    - Integer id
+    - Integer equipmentId
+    - Integer reportedByUserId
+    - Integer assignedTechnicianId
+    - String description
+    - String priority
+    - String status
+    - LocalDateTime createdAt
+}
+
+Equipment <|-- Computer
+Equipment <|-- Monitor
+Equipment <|-- Projector
+
+ComputerRoom "1" *-- "many" Equipment : contains
+EquipmentCategory "1" *-- "many" Equipment : classifies
+Equipment "1" *-- "many" IncidentReport : has
+User "1" *-- "many" IncidentReport : reports
+User "1" *-- "many" IncidentReport : fixes
+
+@enduml
