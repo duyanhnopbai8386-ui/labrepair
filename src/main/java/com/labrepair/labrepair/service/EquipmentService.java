@@ -5,10 +5,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.labrepair.labrepair.dto.EquipmentRequest;
+import com.labrepair.labrepair.dto.EquipmentResponse;
 import com.labrepair.labrepair.exception.BadRequestException;
 import com.labrepair.labrepair.exception.DuplicateResourceException;
 import com.labrepair.labrepair.exception.ResourceNotFoundException;
+import com.labrepair.labrepair.mapper.EquipmentMapper;
+import com.labrepair.labrepair.model.ComputerRoom;
 import com.labrepair.labrepair.model.Equipment;
+import com.labrepair.labrepair.model.EquipmentCategory;
 import com.labrepair.labrepair.repository.ComputerRoomRepository;
 import com.labrepair.labrepair.repository.EquipmentCategoryRepository;
 import com.labrepair.labrepair.repository.EquipmentRepository;
@@ -19,21 +24,32 @@ public class EquipmentService {
     private final EquipmentRepository repository;
     private final ComputerRoomRepository roomRepository;
     private final EquipmentCategoryRepository categoryRepository;
+    private final EquipmentMapper mapper;
 
     public EquipmentService(
             EquipmentRepository repository,
             ComputerRoomRepository roomRepository,
-            EquipmentCategoryRepository categoryRepository) {
+            EquipmentCategoryRepository categoryRepository,
+            EquipmentMapper mapper) {
         this.repository = repository;
         this.roomRepository = roomRepository;
         this.categoryRepository = categoryRepository;
+        this.mapper = mapper;
     }
 
-    public List<Equipment> findAll() {
-        return repository.findAll();
+    @Transactional(readOnly = true)
+    public List<EquipmentResponse> findAll() {
+        return repository.findAll().stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 
-    public Equipment findById(Integer id) {
+    @Transactional(readOnly = true)
+    public EquipmentResponse findById(Integer id) {
+        return mapper.toResponse(getEntityById(id));
+    }
+
+    public Equipment getEntityById(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Không tìm thấy thiết bị có id = " + id
@@ -41,79 +57,108 @@ public class EquipmentService {
     }
 
     @Transactional
-    public Equipment create(Equipment equipment) {
-        validate(equipment);
+    public EquipmentResponse create(EquipmentRequest request) {
+        if (request == null) {
+            throw new BadRequestException("Dữ liệu thiết bị không được để trống");
+        }
 
-        if (repository.existsByEquipmentCode(equipment.getEquipmentCode())) {
+        if (repository.existsByEquipmentCode(request.getEquipmentCode())) {
             throw new DuplicateResourceException(
-                    "Mã thiết bị '" + equipment.getEquipmentCode() + "' đã tồn tại"
+                    "Mã thiết bị '" + request.getEquipmentCode() + "' đã tồn tại"
             );
         }
 
-        equipment.setId(null);
-
-        if (equipment.getStatus() == null || equipment.getStatus().isBlank()) {
-            equipment.setStatus("HOAT_DONG");
+        EquipmentCategory category = null;
+        if (request.getCategoryId() != null) {
+            category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new BadRequestException("Không tìm thấy danh mục thiết bị id = " + request.getCategoryId()));
+        } else if (request.getType() != null && !request.getType().isBlank()) {
+            category = categoryRepository.findByCode(request.getType())
+                    .orElseThrow(() -> new BadRequestException("Loại thiết bị '" + request.getType() + "' không tồn tại trong hệ thống"));
         }
 
-        return repository.save(equipment);
+        ComputerRoom room = null;
+        if (request.getRoomId() != null) {
+            room = roomRepository.findById(request.getRoomId())
+                    .orElseThrow(() -> new BadRequestException("Không tìm thấy phòng máy id = " + request.getRoomId()));
+        } else if (request.getRoomCode() != null && !request.getRoomCode().isBlank()) {
+            room = roomRepository.findByCode(request.getRoomCode())
+                    .orElseThrow(() -> new BadRequestException("Phòng máy '" + request.getRoomCode() + "' không tồn tại trong hệ thống"));
+        }
+
+        Equipment equipment = mapper.toEntity(request);
+        if (category != null) {
+            equipment.setCategory(category);
+            equipment.setType(category.getCategoryCode());
+        }
+        if (room != null) {
+            equipment.setRoom(room);
+            equipment.setRoomCode(room.getRoomCode());
+        }
+
+        Equipment saved = repository.save(equipment);
+        return mapper.toResponse(saved);
     }
 
     @Transactional
-    public Equipment update(Integer id, Equipment equipment) {
-        findById(id);
-        validate(equipment);
+    public EquipmentResponse update(Integer id, EquipmentRequest request) {
+        Equipment existing = getEntityById(id);
 
-        repository.findByEquipmentCode(equipment.getEquipmentCode())
-                .ifPresent(existing -> {
-                    if (!existing.getId().equals(id)) {
-                        throw new DuplicateResourceException(
-                                "Mã thiết bị '" + equipment.getEquipmentCode() + "' đã thuộc về thiết bị khác"
-                        );
-                    }
-                });
+        if (request.getEquipmentCode() != null && !request.getEquipmentCode().isBlank()) {
+            repository.findByEquipmentCode(request.getEquipmentCode())
+                    .ifPresent(other -> {
+                        if (!other.getId().equals(id)) {
+                            throw new DuplicateResourceException(
+                                    "Mã thiết bị '" + request.getEquipmentCode() + "' đã thuộc về thiết bị khác"
+                            );
+                        }
+                    });
+            existing.setEquipmentCode(request.getEquipmentCode());
+        }
 
-        equipment.setId(id);
-        return repository.save(equipment);
+        if (request.getName() != null && !request.getName().isBlank()) {
+            existing.setName(request.getName());
+        }
+
+        if (request.getCategoryId() != null) {
+            EquipmentCategory cat = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new BadRequestException("Không tìm thấy danh mục thiết bị id = " + request.getCategoryId()));
+            existing.setCategory(cat);
+            existing.setType(cat.getCategoryCode());
+        } else if (request.getType() != null && !request.getType().isBlank()) {
+            EquipmentCategory cat = categoryRepository.findByCode(request.getType())
+                    .orElseThrow(() -> new BadRequestException("Loại thiết bị '" + request.getType() + "' không tồn tại trong hệ thống"));
+            existing.setCategory(cat);
+            existing.setType(cat.getCategoryCode());
+        }
+
+        if (request.getRoomId() != null) {
+            ComputerRoom room = roomRepository.findById(request.getRoomId())
+                    .orElseThrow(() -> new BadRequestException("Không tìm thấy phòng máy id = " + request.getRoomId()));
+            existing.setRoom(room);
+            existing.setRoomCode(room.getRoomCode());
+        } else if (request.getRoomCode() != null && !request.getRoomCode().isBlank()) {
+            ComputerRoom room = roomRepository.findByCode(request.getRoomCode())
+                    .orElseThrow(() -> new BadRequestException("Phòng máy '" + request.getRoomCode() + "' không tồn tại trong hệ thống"));
+            existing.setRoom(room);
+            existing.setRoomCode(room.getRoomCode());
+        }
+
+        if (request.getSerialNumber() != null) existing.setSerialNumber(request.getSerialNumber());
+        if (request.getManufacturer() != null) existing.setManufacturer(request.getManufacturer());
+        if (request.getModel() != null) existing.setModel(request.getModel());
+        if (request.getPurchaseDate() != null) existing.setPurchaseDate(request.getPurchaseDate());
+        if (request.getWarrantyExpiry() != null) existing.setWarrantyExpiry(request.getWarrantyExpiry());
+        if (request.getStatus() != null && !request.getStatus().isBlank()) existing.setStatus(request.getStatus());
+        if (request.getConditionNote() != null) existing.setConditionNote(request.getConditionNote());
+
+        Equipment saved = repository.save(existing);
+        return mapper.toResponse(saved);
     }
 
     @Transactional
     public void delete(Integer id) {
-        findById(id);
+        getEntityById(id);
         repository.deleteById(id);
-    }
-
-    private void validate(Equipment equipment) {
-        if (equipment == null) {
-            throw new BadRequestException("Dữ liệu thiết bị không được để trống");
-        }
-
-        if (equipment.getEquipmentCode() == null || equipment.getEquipmentCode().isBlank()) {
-            throw new BadRequestException("Mã thiết bị không được để trống");
-        }
-
-        if (equipment.getName() == null || equipment.getName().isBlank()) {
-            throw new BadRequestException("Tên thiết bị không được để trống");
-        }
-
-        if (equipment.getType() == null || equipment.getType().isBlank()) {
-            throw new BadRequestException("Loại thiết bị không được để trống");
-        }
-
-        if (categoryRepository.findByCode(equipment.getType()).isEmpty()) {
-            throw new BadRequestException(
-                    "Loại thiết bị '" + equipment.getType() + "' không tồn tại trong hệ thống"
-            );
-        }
-
-        if (equipment.getRoomCode() == null || equipment.getRoomCode().isBlank()) {
-            throw new BadRequestException("Phòng máy không được để trống");
-        }
-
-        if (roomRepository.findByCode(equipment.getRoomCode()).isEmpty()) {
-            throw new BadRequestException(
-                    "Phòng máy '" + equipment.getRoomCode() + "' không tồn tại trong hệ thống"
-            );
-        }
     }
 }

@@ -1,5 +1,6 @@
 package com.labrepair.labrepair.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class EquipmentCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +25,15 @@ public class EquipmentCategory {
 
     @Column(length = 255)
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_category_id")
+    private EquipmentCategory parentCategory;
+
+    public EquipmentCategory(Integer id, String categoryCode, String categoryName, String description) {
+        this.id = id;
+        this.categoryCode = categoryCode;
+        this.categoryName = categoryName;
+        this.description = description;
+    }
 }
