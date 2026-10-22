@@ -219,3 +219,30 @@ labrepair/
 ├── pom.xml                     # Khai báo dependency Maven
 └── README.md                   # Tài liệu tổng quan dự án
 ```
+
+
+---
+
+## 🎨 7. Giao diện Người Dùng Hiện Đại (Web Frontend SPA)
+
+Giao diện hệ thống được thiết kế theo phong cách **iOS Frosted Glass (Kính mờ Apple Glassmorphism)** kết hợp tông màu **Trắng Tinh Khiết & Xanh Nước Biển (Aqua Blue)**:
+
+- **Công nghệ nền tảng:** React 19 + Vite 6 + Tailwind CSS + Lucide Icons.
+- **Phong cách thị giác (Visual Language):**
+  - Hiệu ứng kính mờ chiều sâu (`backdrop-blur-2xl`, viền phát sáng `border-white/60`, đổ bóng mềm `shadow-sky-500/10`).
+  - Nút bấm và thẻ bo góc lớn mềm mại đặc trưng iOS (`rounded-2xl`, `rounded-3xl`, viền bóng mượt).
+  - Badge trạng thái thông minh phát sáng: Đèn xanh (Hoạt động), Đèn vàng/đỏ (Chờ sửa/Hỏng), Đèn xanh dương (Đang bảo trì).
+- **Các phân hệ màn hình chính:**
+  1. **Trung tâm Điều hành (Dashboard):** 4 thẻ widget thống kê tổng quan (Máy hoạt động, Sự cố đang xử lý, Chi phí sửa chữa lũy kế, Cảnh báo vật tư chạm ngưỡng), biểu đồ phân bổ kinh phí theo phòng máy và danh sách sự cố khẩn cấp.
+  2. **Phòng máy & Sơ đồ Máy trạm (Computer Rooms):** Chuyển đổi linh hoạt giữa PM01, PM02, PM03; xem sơ đồ trực quan từng vị trí máy tính; click xem cấu hình phần cứng chi tiết và nút 1-click báo hỏng.
+  3. **Phiếu Báo Hỏng & Quản Lý Sửa Chữa (Incidents):** Luồng tạo phiếu báo hỏng; Kỹ thuật viên tiếp nhận; modal sửa chữa chọn linh kiện từ kho tự động tính chi phí, xuất kho và chuyển máy về trạng thái hoạt động.
+  4. **Kho Linh Kiện & Vật Tư (Spare Parts):** Quản lý tồn kho linh kiện, cảnh báo đỏ khi chạm mức tồn tối thiểu, tính năng nhập thêm hàng nhanh chóng.
+  5. **Đăng nhập & Trải nghiệm Nhanh (1-Click Demo):** 4 nút bấm đăng nhập tức thì cho Quản trị viên (Admin), Kỹ thuật viên (Technician), Giảng viên (Teacher) và Sinh viên Duy Anh (CCQ2411E).
+
+### 🚀 Hướng Dẫn Khởi Chạy Frontend:
+```bash
+cd frontend
+npm install
+npm run dev
+# Ứng dụng chạy tại: http://localhost:5173
+```
