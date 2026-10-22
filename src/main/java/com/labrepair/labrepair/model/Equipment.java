@@ -41,28 +41,28 @@ public class Equipment {
     private ComputerRoom room;
 
     @Column(name = "serial_number", length = 100)
-    private String serialNumber;
+    private String serialNumber;  // số seri máy 
 
     @Column(length = 100)
-    private String manufacturer;
+    private String manufacturer; // hãng sản xuất
 
     @Column(length = 100)
     private String model;
 
     @Column(name = "purchase_date")
-    private LocalDate purchaseDate;
+    private LocalDate purchaseDate; // ngày mua thiết bị 
 
     @Column(name = "warranty_expiry")
-    private LocalDate warrantyExpiry;
+    private LocalDate warrantyExpiry; // ngày hết hạn bảo hành 
 
     @Column(length = 50)
     private String status = "HOAT_DONG"; // HOAT_DONG, HONG, DANG_SUA, THANH_LY
 
     @Column(name = "condition_note", columnDefinition = "TEXT")
-    private String conditionNote;
+    private String conditionNote; // ghi chú hiện trạng phần cứng 
 
     @Column(name = "last_maintenance")
-    private LocalDate lastMaintenance;
+    private LocalDate lastMaintenance; // ngày bảo dưỡng gần nhất 
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

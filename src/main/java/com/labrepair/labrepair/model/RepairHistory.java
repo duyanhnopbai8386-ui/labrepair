@@ -30,13 +30,13 @@ public class RepairHistory {
     private User technician;
 
     @Column(name = "action_type", nullable = false, length = 50)
-    private String actionType; // KHAO_SAT, SUA_CHUA, THAY_THE, HOAN_THANH
+    private String actionType; // hành động khảo sát  sửa chữa , thay thế, 
 
     @Column(columnDefinition = "TEXT")
     private String note;
 
     @Column(name = "duration_minutes")
-    private Integer durationMinutes;
+    private Integer durationMinutes; // thời gian làm
 
     @Column(name = "performed_at")
     private LocalDateTime performedAt;

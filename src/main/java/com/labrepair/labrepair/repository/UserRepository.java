@@ -9,4 +9,6 @@ import com.labrepair.labrepair.model.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
+    Optional<User> findByEmployeeCode(String employeeCode);
+    boolean existsByEmployeeCode(String employeeCode);
 }

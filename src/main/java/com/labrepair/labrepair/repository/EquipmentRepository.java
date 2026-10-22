@@ -9,4 +9,8 @@ import com.labrepair.labrepair.model.Equipment;
 public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
     Optional<Equipment> findByEquipmentCode(String equipmentCode);
     boolean existsByEquipmentCode(String equipmentCode);
+
+    long countByStatus(String status);
+    long countByStatusNot(String status);
+    long countByRoomCode(String roomCode);
 }

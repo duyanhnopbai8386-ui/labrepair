@@ -21,6 +21,7 @@ public class UserRequest {
 
     private String phone;
     private String department;
+    private String password;
 
     @NotBlank(message = "Vai trò không được để trống (ADMIN, TECHNICIAN, TEACHER, STUDENT)")
     private String role;

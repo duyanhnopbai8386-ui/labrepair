@@ -31,10 +31,10 @@ public class SparePart {
     private Integer stockQuantity = 0;
 
     @Column(name = "min_stock_level")
-    private Integer minStockLevel = 5; // Cảnh báo khi tồn kho <= ngưỡng này
+    private Integer minStockLevel = 5; // cảnh báo hết hàng
 
     @Column(name = "unit_price", precision = 12, scale = 2)
-    private BigDecimal unitPrice;
+    private BigDecimal unitPrice; // đơn giá 
 
     @Column(length = 100)
     private String supplier;

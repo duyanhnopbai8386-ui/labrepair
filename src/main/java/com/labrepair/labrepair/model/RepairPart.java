@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RepairPart {
+public class RepairPart { // bảng chi tiết linh kiện sử dụng 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

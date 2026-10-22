@@ -16,10 +16,10 @@ public class IncidentResponse {
     private Integer id;
     private Integer equipmentId;
     private String equipmentCode;
-    private String equipmentName;
+    private String equipmentName; // update
     private String roomCode;
     private Integer reportedByUserId;
-    private String reportedByUserName;
+    private String reportedByUserName; //u 
     private Integer assignedTechnicianId;
     private String assignedTechnicianName;
     private String description;

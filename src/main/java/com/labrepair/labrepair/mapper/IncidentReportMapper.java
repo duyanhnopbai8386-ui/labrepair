@@ -30,7 +30,7 @@ public class IncidentReportMapper {
         return inc;
     }
 
-    public IncidentResponse toResponse(IncidentReport entity) {
+    public IncidentResponse toResponse(IncidentReport entity) { // nhận entity từ CSDL
         if (entity == null) return null;
         IncidentResponse res = new IncidentResponse();
         res.setId(entity.getId());

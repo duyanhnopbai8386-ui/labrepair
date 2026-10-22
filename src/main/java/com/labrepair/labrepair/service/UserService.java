@@ -14,11 +14,13 @@ import com.labrepair.labrepair.repository.UserRepository;
 
 @Service
 public class UserService {
-    private static final Set<String> ROLES = Set.of("LECTURER", "TECHNICIAN", "ADMIN", "STUDENT");
+    private static final Set<String> ROLES = Set.of("LECTURER", "TEACHER", "TECHNICIAN", "ADMIN", "STUDENT");
     private final UserRepository repository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> findAll() {
@@ -37,6 +39,11 @@ public class UserService {
             throw new DuplicateResourceException("Email '" + user.getEmail() + "' đã tồn tại");
         }
         user.setId(null);
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode("123456"));
+        } else if (!user.getPassword().startsWith("$2a$")) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         if (user.getStatus() == null || user.getStatus().isBlank()) {
             user.setStatus("ACTIVE");
         }

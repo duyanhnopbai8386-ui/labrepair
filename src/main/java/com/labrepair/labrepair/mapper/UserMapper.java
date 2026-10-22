@@ -16,6 +16,7 @@ public class UserMapper {
         user.setPhone(request.getPhone());
         user.setDepartment(request.getDepartment());
         user.setRole(request.getRole());
+        user.setPassword(request.getPassword());
         user.setStatus(request.getStatus() != null ? request.getStatus() : "ACTIVE");
         return user;
     }

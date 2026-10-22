@@ -104,6 +104,7 @@ public class RepairHistoryService {
         history.setRepairParts(partsList);
 
         BigDecimal currentActualCost = incident.getActualCost() != null ? incident.getActualCost() : BigDecimal.ZERO;
+
         incident.setActualCost(currentActualCost.add(additionalCost));
 
         if ("HOAN_THANH".equalsIgnoreCase(request.getActionType())) {
