@@ -1,104 +1,82 @@
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { Header } from './components/Header';
+import { AdminLayout } from './components/AdminLayout';
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { EquipmentManagement } from './pages/admin/EquipmentManagement';
+import { RoomManagement } from './pages/admin/RoomManagement';
+import { IncidentManagement } from './pages/admin/IncidentManagement';
+import { SparePartManagement } from './pages/admin/SparePartManagement';
+import { UserManagement } from './pages/admin/UserManagement';
 import { LoginPage } from './pages/LoginPage';
-import { DashboardPage } from './pages/DashboardPage';
-import { ComputerRoomsPage } from './pages/ComputerRoomsPage';
-import { IncidentReportsPage } from './pages/IncidentReportsPage';
-import { SparePartsPage } from './pages/SparePartsPage';
-import { ShieldCheck } from 'lucide-react';
+import { Server, Database, ShieldCheck, Terminal, CheckCircle2 } from 'lucide-react';
 
-function MainApp() {
-  const { user, isAuthenticated } = useAuth();
-  const [currentTab, setCurrentTab] = useState('dashboard');
-
-  // Navigation helpers with state pass-through (e.g. from Dashboard or Rooms to Report Issue)
-  const [incidentPrefill, setIncidentPrefill] = useState(null);
-  const [openCreateIncidentModal, setOpenCreateIncidentModal] = useState(false);
-
-  const handleNavigate = (tab, extra = {}) => {
-    if (extra.openCreateModal) {
-      setOpenCreateIncidentModal(true);
-    }
-    setCurrentTab(tab);
-  };
-
-  const handleReportIssueFromRoom = (data) => {
-    setIncidentPrefill(data);
-    setOpenCreateIncidentModal(true);
-    setCurrentTab('incidents');
-  };
-
+function SystemSettingsView() {
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden text-slate-800 antialiased selection:bg-sky-500 selection:text-white">
-      {/* Background Animated iOS Ambient Orbs */}
-      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-        {/* Sky Blue Orb Top Left */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-sky-300/40 to-cyan-200/30 rounded-full blur-3xl animate-pulse" />
-        {/* Soft Indigo Orb Center Right */}
-        <div className="absolute top-1/3 -right-32 w-[30rem] h-[30rem] bg-gradient-to-bl from-blue-300/30 to-sky-100/40 rounded-full blur-3xl" />
-        {/* Aqua Cyan Orb Bottom Left */}
-        <div className="absolute -bottom-32 left-1/4 w-[28rem] h-[28rem] bg-gradient-to-tr from-cyan-200/40 to-sky-300/30 rounded-full blur-3xl" />
+    <div className="space-y-5 animate-fade-in text-slate-200">
+      <div className="border-b border-[#272e3d] pb-3">
+        <h1 className="text-2xl font-bold text-white tracking-tight">System Settings</h1>
+        <p className="text-xs text-slate-400 mt-0.5">Cấu hình kết nối Backend RESTful API & MySQL Database</p>
       </div>
 
-      {/* iOS Frosted Glass Header */}
-      <Header currentTab={currentTab} setCurrentTab={setCurrentTab} />
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
-        {currentTab === 'login' && !isAuthenticated ? (
-          <LoginPage onLoginSuccess={() => setCurrentTab('dashboard')} />
-        ) : (
-          <>
-            {currentTab === 'dashboard' && (
-              <DashboardPage onNavigate={handleNavigate} />
-            )}
-
-            {currentTab === 'rooms' && (
-              <ComputerRoomsPage onReportIssue={handleReportIssueFromRoom} />
-            )}
-
-            {currentTab === 'incidents' && (
-              <IncidentReportsPage
-                initialOpenCreate={openCreateIncidentModal}
-                prefillData={incidentPrefill}
-                onClearPrefill={() => {
-                  setIncidentPrefill(null);
-                  setOpenCreateIncidentModal(false);
-                }}
-              />
-            )}
-
-            {currentTab === 'spare-parts' && (
-              <SparePartsPage />
-            )}
-          </>
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-white/60 bg-white/40 backdrop-blur-xl py-6 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-700">LabRepair v2.0</span>
-            <span>•</span>
-            <span>Trường Cao đẳng Công Thương TP.HCM (HITC)</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 font-medium">
-            <span>Sinh viên thực hiện:</span>
-            <strong className="text-sky-700">Lê Nguyễn Ngọc Duy Anh</strong>
-            <span>• MSSV: 2124110340</span>
-            <span>• Lớp CCQ2411E</span>
-          </div>
-
-          <div className="flex items-center gap-2 text-slate-400">
-            <ShieldCheck size={14} className="text-emerald-500" />
-            <span>Spring Boot 3.4 & React SPA</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-[#181d26] p-5 rounded-xl border border-[#272e3d] space-y-3">
+          <h3 className="font-bold text-white text-sm flex items-center gap-2">
+            <Server size={16} className="text-sky-400" /> Cấu hình Máy Chủ Spring Boot
+          </h3>
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between py-1 border-b border-[#272e3d]">
+              <span className="text-slate-400">Server Port:</span>
+              <strong className="text-white font-mono">8080</strong>
+            </div>
+            <div className="flex justify-between py-1 border-b border-[#272e3d]">
+              <span className="text-slate-400">Context Path:</span>
+              <strong className="text-white font-mono">/api</strong>
+            </div>
+            <div className="flex justify-between py-1 border-b border-[#272e3d]">
+              <span className="text-slate-400">CORS Policy:</span>
+              <span className="text-emerald-400 font-bold">Enabled (Origins Allowed)</span>
+            </div>
           </div>
         </div>
-      </footer>
+
+        <div className="bg-[#181d26] p-5 rounded-xl border border-[#272e3d] space-y-3">
+          <h3 className="font-bold text-white text-sm flex items-center gap-2">
+            <Database size={16} className="text-sky-400" /> Cấu hình Cơ Sở Dữ Liệu MySQL
+          </h3>
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between py-1 border-b border-[#272e3d]">
+              <span className="text-slate-400">Database Name:</span>
+              <strong className="text-white font-mono">labrepair_db</strong>
+            </div>
+            <div className="flex justify-between py-1 border-b border-[#272e3d]">
+              <span className="text-slate-400">Hibernate DDL:</span>
+              <strong className="text-white font-mono">update</strong>
+            </div>
+            <div className="flex justify-between py-1 border-b border-[#272e3d]">
+              <span className="text-slate-400">JDBC Driver:</span>
+              <span className="text-sky-400 font-mono">com.mysql.cj.jdbc.Driver</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  );
+}
+
+function MainApp() {
+  const { isAuthenticated } = useAuth();
+  const [activeMenu, setActiveMenu] = useState('equipment'); // Default to Equipment CRUD like the user's reference image
+
+  return (
+    <AdminLayout activeMenu={activeMenu} setActiveMenu={setActiveMenu}>
+      {activeMenu === 'dashboard' && <AdminDashboard onNavigate={setActiveMenu} />}
+      {activeMenu === 'equipment' && <EquipmentManagement />}
+      {activeMenu === 'rooms' && <RoomManagement />}
+      {activeMenu === 'incidents' && <IncidentManagement />}
+      {activeMenu === 'spare-parts' && <SparePartManagement />}
+      {activeMenu === 'users' && <UserManagement />}
+      {activeMenu === 'settings' && <SystemSettingsView />}
+    </AdminLayout>
   );
 }
 
