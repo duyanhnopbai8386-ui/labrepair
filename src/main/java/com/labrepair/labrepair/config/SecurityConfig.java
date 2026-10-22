@@ -55,6 +55,9 @@ public class SecurityConfig {
                         // Cho phép Preflight request (OPTIONS) từ trình duyệt
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
+                        // Cho phép tài nguyên tĩnh (Giao diện Quản trị Web tích hợp trong Spring Boot)
+                        .requestMatchers("/", "/index.html", "/assets/**", "/*.svg", "/*.ico", "/*.png", "/favicon.ico").permitAll()
+
                         // 1. API Xác thực công khai (Login, Register)
                         .requestMatchers("/api/auth/**").permitAll()
 
