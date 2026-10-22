@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AdminLayout } from './components/AdminLayout';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
@@ -7,8 +7,7 @@ import { RoomManagement } from './pages/admin/RoomManagement';
 import { IncidentManagement } from './pages/admin/IncidentManagement';
 import { SparePartManagement } from './pages/admin/SparePartManagement';
 import { UserManagement } from './pages/admin/UserManagement';
-import { LoginPage } from './pages/LoginPage';
-import { Server, Database, ShieldCheck, Terminal, CheckCircle2 } from 'lucide-react';
+import { Server, Database } from 'lucide-react';
 
 function SystemSettingsView() {
   return (
@@ -64,12 +63,21 @@ function SystemSettingsView() {
 }
 
 function MainApp() {
-  const { isAuthenticated } = useAuth();
-  const [activeMenu, setActiveMenu] = useState('equipment'); // Default to Equipment CRUD like the user's reference image
+  // Remember the active menu on F5 / Page reload
+  const [activeMenu, setActiveMenu] = useState(() => {
+    return localStorage.getItem('labrepair_active_menu') || 'spare-parts';
+  });
+
+  const handleSelectMenu = (menu) => {
+    setActiveMenu(menu);
+    try {
+      localStorage.setItem('labrepair_active_menu', menu);
+    } catch (e) {}
+  };
 
   return (
-    <AdminLayout activeMenu={activeMenu} setActiveMenu={setActiveMenu}>
-      {activeMenu === 'dashboard' && <AdminDashboard onNavigate={setActiveMenu} />}
+    <AdminLayout activeMenu={activeMenu} setActiveMenu={handleSelectMenu}>
+      {activeMenu === 'dashboard' && <AdminDashboard onNavigate={handleSelectMenu} />}
       {activeMenu === 'equipment' && <EquipmentManagement />}
       {activeMenu === 'rooms' && <RoomManagement />}
       {activeMenu === 'incidents' && <IncidentManagement />}

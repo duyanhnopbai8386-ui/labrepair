@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { equipmentApi } from '../../api/equipmentApi';
-import { roomApi } from '../../api/roomApi';
-import { GlassModal } from '../../components/GlassModal';
 import {
   Plus,
   Search,
@@ -9,87 +7,98 @@ import {
   Edit2,
   Trash2,
   Monitor,
-  CheckCircle2,
-  AlertTriangle,
-  Wrench,
   ChevronLeft,
-  ChevronRight,
-  RefreshCw,
-  Eye,
-  Cpu
+  ChevronRight
 } from 'lucide-react';
 
-export const EquipmentManagement = ({ onReportIssue }) => {
-  const [equipments, setEquipments] = useState([
-    {
-      id: 1,
-      equipmentCode: 'PC-PM01-01',
-      equipmentName: 'Máy trạm Dell OptiPlex 7080 SFF',
-      categoryName: 'Máy tính để bàn',
-      roomName: 'Phòng Máy 01',
-      serialNumber: 'SN-DL-7080-01',
-      specification: 'Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor 24"',
-      status: 'HOAT_DONG',
-      createdAt: '2024-07-23 12:19:32'
-    },
-    {
-      id: 2,
-      equipmentCode: 'PC-PM01-08',
-      equipmentName: 'Máy trạm Dell OptiPlex 7080 SFF',
-      categoryName: 'Máy tính để bàn',
-      roomName: 'Phòng Máy 01',
-      serialNumber: 'SN-DL-7080-08',
-      specification: 'Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor 24"',
-      status: 'CHO_SUA',
-      createdAt: '2024-07-23 12:14:19'
-    },
-    {
-      id: 3,
-      equipmentCode: 'PC-PM01-12',
-      equipmentName: 'Máy trạm Dell OptiPlex 7080 SFF',
-      categoryName: 'Máy tính để bàn',
-      roomName: 'Phòng Máy 01',
-      serialNumber: 'SN-DL-7080-12',
-      specification: 'Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor 24"',
-      status: 'DANG_SUA',
-      createdAt: '2024-07-22 09:53:57'
-    },
-    {
-      id: 4,
-      equipmentCode: 'PC-PM02-03',
-      equipmentName: 'Máy trạm HP ProDesk 400 G7',
-      categoryName: 'Máy tính để bàn',
-      roomName: 'Phòng Máy 02',
-      serialNumber: 'SN-HP-400-03',
-      specification: 'Core i5-10500 / 16GB RAM / SSD 256GB / Monitor HP 22"',
-      status: 'CHO_SUA',
-      createdAt: '2024-07-11 16:51:29'
-    },
-    {
-      id: 5,
-      equipmentCode: 'SW-PM02-01',
-      equipmentName: 'Switch Cisco Catalyst 2960 24-Port',
-      categoryName: 'Thiết bị mạng',
-      roomName: 'Phòng Máy 02',
-      serialNumber: 'SN-CS-2960-01',
-      specification: '24 x 10/100/1000 PoE+ Ports, 2 x SFP Uplink',
-      status: 'HOAT_DONG',
-      createdAt: '2024-07-10 14:20:11'
-    },
-    {
-      id: 6,
-      equipmentCode: 'PRJ-PM01-01',
-      equipmentName: 'Máy chiếu Epson EB-E01 XGA 3300 Lumens',
-      categoryName: 'Thiết bị hiển thị',
-      roomName: 'Phòng Máy 01',
-      serialNumber: 'SN-EP-E01-99',
-      specification: 'Độ sáng 3300 Lumens, HDMI, Tuổi thọ bóng 12,000 giờ',
-      status: 'HOAT_DONG',
-      createdAt: '2024-06-30 08:30:00'
-    }
-  ]);
+const STORAGE_KEY = 'labrepair_equipments_v2';
 
-  const [loading, setLoading] = useState(false);
+const DEFAULT_EQUIPMENTS = [
+  {
+    id: 1,
+    equipmentCode: 'PC-PM01-01',
+    equipmentName: 'Máy trạm Dell OptiPlex 7080 SFF',
+    categoryName: 'Máy tính để bàn',
+    roomName: 'Phòng Máy 01',
+    serialNumber: 'SN-DL-7080-01',
+    specification: 'Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor 24"',
+    status: 'HOAT_DONG',
+    createdAt: '2024-07-23 12:19:32'
+  },
+  {
+    id: 2,
+    equipmentCode: 'PC-PM01-08',
+    equipmentName: 'Máy trạm Dell OptiPlex 7080 SFF',
+    categoryName: 'Máy tính để bàn',
+    roomName: 'Phòng Máy 01',
+    serialNumber: 'SN-DL-7080-08',
+    specification: 'Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor 24"',
+    status: 'CHO_SUA',
+    createdAt: '2024-07-23 12:14:19'
+  },
+  {
+    id: 3,
+    equipmentCode: 'PC-PM01-12',
+    equipmentName: 'Máy trạm Dell OptiPlex 7080 SFF',
+    categoryName: 'Máy tính để bàn',
+    roomName: 'Phòng Máy 01',
+    serialNumber: 'SN-DL-7080-12',
+    specification: 'Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor 24"',
+    status: 'DANG_SUA',
+    createdAt: '2024-07-22 09:53:57'
+  },
+  {
+    id: 4,
+    equipmentCode: 'PC-PM02-03',
+    equipmentName: 'Máy trạm HP ProDesk 400 G7',
+    categoryName: 'Máy tính để bàn',
+    roomName: 'Phòng Máy 02',
+    serialNumber: 'SN-HP-400-03',
+    specification: 'Core i5-10500 / 16GB RAM / SSD 256GB / Monitor HP 22"',
+    status: 'CHO_SUA',
+    createdAt: '2024-07-11 16:51:29'
+  },
+  {
+    id: 5,
+    equipmentCode: 'SW-PM02-01',
+    equipmentName: 'Switch Cisco Catalyst 2960 24-Port',
+    categoryName: 'Thiết bị mạng',
+    roomName: 'Phòng Máy 02',
+    serialNumber: 'SN-CS-2960-01',
+    specification: '24 x 10/100/1000 PoE+ Ports, 2 x SFP Uplink',
+    status: 'HOAT_DONG',
+    createdAt: '2024-07-10 14:20:11'
+  },
+  {
+    id: 6,
+    equipmentCode: 'PRJ-PM01-01',
+    equipmentName: 'Máy chiếu Epson EB-E01 XGA 3300 Lumens',
+    categoryName: 'Thiết bị hiển thị',
+    roomName: 'Phòng Máy 01',
+    serialNumber: 'SN-EP-E01-99',
+    specification: 'Độ sáng 3300 Lumens, HDMI, Tuổi thọ bóng 12,000 giờ',
+    status: 'HOAT_DONG',
+    createdAt: '2024-06-30 08:30:00'
+  }
+];
+
+export const EquipmentManagement = () => {
+  const [equipments, setEquipments] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((item, idx) => ({
+            ...item,
+            id: Number(item.id) > 100000 ? idx + 1 : Number(item.id) || idx + 1
+          }));
+        }
+      }
+    } catch (e) {}
+    return DEFAULT_EQUIPMENTS;
+  });
+
   const [selectedIds, setSelectedIds] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -108,25 +117,31 @@ export const EquipmentManagement = ({ onReportIssue }) => {
     status: 'HOAT_DONG'
   });
 
-  const loadData = async () => {
-    setLoading(true);
+  const saveEquipments = (newList) => {
+    setEquipments(newList);
     try {
-      const res = await equipmentApi.getAll();
-      if (res.data && res.data.length > 0) {
-        setEquipments(res.data);
-      }
-    } catch (err) {
-      console.warn('API fallback to current data');
-    } finally {
-      setLoading(false);
-    }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
+    } catch (err) {}
   };
 
   useEffect(() => {
-    loadData();
+    const fetchApi = async () => {
+      try {
+        const res = await equipmentApi.getAll();
+        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+          saveEquipments(res.data);
+        }
+      } catch (err) {}
+    };
+    fetchApi();
   }, []);
 
-  // Filter
+  const getNextCleanId = () => {
+    if (!equipments || equipments.length === 0) return 1;
+    const maxId = Math.max(...equipments.map(e => Number(e.id) || 0));
+    return maxId + 1;
+  };
+
   const filtered = equipments.filter((item) => {
     const matchStatus = statusFilter === 'ALL' || item.status === statusFilter;
     const matchKeyword =
@@ -137,7 +152,6 @@ export const EquipmentManagement = ({ onReportIssue }) => {
     return matchStatus && matchKeyword;
   });
 
-  // Select all checkboxes
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectedIds(filtered.map((item) => item.id));
@@ -154,7 +168,6 @@ export const EquipmentManagement = ({ onReportIssue }) => {
     }
   };
 
-  // Bulk action
   const handleBulkPerform = () => {
     if (selectedIds.length === 0) {
       alert('Vui lòng chọn ít nhất 1 thiết bị để thao tác!');
@@ -162,31 +175,30 @@ export const EquipmentManagement = ({ onReportIssue }) => {
     }
     if (bulkAction === 'delete') {
       if (confirm(`Bạn có chắc muốn xóa ${selectedIds.length} thiết bị đã chọn?`)) {
-        setEquipments(equipments.filter((item) => !selectedIds.includes(item.id)));
+        const updated = equipments.filter((item) => !selectedIds.includes(item.id));
+        saveEquipments(updated);
         setSelectedIds([]);
       }
     } else if (bulkAction === 'repair') {
-      setEquipments(
-        equipments.map((item) =>
-          selectedIds.includes(item.id) ? { ...item, status: 'CHO_SUA' } : item
-        )
+      const updated = equipments.map((item) =>
+        selectedIds.includes(item.id) ? { ...item, status: 'CHO_SUA' } : item
       );
+      saveEquipments(updated);
       setSelectedIds([]);
     } else if (bulkAction === 'active') {
-      setEquipments(
-        equipments.map((item) =>
-          selectedIds.includes(item.id) ? { ...item, status: 'HOAT_DONG' } : item
-        )
+      const updated = equipments.map((item) =>
+        selectedIds.includes(item.id) ? { ...item, status: 'HOAT_DONG' } : item
       );
+      saveEquipments(updated);
       setSelectedIds([]);
     }
   };
 
-  // Open Add modal
   const handleOpenAdd = () => {
     setEditingItem(null);
+    const nextId = getNextCleanId();
     setFormData({
-      equipmentCode: `PC-PM01-${equipments.length + 1 < 10 ? `0${equipments.length + 1}` : equipments.length + 1}`,
+      equipmentCode: `PC-PM01-${nextId < 10 ? `0${nextId}` : nextId}`,
       equipmentName: 'Máy trạm Dell OptiPlex 7080',
       roomName: 'Phòng Máy 01',
       categoryName: 'Máy tính để bàn',
@@ -197,7 +209,6 @@ export const EquipmentManagement = ({ onReportIssue }) => {
     setModalOpen(true);
   };
 
-  // Open Edit modal
   const handleOpenEdit = (item) => {
     setEditingItem(item);
     setFormData({
@@ -212,30 +223,42 @@ export const EquipmentManagement = ({ onReportIssue }) => {
     setModalOpen(true);
   };
 
-  // Save Add/Edit
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     if (editingItem) {
-      setEquipments(
-        equipments.map((item) =>
-          item.id === editingItem.id ? { ...item, ...formData } : item
-        )
+      const updated = equipments.map((item) =>
+        item.id === editingItem.id ? { ...item, ...formData } : item
       );
+      saveEquipments(updated);
+
+      try {
+        await equipmentApi.update(editingItem.id, formData);
+      } catch (err) {}
     } else {
+      const cleanId = getNextCleanId();
       const newItem = {
-        id: Date.now(),
+        id: cleanId, // ID chuẩn: 7, 8, 9...
         ...formData,
         createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
       };
-      setEquipments([newItem, ...equipments]);
+      const updated = [...equipments, newItem];
+      saveEquipments(updated);
+
+      try {
+        await equipmentApi.create(newItem);
+      } catch (err) {}
     }
     setModalOpen(false);
   };
 
-  // Delete single item
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm('Bạn có chắc chắn muốn xóa thiết bị này khỏi cơ sở dữ liệu?')) {
-      setEquipments(equipments.filter((item) => item.id !== id));
+      const updated = equipments.filter((item) => item.id !== id);
+      saveEquipments(updated);
+
+      try {
+        await equipmentApi.delete(id);
+      } catch (err) {}
     }
   };
 
@@ -253,8 +276,8 @@ export const EquipmentManagement = ({ onReportIssue }) => {
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
-      {/* Page Title & Add New Button (Exact layout like reference image) */}
+    <div className="space-y-5 animate-fade-in text-slate-200">
+      {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold text-white tracking-tight">Equipments</h1>
@@ -266,13 +289,12 @@ export const EquipmentManagement = ({ onReportIssue }) => {
           </button>
         </div>
         <div className="text-xs text-slate-400">
-          E-Commerce / <span className="text-slate-200 font-medium">Equipments</span>
+          Management / <span className="text-slate-200 font-medium">Equipments</span>
         </div>
       </div>
 
-      {/* Action Bar (Bulk Action + Search + Status Filter) */}
+      {/* Action Bar */}
       <div className="bg-[#181d26] p-3.5 rounded-xl border border-[#272e3d] flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Bulk Action Left */}
         <div className="flex items-center gap-2 w-full md:w-auto">
           <select
             value={bulkAction}
@@ -292,19 +314,16 @@ export const EquipmentManagement = ({ onReportIssue }) => {
           </button>
         </div>
 
-        {/* Search & Status Filter Right */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <span className="text-xs text-slate-400 shrink-0">Search:</span>
-            <div className="relative w-full sm:w-56">
-              <input
-                type="text"
-                placeholder="Keyword..."
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
-                className="w-full bg-[#272e3d] text-slate-200 text-xs px-3 py-2 rounded-lg border border-[#384256] focus:outline-none focus:ring-1 focus:ring-sky-500"
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Keyword..."
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              className="w-full bg-[#272e3d] text-slate-200 text-xs px-3 py-2 rounded-lg border border-[#384256] focus:outline-none focus:ring-1 focus:ring-sky-500 sm:w-56"
+            />
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -314,7 +333,7 @@ export const EquipmentManagement = ({ onReportIssue }) => {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="bg-[#272e3d] text-slate-200 text-xs px-3 py-2 rounded-lg border border-[#384256] focus:outline-none focus:ring-1 focus:ring-sky-500 w-full sm:w-auto"
             >
-              <option value="ALL">All</option>
+              <option value="ALL">All Status</option>
               <option value="HOAT_DONG">Hoạt động (Active)</option>
               <option value="CHO_SUA">Chờ sửa (Pending)</option>
               <option value="DANG_SUA">Đang sửa (Repairing)</option>
@@ -323,7 +342,7 @@ export const EquipmentManagement = ({ onReportIssue }) => {
         </div>
       </div>
 
-      {/* Main Data Table (Exact Columns & Dark styling like reference image) */}
+      {/* Main Table */}
       <div className="bg-[#181d26] rounded-xl border border-[#272e3d] overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
@@ -337,15 +356,15 @@ export const EquipmentManagement = ({ onReportIssue }) => {
                     className="rounded bg-[#272e3d] border-[#384256] text-sky-500 focus:ring-0 cursor-pointer"
                   />
                 </th>
-                <th className="py-3 px-3 w-12 text-center">Id</th>
-                <th className="py-3 px-3 w-14 text-center">Icon</th>
-                <th className="py-3 px-3">Code</th>
-                <th className="py-3 px-3">Display Name</th>
-                <th className="py-3 px-3">Room</th>
-                <th className="py-3 px-3">Category</th>
-                <th className="py-3 px-3">Status</th>
-                <th className="py-3 px-3">Created At</th>
-                <th className="py-3 px-4 text-center w-24">Actions</th>
+                <th className="py-3 px-3 w-12 text-center">ID</th>
+                <th className="py-3 px-3 w-14 text-center">ICON</th>
+                <th className="py-3 px-3">CODE</th>
+                <th className="py-3 px-3">DISPLAY NAME</th>
+                <th className="py-3 px-3">ROOM</th>
+                <th className="py-3 px-3">CATEGORY</th>
+                <th className="py-3 px-3">STATUS</th>
+                <th className="py-3 px-3">CREATED AT</th>
+                <th className="py-3 px-4 text-center w-24">ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#232b38]">
@@ -418,43 +437,28 @@ export const EquipmentManagement = ({ onReportIssue }) => {
                   </tr>
                 );
               })}
-
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={10} className="py-8 text-center text-slate-400">
-                    Không tìm thấy thiết bị nào phù hợp với bộ lọc tìm kiếm.
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
 
-        {/* Table Footer with Pagination (Exact like reference image) */}
         <div className="p-3.5 bg-[#151922] border-t border-[#272e3d] flex items-center justify-between text-xs text-slate-400">
-          <div>
-            {filtered.length} of {equipments.length} equipments
-          </div>
+          <div>{filtered.length} of {equipments.length} equipments</div>
           <div className="flex items-center gap-1.5">
-            <button className="flex items-center gap-1 px-3 py-1.5 rounded bg-[#272e3d] hover:bg-[#323b4e] text-slate-300 font-semibold transition-all">
-              <ChevronLeft size={14} /> Prev
-            </button>
-            <button className="flex items-center gap-1 px-3 py-1.5 rounded bg-[#272e3d] hover:bg-[#323b4e] text-slate-300 font-semibold transition-all">
-              Next <ChevronRight size={14} />
-            </button>
+            <button className="flex items-center gap-1 px-3 py-1.5 rounded bg-[#272e3d] text-slate-300"><ChevronLeft size={14} /> Prev</button>
+            <button className="flex items-center gap-1 px-3 py-1.5 rounded bg-[#272e3d] text-slate-300">Next <ChevronRight size={14} /></button>
           </div>
         </div>
       </div>
 
-      {/* Modal Add / Edit Equipment */}
+      {/* Modal Add / Edit */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#181d26] border border-[#2e3748] rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-slate-200">
+          <div className="bg-[#181d26] border border-[#2e3748] rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-slate-200 text-xs">
             <h3 className="text-lg font-bold text-white border-b border-[#272e3d] pb-3">
               {editingItem ? `Chỉnh sửa Thiết bị [${editingItem.equipmentCode}]` : 'Thêm Thiết Bị Mới Vào CSDL'}
             </h3>
 
-            <form onSubmit={handleSave} className="space-y-3.5 text-xs">
+            <form onSubmit={handleSave} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-300 font-semibold mb-1">Mã thiết bị (Code) *</label>
@@ -463,7 +467,7 @@ export const EquipmentManagement = ({ onReportIssue }) => {
                     required
                     value={formData.equipmentCode}
                     onChange={(e) => setFormData({ ...formData, equipmentCode: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white font-mono focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white font-mono"
                   />
                 </div>
                 <div>
@@ -472,7 +476,7 @@ export const EquipmentManagement = ({ onReportIssue }) => {
                     type="text"
                     value={formData.serialNumber}
                     onChange={(e) => setFormData({ ...formData, serialNumber: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white font-mono focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white font-mono"
                   />
                 </div>
               </div>
@@ -482,9 +486,10 @@ export const EquipmentManagement = ({ onReportIssue }) => {
                 <input
                   type="text"
                   required
+                  placeholder="VD: Máy trạm Dell OptiPlex 7080..."
                   value={formData.equipmentName}
                   onChange={(e) => setFormData({ ...formData, equipmentName: e.target.value })}
-                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                 />
               </div>
 
@@ -494,7 +499,7 @@ export const EquipmentManagement = ({ onReportIssue }) => {
                   <select
                     value={formData.roomName}
                     onChange={(e) => setFormData({ ...formData, roomName: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                   >
                     <option value="Phòng Máy 01">Phòng Máy 01 (Web)</option>
                     <option value="Phòng Máy 02">Phòng Máy 02 (Mạng)</option>
@@ -506,7 +511,7 @@ export const EquipmentManagement = ({ onReportIssue }) => {
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                   >
                     <option value="HOAT_DONG">Hoạt động tốt</option>
                     <option value="CHO_SUA">Chờ sửa chữa</option>
@@ -521,7 +526,7 @@ export const EquipmentManagement = ({ onReportIssue }) => {
                   rows={2}
                   value={formData.specification}
                   onChange={(e) => setFormData({ ...formData, specification: e.target.value })}
-                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                 />
               </div>
 
@@ -529,13 +534,13 @@ export const EquipmentManagement = ({ onReportIssue }) => {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-lg bg-[#272e3d] hover:bg-[#323b4e] text-slate-300 font-semibold"
+                  className="px-4 py-2 rounded-lg bg-[#272e3d] text-slate-300 font-semibold"
                 >
                   Hủy bỏ
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold shadow-md shadow-sky-600/30"
+                  className="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold"
                 >
                   Lưu Thiết Bị
                 </button>

@@ -7,57 +7,72 @@ import {
   Edit2,
   Trash2,
   MapPin,
-  Users,
   ChevronLeft,
-  ChevronRight,
-  Monitor
+  ChevronRight
 } from 'lucide-react';
 
+const STORAGE_KEY = 'labrepair_rooms_v2';
+
+const DEFAULT_ROOMS = [
+  {
+    id: 1,
+    roomCode: 'PM01',
+    roomName: 'Phòng Máy 01 (Thực hành Web & App)',
+    location: 'Tầng 3 - Tòa Nhà A (HITC)',
+    capacity: 40,
+    activeComputers: 37,
+    brokenComputers: 3,
+    managerName: 'Thầy Trần Quang Minh',
+    contactPhone: '0908.123.456',
+    status: 'HOAT_DONG',
+    createdAt: '2024-06-15 09:00:00'
+  },
+  {
+    id: 2,
+    roomCode: 'PM02',
+    roomName: 'Phòng Máy 02 (Mạng Máy Tính & An Ninh)',
+    location: 'Tầng 3 - Tòa Nhà B (HITC)',
+    capacity: 35,
+    activeComputers: 34,
+    brokenComputers: 1,
+    managerName: 'Cô Lê Thị Kim Yến',
+    contactPhone: '0912.888.999',
+    status: 'HOAT_DONG',
+    createdAt: '2024-06-15 09:30:00'
+  },
+  {
+    id: 3,
+    roomCode: 'PM03',
+    roomName: 'Phòng Máy 03 (Đồ Họa & Đa Phương Tiện)',
+    location: 'Tầng 4 - Tòa Nhà A (HITC)',
+    capacity: 30,
+    activeComputers: 30,
+    brokenComputers: 0,
+    managerName: 'Thầy Nguyễn Văn Hoàng',
+    contactPhone: '0933.555.777',
+    status: 'HOAT_DONG',
+    createdAt: '2024-06-20 14:15:00'
+  }
+];
+
 export const RoomManagement = () => {
-  const [rooms, setRooms] = useState([
-    {
-      id: 1,
-      roomCode: 'PM01',
-      roomName: 'Phòng Máy 01 (Thực hành Web & App)',
-      location: 'Tầng 3 - Tòa Nhà A (HITC)',
-      capacity: 40,
-      activeComputers: 37,
-      brokenComputers: 3,
-      managerName: 'Thầy Trần Quang Minh',
-      contactPhone: '0908.123.456',
-      status: 'HOAT_DONG',
-      createdAt: '2024-06-15 09:00:00'
-    },
-    {
-      id: 2,
-      roomCode: 'PM02',
-      roomName: 'Phòng Máy 02 (Mạng Máy Tính & An Ninh)',
-      location: 'Tầng 3 - Tòa Nhà B (HITC)',
-      capacity: 35,
-      activeComputers: 34,
-      brokenComputers: 1,
-      managerName: 'Cô Lê Thị Kim Yến',
-      contactPhone: '0912.888.999',
-      status: 'HOAT_DONG',
-      createdAt: '2024-06-15 09:30:00'
-    },
-    {
-      id: 3,
-      roomCode: 'PM03',
-      roomName: 'Phòng Máy 03 (Đồ Họa & Đa Phương Tiện)',
-      location: 'Tầng 4 - Tòa Nhà A (HITC)',
-      capacity: 30,
-      activeComputers: 30,
-      brokenComputers: 0,
-      managerName: 'Thầy Nguyễn Văn Hoàng',
-      contactPhone: '0933.555.777',
-      status: 'HOAT_DONG',
-      createdAt: '2024-06-20 14:15:00'
-    }
-  ]);
+  const [rooms, setRooms] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((item, idx) => ({
+            ...item,
+            id: Number(item.id) > 100000 ? idx + 1 : Number(item.id) || idx + 1
+          }));
+        }
+      }
+    } catch (e) {}
+    return DEFAULT_ROOMS;
+  });
 
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [selectedIds, setSelectedIds] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingRoom, setEditingRoom] = useState(null);
   const [formData, setFormData] = useState({
@@ -70,19 +85,45 @@ export const RoomManagement = () => {
     status: 'HOAT_DONG'
   });
 
+  const saveRooms = (newList) => {
+    setRooms(newList);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const res = await roomApi.getAll();
+        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+          saveRooms(res.data);
+        }
+      } catch (err) {}
+    };
+    fetchApi();
+  }, []);
+
+  const getNextCleanId = () => {
+    if (!rooms || rooms.length === 0) return 1;
+    const maxId = Math.max(...rooms.map(r => Number(r.id) || 0));
+    return maxId + 1;
+  };
+
   const filtered = rooms.filter(
     (r) =>
-      r.roomCode.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      r.roomName.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      r.location.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      r.managerName.toLowerCase().includes(searchKeyword.toLowerCase())
+      (r.roomCode || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (r.roomName || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (r.location || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (r.managerName || '').toLowerCase().includes(searchKeyword.toLowerCase())
   );
 
   const handleOpenAdd = () => {
     setEditingRoom(null);
+    const nextId = getNextCleanId();
     setFormData({
-      roomCode: `PM0${rooms.length + 1}`,
-      roomName: `Phòng Máy 0${rooms.length + 1}`,
+      roomCode: `PM0${nextId}`,
+      roomName: `Phòng Máy 0${nextId}`,
       location: 'Tầng 4 - Tòa Nhà B (HITC)',
       capacity: 35,
       managerName: 'Giảng viên Phụ trách',
@@ -98,34 +139,48 @@ export const RoomManagement = () => {
     setModalOpen(true);
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     if (editingRoom) {
-      setRooms(rooms.map((r) => (r.id === editingRoom.id ? { ...r, ...formData } : r)));
+      const updated = rooms.map((r) => (r.id === editingRoom.id ? { ...r, ...formData } : r));
+      saveRooms(updated);
+
+      try {
+        await roomApi.update(editingRoom.id, formData);
+      } catch (err) {}
     } else {
-      setRooms([
-        ...rooms,
-        {
-          id: Date.now(),
-          ...formData,
-          activeComputers: formData.capacity,
-          brokenComputers: 0,
-          createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
-        }
-      ]);
+      const cleanId = getNextCleanId();
+      const newRoom = {
+        id: cleanId, // ID chuẩn: 4, 5, 6...
+        ...formData,
+        activeComputers: formData.capacity,
+        brokenComputers: 0,
+        createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
+      };
+      const updated = [...rooms, newRoom];
+      saveRooms(updated);
+
+      try {
+        await roomApi.create(newRoom);
+      } catch (err) {}
     }
     setModalOpen(false);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm('Xóa phòng máy này sẽ ảnh hưởng đến các thiết bị bên trong, bạn có chắc chắn?')) {
-      setRooms(rooms.filter((r) => r.id !== id));
+      const updated = rooms.filter((r) => r.id !== id);
+      saveRooms(updated);
+
+      try {
+        await roomApi.delete(id);
+      } catch (err) {}
     }
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
-      {/* Title & Add New */}
+    <div className="space-y-5 animate-fade-in text-slate-200">
+      {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold text-white tracking-tight">Computer Rooms</h1>
@@ -154,7 +209,7 @@ export const RoomManagement = () => {
           />
         </div>
         <div className="text-xs text-slate-400">
-          Đang hiển thị <strong>{filtered.length}</strong> phòng máy thực hành
+          Đang hiển thị <strong className="text-white">{filtered.length}</strong> phòng máy thực hành
         </div>
       </div>
 
@@ -164,15 +219,15 @@ export const RoomManagement = () => {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-[#151922] border-b border-[#272e3d] text-slate-400 font-bold uppercase tracking-wider">
-                <th className="py-3 px-3 w-12 text-center">Id</th>
-                <th className="py-3 px-3">Room Code</th>
-                <th className="py-3 px-3">Room Name</th>
-                <th className="py-3 px-3">Location</th>
-                <th className="py-3 px-3 text-center">Capacity</th>
-                <th className="py-3 px-3 text-center">Health Ratio</th>
-                <th className="py-3 px-3">Manager</th>
-                <th className="py-3 px-3">Created At</th>
-                <th className="py-3 px-4 text-center w-24">Actions</th>
+                <th className="py-3 px-3 w-12 text-center">ID</th>
+                <th className="py-3 px-3">ROOM CODE</th>
+                <th className="py-3 px-3">ROOM NAME</th>
+                <th className="py-3 px-3">LOCATION</th>
+                <th className="py-3 px-3 text-center">CAPACITY</th>
+                <th className="py-3 px-3 text-center">HEALTH RATIO</th>
+                <th className="py-3 px-3">MANAGER</th>
+                <th className="py-3 px-3">CREATED AT</th>
+                <th className="py-3 px-4 text-center w-24">ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#232b38]">
@@ -243,12 +298,12 @@ export const RoomManagement = () => {
       {/* Modal Add / Edit */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#181d26] border border-[#2e3748] rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-slate-200">
+          <div className="bg-[#181d26] border border-[#2e3748] rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-slate-200 text-xs">
             <h3 className="text-lg font-bold text-white border-b border-[#272e3d] pb-3">
               {editingRoom ? `Cập nhật Phòng Máy [${editingRoom.roomCode}]` : 'Thêm Phòng Máy Mới Vào CSDL'}
             </h3>
 
-            <form onSubmit={handleSave} className="space-y-3.5 text-xs">
+            <form onSubmit={handleSave} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-300 font-semibold mb-1">Mã phòng (Code) *</label>
@@ -257,7 +312,7 @@ export const RoomManagement = () => {
                     required
                     value={formData.roomCode}
                     onChange={(e) => setFormData({ ...formData, roomCode: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white font-mono focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white font-mono"
                   />
                 </div>
                 <div>
@@ -267,7 +322,7 @@ export const RoomManagement = () => {
                     required
                     value={formData.capacity}
                     onChange={(e) => setFormData({ ...formData, capacity: Number(e.target.value) })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                   />
                 </div>
               </div>
@@ -277,9 +332,10 @@ export const RoomManagement = () => {
                 <input
                   type="text"
                   required
+                  placeholder="VD: Phòng Máy 04 (Thực hành AI)..."
                   value={formData.roomName}
                   onChange={(e) => setFormData({ ...formData, roomName: e.target.value })}
-                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                 />
               </div>
 
@@ -288,9 +344,10 @@ export const RoomManagement = () => {
                 <input
                   type="text"
                   required
+                  placeholder="VD: Tầng 4 - Tòa Nhà A (HITC)..."
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                 />
               </div>
 
@@ -301,7 +358,7 @@ export const RoomManagement = () => {
                     type="text"
                     value={formData.managerName}
                     onChange={(e) => setFormData({ ...formData, managerName: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                   />
                 </div>
                 <div>
@@ -310,7 +367,7 @@ export const RoomManagement = () => {
                     type="text"
                     value={formData.contactPhone}
                     onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                   />
                 </div>
               </div>

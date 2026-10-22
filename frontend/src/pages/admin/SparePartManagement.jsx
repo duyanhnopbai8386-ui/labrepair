@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { sparePartApi } from '../../api/sparePartApi';
 import {
   Plus,
   Search,
@@ -8,83 +9,103 @@ import {
   AlertTriangle,
   ChevronLeft,
   ChevronRight,
-  TrendingDown,
-  DollarSign
+  RefreshCw
 } from 'lucide-react';
 
+const STORAGE_KEY = 'labrepair_spare_parts_v2';
+
+const DEFAULT_PARTS = [
+  {
+    id: 1,
+    partCode: 'RAM-DDR4-8G',
+    partName: 'RAM Kingston Fury 8GB DDR4 Bus 3200',
+    category: 'Bộ nhớ RAM',
+    unitPrice: 450000,
+    stockQuantity: 12,
+    minStockLevel: 5,
+    unit: 'Thanh',
+    createdAt: '2024-07-23 12:19:32'
+  },
+  {
+    id: 2,
+    partCode: 'RAM-DDR4-16G',
+    partName: 'RAM Kingston Fury 16GB DDR4 Bus 3200',
+    category: 'Bộ nhớ RAM',
+    unitPrice: 850000,
+    stockQuantity: 8,
+    minStockLevel: 3,
+    unit: 'Thanh',
+    createdAt: '2024-07-23 12:14:19'
+  },
+  {
+    id: 3,
+    partCode: 'SSD-512G-M2',
+    partName: 'SSD Kingston NV2 512GB M.2 NVMe PCIe',
+    category: 'Ổ cứng SSD',
+    unitPrice: 850000,
+    stockQuantity: 2,
+    minStockLevel: 5,
+    unit: 'Chiếc',
+    createdAt: '2024-07-22 09:53:57'
+  },
+  {
+    id: 4,
+    partCode: 'PSU-500W-AER',
+    partName: 'Nguồn máy tính Cooler Master Elite V4 500W',
+    category: 'Nguồn máy tính (PSU)',
+    unitPrice: 650000,
+    stockQuantity: 1,
+    minStockLevel: 4,
+    unit: 'Bộ',
+    createdAt: '2024-07-11 16:51:29'
+  },
+  {
+    id: 5,
+    partCode: 'KB-LOGI-K120',
+    partName: 'Bàn phím có dây Logitech K120 USB',
+    category: 'Phím & Chuột',
+    unitPrice: 180000,
+    stockQuantity: 25,
+    minStockLevel: 10,
+    unit: 'Chiếc',
+    createdAt: '2024-07-10 11:20:00'
+  },
+  {
+    id: 6,
+    partCode: 'MS-LOGI-B100',
+    partName: 'Chuột quang Logitech B100 USB 800DPI',
+    category: 'Phím & Chuột',
+    unitPrice: 110000,
+    stockQuantity: 30,
+    minStockLevel: 10,
+    unit: 'Chiếc',
+    createdAt: '2024-07-10 11:25:00'
+  }
+];
+
 export const SparePartManagement = () => {
-  const [parts, setParts] = useState([
-    {
-      id: 1,
-      partCode: 'RAM-DDR4-8G',
-      partName: 'RAM Kingston Fury 8GB DDR4 Bus 3200',
-      category: 'Bộ nhớ RAM',
-      unitPrice: 450000,
-      stockQuantity: 12,
-      minStockLevel: 5,
-      unit: 'Thanh',
-      createdAt: '2024-07-23 12:19:32'
-    },
-    {
-      id: 2,
-      partCode: 'RAM-DDR4-16G',
-      partName: 'RAM Kingston Fury 16GB DDR4 Bus 3200',
-      category: 'Bộ nhớ RAM',
-      unitPrice: 850000,
-      stockQuantity: 8,
-      minStockLevel: 3,
-      unit: 'Thanh',
-      createdAt: '2024-07-23 12:14:19'
-    },
-    {
-      id: 3,
-      partCode: 'SSD-512G-M2',
-      partName: 'SSD Kingston NV2 512GB M.2 NVMe PCIe',
-      category: 'Ổ cứng SSD',
-      unitPrice: 850000,
-      stockQuantity: 2,
-      minStockLevel: 5,
-      unit: 'Chiếc',
-      createdAt: '2024-07-22 09:53:57'
-    },
-    {
-      id: 4,
-      partCode: 'PSU-500W-AER',
-      partName: 'Nguồn máy tính Cooler Master Elite V4 500W',
-      category: 'Nguồn máy tính (PSU)',
-      unitPrice: 650000,
-      stockQuantity: 1,
-      minStockLevel: 4,
-      unit: 'Bộ',
-      createdAt: '2024-07-11 16:51:29'
-    },
-    {
-      id: 5,
-      partCode: 'KB-LOGI-K120',
-      partName: 'Bàn phím có dây Logitech K120 USB',
-      category: 'Phím & Chuột',
-      unitPrice: 180000,
-      stockQuantity: 25,
-      minStockLevel: 10,
-      unit: 'Chiếc',
-      createdAt: '2024-07-10 11:20:00'
-    },
-    {
-      id: 6,
-      partCode: 'MS-LOGI-B100',
-      partName: 'Chuột quang Logitech B100 USB 800DPI',
-      category: 'Phím & Chuột',
-      unitPrice: 110000,
-      stockQuantity: 30,
-      minStockLevel: 10,
-      unit: 'Chiếc',
-      createdAt: '2024-07-10 11:25:00'
+  const [parts, setParts] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Normalize IDs if any was Date.now()
+          return parsed.map((item, idx) => ({
+            ...item,
+            id: Number(item.id) > 100000 ? idx + 1 : Number(item.id) || idx + 1
+          }));
+        }
+      }
+    } catch (e) {
+      console.warn('Error reading from localStorage:', e);
     }
-  ]);
+    return DEFAULT_PARTS;
+  });
 
   const [searchKeyword, setSearchKeyword] = useState('');
   const [filterLowStockOnly, setFilterLowStockOnly] = useState(false);
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Restock Modal
   const [restockModalOpen, setRestockModalOpen] = useState(false);
@@ -104,84 +125,146 @@ export const SparePartManagement = () => {
     unit: 'Chiếc'
   });
 
+  // Save to localStorage whenever parts state changes
+  const saveParts = (newParts) => {
+    setParts(newParts);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newParts));
+    } catch (err) {
+      console.error('LocalStorage write error:', err);
+    }
+  };
+
+  // Sync with Backend API if available
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const res = await sparePartApi.getAll();
+        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+          saveParts(res.data);
+        }
+      } catch (err) {
+        // Fallback to local storage
+      }
+    };
+    fetchApi();
+  }, []);
+
   const formatCurrency = (val) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0);
   };
 
   const filtered = parts.filter((p) => {
     const matchSearch =
-      p.partCode.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      p.partName.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      p.category.toLowerCase().includes(searchKeyword.toLowerCase());
+      (p.partCode || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (p.partName || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (p.category || '').toLowerCase().includes(searchKeyword.toLowerCase());
     const matchLow = filterLowStockOnly ? p.stockQuantity <= p.minStockLevel : true;
     return matchSearch && matchLow;
   });
 
+  // Calculate clean, neat incremental ID (1, 2, 3, 4, 5, 6, 7...)
+  const getNextCleanId = () => {
+    if (!parts || parts.length === 0) return 1;
+    const maxId = Math.max(...parts.map(p => Number(p.id) || 0));
+    return maxId + 1;
+  };
+
   const handleOpenAdd = () => {
     setEditingPart(null);
+    const nextNum = getNextCleanId();
     setFormData({
-      partCode: 'FAN-CPU-INTEL',
-      partName: 'Quạt tản nhiệt CPU Intel LGA 1200 / 1700',
-      category: 'Tản nhiệt & Phụ kiện',
-      unitPrice: 120000,
-      stockQuantity: 15,
+      partCode: `PART-NEW-0${nextNum}`,
+      partName: '',
+      category: 'Bộ nhớ RAM',
+      unitPrice: 250000,
+      stockQuantity: 10,
       minStockLevel: 5,
-      unit: 'Cái'
+      unit: 'Chiếc'
     });
     setModalOpen(true);
   };
 
   const handleOpenEdit = (p) => {
     setEditingPart(p);
-    setFormData({ ...p });
+    setFormData({
+      partCode: p.partCode,
+      partName: p.partName,
+      category: p.category,
+      unitPrice: p.unitPrice,
+      stockQuantity: p.stockQuantity,
+      minStockLevel: p.minStockLevel,
+      unit: p.unit || 'Chiếc'
+    });
     setModalOpen(true);
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     if (editingPart) {
-      setParts(parts.map((p) => (p.id === editingPart.id ? { ...p, ...formData } : p)));
+      // SỬA LINH KIỆN
+      const updated = parts.map((p) =>
+        p.id === editingPart.id ? { ...p, ...formData } : p
+      );
+      saveParts(updated);
+
+      try {
+        await sparePartApi.update(editingPart.id, formData);
+      } catch (err) {}
     } else {
-      setParts([
-        ...parts,
-        {
-          id: Date.now(),
-          ...formData,
-          createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
-        }
-      ]);
+      // THÊM LINH KIỆN MỚI
+      const cleanId = getNextCleanId();
+      const newItem = {
+        id: cleanId, // ID chuẩn: 7, 8, 9... KHÔNG dùng Date.now()
+        ...formData,
+        createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
+      };
+      const updated = [...parts, newItem];
+      saveParts(updated);
+
+      try {
+        await sparePartApi.create(newItem);
+      } catch (err) {}
     }
     setModalOpen(false);
   };
 
-  const handleConfirmRestock = (e) => {
+  const handleConfirmRestock = async (e) => {
     e.preventDefault();
     if (!targetPart) return;
-    setParts(
-      parts.map((p) =>
-        p.id === targetPart.id
-          ? { ...p, stockQuantity: p.stockQuantity + Number(restockAmount) }
-          : p
-      )
+    const newStock = targetPart.stockQuantity + Number(restockAmount);
+    const updated = parts.map((p) =>
+      p.id === targetPart.id ? { ...p, stockQuantity: newStock } : p
     );
+    saveParts(updated);
+
+    try {
+      await sparePartApi.update(targetPart.id, { ...targetPart, stockQuantity: newStock });
+    } catch (err) {}
+
     setRestockModalOpen(false);
   };
 
-  const handleDelete = (id) => {
-    if (confirm('Xóa linh kiện này khỏi kho?')) {
-      setParts(parts.filter((p) => p.id !== id));
+  const handleDelete = async (id) => {
+    if (confirm('Bạn có chắc chắn muốn xóa linh kiện này khỏi cơ sở dữ liệu?')) {
+      const updated = parts.filter((p) => p.id !== id);
+      saveParts(updated);
+
+      try {
+        await sparePartApi.delete(id);
+      } catch (err) {}
     }
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5 animate-fade-in text-slate-200">
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold text-white tracking-tight">Spare Parts</h1>
           <button
             onClick={handleOpenAdd}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shadow-sm active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shadow-sm active:scale-95"
           >
             <Plus size={14} className="stroke-[3]" /> Add New
           </button>
@@ -216,7 +299,7 @@ export const SparePartManagement = () => {
             <AlertTriangle size={14} /> Xem vật tư sắp hết kho
           </button>
           <span className="text-xs text-slate-400">
-            Tổng cộng: <strong>{filtered.length}</strong> mặt hàng
+            Tổng cộng: <strong className="text-white">{filtered.length}</strong> mặt hàng
           </span>
         </div>
       </div>
@@ -227,15 +310,15 @@ export const SparePartManagement = () => {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-[#151922] border-b border-[#272e3d] text-slate-400 font-bold uppercase tracking-wider">
-                <th className="py-3 px-3 w-12 text-center">Id</th>
-                <th className="py-3 px-3">Part Code</th>
-                <th className="py-3 px-3">Part Name</th>
-                <th className="py-3 px-3">Category</th>
-                <th className="py-3 px-3 text-right">Price</th>
-                <th className="py-3 px-3 text-center">Remain / Stock</th>
-                <th className="py-3 px-3 text-center">Status</th>
-                <th className="py-3 px-3">Created At</th>
-                <th className="py-3 px-4 text-center w-28">Actions</th>
+                <th className="py-3 px-3 w-12 text-center">ID</th>
+                <th className="py-3 px-3">PART CODE</th>
+                <th className="py-3 px-3">PART NAME</th>
+                <th className="py-3 px-3">CATEGORY</th>
+                <th className="py-3 px-3 text-right">PRICE</th>
+                <th className="py-3 px-3 text-center">REMAIN / STOCK</th>
+                <th className="py-3 px-3 text-center">STATUS</th>
+                <th className="py-3 px-3">CREATED AT</th>
+                <th className="py-3 px-4 text-center w-28">ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#232b38]">
@@ -243,11 +326,21 @@ export const SparePartManagement = () => {
                 const isLow = item.stockQuantity <= item.minStockLevel;
                 return (
                   <tr key={item.id} className="hover:bg-[#1f2633] transition-colors">
-                    <td className="py-3.5 px-3 text-center text-slate-400 font-mono font-bold">{item.id}</td>
-                    <td className="py-3.5 px-3 font-mono font-bold text-sky-400">{item.partCode}</td>
-                    <td className="py-3.5 px-3 font-bold text-white max-w-xs">{item.partName}</td>
-                    <td className="py-3.5 px-3 text-slate-300">{item.category}</td>
-                    <td className="py-3.5 px-3 text-right font-bold text-emerald-400">{formatCurrency(item.unitPrice)}</td>
+                    <td className="py-3.5 px-3 text-center text-slate-400 font-mono font-bold">
+                      {item.id}
+                    </td>
+                    <td className="py-3.5 px-3 font-mono font-bold text-sky-400">
+                      {item.partCode}
+                    </td>
+                    <td className="py-3.5 px-3 font-bold text-white max-w-xs">
+                      {item.partName}
+                    </td>
+                    <td className="py-3.5 px-3 text-slate-300">
+                      {item.category}
+                    </td>
+                    <td className="py-3.5 px-3 text-right font-bold text-emerald-400">
+                      {formatCurrency(item.unitPrice)}
+                    </td>
                     <td className="py-3.5 px-3 text-center">
                       <span className={`inline-block px-2.5 py-0.5 rounded font-bold ${
                         isLow ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'text-slate-200'
@@ -267,7 +360,9 @@ export const SparePartManagement = () => {
                         </span>
                       )}
                     </td>
-                    <td className="py-3.5 px-3 font-mono text-slate-400 text-[11px]">{item.createdAt}</td>
+                    <td className="py-3.5 px-3 font-mono text-slate-400 text-[11px]">
+                      {item.createdAt}
+                    </td>
                     <td className="py-3.5 px-4 text-center">
                       <div className="flex items-center justify-center gap-1.5">
                         <button
@@ -283,14 +378,14 @@ export const SparePartManagement = () => {
                         </button>
                         <button
                           onClick={() => handleOpenEdit(item)}
-                          title="Chỉnh sửa"
+                          title="Chỉnh sửa linh kiện"
                           className="p-1 rounded bg-slate-700 hover:bg-slate-600 text-slate-300"
                         >
                           <Edit2 size={13} />
                         </button>
                         <button
                           onClick={() => handleDelete(item.id)}
-                          title="Xóa"
+                          title="Xóa linh kiện"
                           className="p-1 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400"
                         >
                           <Trash2 size={13} />
@@ -399,6 +494,7 @@ export const SparePartManagement = () => {
                 <input
                   type="text"
                   required
+                  placeholder="VD: RAM Kingston Fury 16GB DDR4..."
                   value={formData.partName}
                   onChange={(e) => setFormData({ ...formData, partName: e.target.value })}
                   className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"

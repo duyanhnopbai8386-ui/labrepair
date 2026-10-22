@@ -5,51 +5,67 @@ import {
   Users,
   Edit2,
   Trash2,
-  Shield,
-  Key,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
 
+const STORAGE_KEY = 'labrepair_users_v2';
+
+const DEFAULT_USERS = [
+  {
+    id: 1,
+    fullName: 'Lê Nguyễn Ngọc Duy Anh',
+    email: 'admin@school.edu',
+    phone: '0987.654.321',
+    role: 'ADMIN',
+    status: 'ACTIVE',
+    createdAt: '2024-06-01 08:00:00'
+  },
+  {
+    id: 2,
+    fullName: 'Nguyễn Văn Kỹ Thuật',
+    email: 'tech@school.edu',
+    phone: '0912.111.222',
+    role: 'TECHNICIAN',
+    status: 'ACTIVE',
+    createdAt: '2024-06-05 09:30:00'
+  },
+  {
+    id: 3,
+    fullName: 'Thầy Trần Quang Minh (Giảng Viên)',
+    email: 'teacher@school.edu',
+    phone: '0908.123.456',
+    role: 'TEACHER',
+    status: 'ACTIVE',
+    createdAt: '2024-06-10 14:00:00'
+  },
+  {
+    id: 4,
+    fullName: 'Nguyễn Văn Sinh Viên (CCQ2411E)',
+    email: 'student@school.edu',
+    phone: '0933.999.888',
+    role: 'STUDENT',
+    status: 'ACTIVE',
+    createdAt: '2024-06-15 11:20:00'
+  }
+];
+
 export const UserManagement = () => {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      fullName: 'Lê Nguyễn Ngọc Duy Anh',
-      email: 'admin@school.edu',
-      phone: '0987.654.321',
-      role: 'ADMIN',
-      status: 'ACTIVE',
-      createdAt: '2024-06-01 08:00:00'
-    },
-    {
-      id: 2,
-      fullName: 'Nguyễn Văn Kỹ Thuật',
-      email: 'tech@school.edu',
-      phone: '0912.111.222',
-      role: 'TECHNICIAN',
-      status: 'ACTIVE',
-      createdAt: '2024-06-05 09:30:00'
-    },
-    {
-      id: 3,
-      fullName: 'Thầy Trần Quang Minh (Giảng Viên)',
-      email: 'teacher@school.edu',
-      phone: '0908.123.456',
-      role: 'TEACHER',
-      status: 'ACTIVE',
-      createdAt: '2024-06-10 14:00:00'
-    },
-    {
-      id: 4,
-      fullName: 'Nguyễn Văn Sinh Viên (CCQ2411E)',
-      email: 'student@school.edu',
-      phone: '0933.999.888',
-      role: 'STUDENT',
-      status: 'ACTIVE',
-      createdAt: '2024-06-15 11:20:00'
-    }
-  ]);
+  const [users, setUsers] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((item, idx) => ({
+            ...item,
+            id: Number(item.id) > 100000 ? idx + 1 : Number(item.id) || idx + 1
+          }));
+        }
+      }
+    } catch (e) {}
+    return DEFAULT_USERS;
+  });
 
   const [searchKeyword, setSearchKeyword] = useState('');
   const [roleFilter, setRoleFilter] = useState('ALL');
@@ -63,12 +79,25 @@ export const UserManagement = () => {
     status: 'ACTIVE'
   });
 
+  const saveUsers = (newList) => {
+    setUsers(newList);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
+    } catch (err) {}
+  };
+
+  const getNextCleanId = () => {
+    if (!users || users.length === 0) return 1;
+    const maxId = Math.max(...users.map(u => Number(u.id) || 0));
+    return maxId + 1;
+  };
+
   const filtered = users.filter((u) => {
     const matchRole = roleFilter === 'ALL' || u.role === roleFilter;
     const matchSearch =
-      u.fullName.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      u.phone.includes(searchKeyword);
+      (u.fullName || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (u.email || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (u.phone || '').includes(searchKeyword);
     return matchRole && matchSearch;
   });
 
@@ -106,28 +135,30 @@ export const UserManagement = () => {
   const handleSave = (e) => {
     e.preventDefault();
     if (editingUser) {
-      setUsers(users.map((u) => (u.id === editingUser.id ? { ...u, ...formData } : u)));
+      const updated = users.map((u) => (u.id === editingUser.id ? { ...u, ...formData } : u));
+      saveUsers(updated);
     } else {
-      setUsers([
-        ...users,
-        {
-          id: Date.now(),
-          ...formData,
-          createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
-        }
-      ]);
+      const cleanId = getNextCleanId();
+      const newUser = {
+        id: cleanId, // ID chuẩn: 5, 6, 7...
+        ...formData,
+        createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
+      };
+      const updated = [...users, newUser];
+      saveUsers(updated);
     }
     setModalOpen(false);
   };
 
   const handleDelete = (id) => {
     if (confirm('Bạn có chắc chắn muốn xóa tài khoản này?')) {
-      setUsers(users.filter((u) => u.id !== id));
+      const updated = users.filter((u) => u.id !== id);
+      saveUsers(updated);
     }
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5 animate-fade-in text-slate-200">
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -179,14 +210,14 @@ export const UserManagement = () => {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-[#151922] border-b border-[#272e3d] text-slate-400 font-bold uppercase tracking-wider">
-                <th className="py-3 px-3 w-12 text-center">Id</th>
-                <th className="py-3 px-3">Full Name</th>
-                <th className="py-3 px-3">Email</th>
-                <th className="py-3 px-3">Phone</th>
-                <th className="py-3 px-3">Role</th>
-                <th className="py-3 px-3 text-center">Status</th>
-                <th className="py-3 px-3">Created At</th>
-                <th className="py-3 px-4 text-center w-24">Actions</th>
+                <th className="py-3 px-3 w-12 text-center">ID</th>
+                <th className="py-3 px-3">FULL NAME</th>
+                <th className="py-3 px-3">EMAIL</th>
+                <th className="py-3 px-3">PHONE</th>
+                <th className="py-3 px-3">ROLE</th>
+                <th className="py-3 px-3 text-center">STATUS</th>
+                <th className="py-3 px-3">CREATED AT</th>
+                <th className="py-3 px-4 text-center w-24">ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#232b38]">
@@ -255,6 +286,7 @@ export const UserManagement = () => {
                 <input
                   type="text"
                   required
+                  placeholder="VD: Lê Nguyễn Ngọc Duy Anh..."
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                   className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
@@ -267,6 +299,7 @@ export const UserManagement = () => {
                   <input
                     type="email"
                     required
+                    placeholder="VD: user@school.edu..."
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
@@ -276,6 +309,7 @@ export const UserManagement = () => {
                   <label className="block text-slate-300 font-semibold mb-1">Số điện thoại</label>
                   <input
                     type="text"
+                    placeholder="09xx.xxx.xxx"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"

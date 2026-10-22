@@ -1,82 +1,97 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { incidentApi } from '../../api/incidentApi';
 import {
   Plus,
   Search,
-  Filter,
   AlertCircle,
   Wrench,
   Trash2,
   UserCheck,
-  CheckCircle2,
   Package,
-  Clock,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
 
+const STORAGE_KEY = 'labrepair_incidents_v2';
+
+const DEFAULT_INCIDENTS = [
+  {
+    id: 1,
+    ticketCode: 'SC-2024-001',
+    equipmentCode: 'PC-PM01-08',
+    equipmentName: 'Máy trạm Dell OptiPlex 7080',
+    roomName: 'Phòng Máy 01',
+    description: 'Lỗi dump xanh (BSOD WHEA_UNCORRECTABLE), nghi hỏng RAM',
+    reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV)',
+    technicianName: 'Nguyễn Văn Kỹ Thuật (KTV Trưởng)',
+    priority: 'KHAN_CAP',
+    status: 'DANG_SUA',
+    totalCost: 450000,
+    createdAt: '2024-07-23 08:30:15'
+  },
+  {
+    id: 2,
+    ticketCode: 'SC-2024-002',
+    equipmentCode: 'PC-PM02-03',
+    equipmentName: 'Máy trạm HP ProDesk 400',
+    roomName: 'Phòng Máy 02',
+    description: 'Bật nguồn không lên đèn, quạt nguồn CPU không quay',
+    reporterName: 'Thầy Nguyễn Văn Hoàng (GV)',
+    technicianName: 'Lê Kỹ Thuật Viên',
+    priority: 'CAO',
+    status: 'DA_TIEP_NHAN',
+    totalCost: 0,
+    createdAt: '2024-07-22 14:15:20'
+  },
+  {
+    id: 3,
+    ticketCode: 'SC-2024-003',
+    equipmentCode: 'PC-PM01-12',
+    equipmentName: 'Máy trạm Dell OptiPlex 7080',
+    roomName: 'Phòng Máy 01',
+    description: 'Liệt phím Enter và Space, chuột quang bị giật con trỏ',
+    reporterName: 'Sinh viên CCQ2411E',
+    technicianName: null,
+    priority: 'TRUNG_BINH',
+    status: 'MOI_TAO',
+    totalCost: 0,
+    createdAt: '2024-07-22 10:45:00'
+  },
+  {
+    id: 4,
+    ticketCode: 'SC-2024-004',
+    equipmentCode: 'PC-PM01-15',
+    equipmentName: 'Máy trạm Dell OptiPlex 7080',
+    roomName: 'Phòng Máy 01',
+    description: 'Ổ cứng SSD báo lỗi Disk Read Error, đã thay thế SSD mới',
+    reporterName: 'Cô Lê Thị Kim Yến',
+    technicianName: 'Nguyễn Văn Kỹ Thuật',
+    priority: 'CAO',
+    status: 'HOAN_THANH',
+    totalCost: 850000,
+    createdAt: '2024-07-20 09:00:00'
+  }
+];
+
 export const IncidentManagement = () => {
-  const [incidents, setIncidents] = useState([
-    {
-      id: 1,
-      ticketCode: 'SC-2024-001',
-      equipmentCode: 'PC-PM01-08',
-      equipmentName: 'Máy trạm Dell OptiPlex 7080',
-      roomName: 'Phòng Máy 01',
-      description: 'Lỗi dump xanh (BSOD WHEA_UNCORRECTABLE), nghi hỏng RAM',
-      reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV)',
-      technicianName: 'Nguyễn Văn Kỹ Thuật (KTV Trưởng)',
-      priority: 'KHAN_CAP',
-      status: 'DANG_SUA',
-      totalCost: 450000,
-      createdAt: '2024-07-23 08:30:15'
-    },
-    {
-      id: 2,
-      ticketCode: 'SC-2024-002',
-      equipmentCode: 'PC-PM02-03',
-      equipmentName: 'Máy trạm HP ProDesk 400',
-      roomName: 'Phòng Máy 02',
-      description: 'Bật nguồn không lên đèn, quạt nguồn CPU không quay',
-      reporterName: 'Thầy Nguyễn Văn Hoàng (GV)',
-      technicianName: 'Lê Kỹ Thuật Viên',
-      priority: 'CAO',
-      status: 'DA_TIEP_NHAN',
-      totalCost: 0,
-      createdAt: '2024-07-22 14:15:20'
-    },
-    {
-      id: 3,
-      ticketCode: 'SC-2024-003',
-      equipmentCode: 'PC-PM01-12',
-      equipmentName: 'Máy trạm Dell OptiPlex 7080',
-      roomName: 'Phòng Máy 01',
-      description: 'Liệt phím Enter và Space, chuột quang bị giật con trỏ',
-      reporterName: 'Sinh viên CCQ2411E',
-      technicianName: null,
-      priority: 'TRUNG_BINH',
-      status: 'MOI_TAO',
-      totalCost: 0,
-      createdAt: '2024-07-22 10:45:00'
-    },
-    {
-      id: 4,
-      ticketCode: 'SC-2024-004',
-      equipmentCode: 'PC-PM01-15',
-      equipmentName: 'Máy trạm Dell OptiPlex 7080',
-      roomName: 'Phòng Máy 01',
-      description: 'Ổ cứng SSD báo lỗi Disk Read Error, đã thay thế SSD mới',
-      reporterName: 'Cô Lê Thị Kim Yến',
-      technicianName: 'Nguyễn Văn Kỹ Thuật',
-      priority: 'CAO',
-      status: 'HOAN_THANH',
-      totalCost: 850000,
-      createdAt: '2024-07-20 09:00:00'
-    }
-  ]);
+  const [incidents, setIncidents] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((item, idx) => ({
+            ...item,
+            id: Number(item.id) > 100000 ? idx + 1 : Number(item.id) || idx + 1
+          }));
+        }
+      }
+    } catch (e) {}
+    return DEFAULT_INCIDENTS;
+  });
 
   const [searchKeyword, setSearchKeyword] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
-  const [selectedIds, setSelectedIds] = useState([]);
 
   // Repair Modal
   const [repairModalOpen, setRepairModalOpen] = useState(false);
@@ -101,13 +116,41 @@ export const IncidentManagement = () => {
     reporterName: 'Lê Nguyễn Ngọc Duy Anh'
   });
 
+  const saveIncidents = (newList) => {
+    setIncidents(newList);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const res = await incidentApi.getAll();
+        if (res.data) {
+          const list = res.data.content || res.data;
+          if (Array.isArray(list) && list.length > 0) {
+            saveIncidents(list);
+          }
+        }
+      } catch (err) {}
+    };
+    fetchApi();
+  }, []);
+
+  const getNextCleanId = () => {
+    if (!incidents || incidents.length === 0) return 1;
+    const maxId = Math.max(...incidents.map(i => Number(i.id) || 0));
+    return maxId + 1;
+  };
+
   const filtered = incidents.filter((item) => {
     const matchStatus = statusFilter === 'ALL' || item.status === statusFilter;
     const matchSearch =
-      item.ticketCode.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      item.equipmentCode.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      item.reporterName.toLowerCase().includes(searchKeyword.toLowerCase());
+      (item.ticketCode || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (item.equipmentCode || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (item.description || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (item.reporterName || '').toLowerCase().includes(searchKeyword.toLowerCase());
     return matchStatus && matchSearch;
   });
 
@@ -134,14 +177,17 @@ export const IncidentManagement = () => {
     }
   };
 
-  const handleAssignMe = (inc) => {
-    setIncidents(
-      incidents.map((i) =>
-        i.id === inc.id
-          ? { ...i, status: 'DA_TIEP_NHAN', technicianName: 'Nguyễn Văn Kỹ Thuật (KTV Trưởng)' }
-          : i
-      )
+  const handleAssignMe = async (inc) => {
+    const updated = incidents.map((i) =>
+      i.id === inc.id
+        ? { ...i, status: 'DA_TIEP_NHAN', technicianName: 'Nguyễn Văn Kỹ Thuật (KTV Trưởng)' }
+        : i
     );
+    saveIncidents(updated);
+
+    try {
+      await incidentApi.updateStatus(inc.id, 'DA_TIEP_NHAN');
+    } catch (err) {}
   };
 
   const handleOpenRepair = (inc) => {
@@ -157,47 +203,68 @@ export const IncidentManagement = () => {
     setRepairModalOpen(true);
   };
 
-  const handleSaveRepair = (e) => {
+  const handleSaveRepair = async (e) => {
     e.preventDefault();
     if (!targetIncident) return;
     const addedCost = repairForm.unitPrice * repairForm.quantity;
-    setIncidents(
-      incidents.map((i) =>
-        i.id === targetIncident.id
-          ? {
-              ...i,
-              status: repairForm.markCompleted ? 'HOAN_THANH' : 'DANG_SUA',
-              totalCost: (i.totalCost || 0) + addedCost
-            }
-          : i
-      )
+    const updated = incidents.map((i) =>
+      i.id === targetIncident.id
+        ? {
+            ...i,
+            status: repairForm.markCompleted ? 'HOAN_THANH' : 'DANG_SUA',
+            totalCost: (i.totalCost || 0) + addedCost
+          }
+        : i
     );
+    saveIncidents(updated);
+
+    try {
+      await incidentApi.recordHistory({
+        incidentId: targetIncident.id,
+        actionType: repairForm.actionType,
+        note: repairForm.note,
+        durationMinutes: 30
+      });
+    } catch (err) {}
+
     setRepairModalOpen(false);
   };
 
-  const handleCreateSubmit = (e) => {
+  const handleCreateSubmit = async (e) => {
     e.preventDefault();
+    const cleanId = getNextCleanId();
     const newInc = {
-      id: Date.now(),
-      ticketCode: `SC-2024-00${incidents.length + 1}`,
+      id: cleanId, // ID chuẩn: 5, 6, 7...
+      ticketCode: `SC-2024-00${cleanId}`,
       ...createForm,
       technicianName: null,
       status: 'MOI_TAO',
       totalCost: 0,
       createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
     };
-    setIncidents([newInc, ...incidents]);
+    const updated = [newInc, ...incidents];
+    saveIncidents(updated);
+
+    try {
+      await incidentApi.create(newInc);
+    } catch (err) {}
+
     setCreateModalOpen(false);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm('Xóa phiếu sự cố này?')) {
-      setIncidents(incidents.filter((i) => i.id !== id));
+      const updated = incidents.filter((i) => i.id !== id);
+      saveIncidents(updated);
+
+      try {
+        await incidentApi.delete(id);
+      } catch (err) {}
     }
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5 animate-fade-in text-slate-200">
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -249,17 +316,17 @@ export const IncidentManagement = () => {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-[#151922] border-b border-[#272e3d] text-slate-400 font-bold uppercase tracking-wider">
-                <th className="py-3 px-3 w-12 text-center">Id</th>
-                <th className="py-3 px-3">Ticket Code</th>
-                <th className="py-3 px-3">Equipment / Room</th>
-                <th className="py-3 px-3">Issue Description</th>
-                <th className="py-3 px-3">Reporter</th>
-                <th className="py-3 px-3">Technician</th>
-                <th className="py-3 px-3">Priority</th>
-                <th className="py-3 px-3">Status</th>
-                <th className="py-3 px-3 text-right">Cost</th>
-                <th className="py-3 px-3">Created At</th>
-                <th className="py-3 px-4 text-center w-28">Actions</th>
+                <th className="py-3 px-3 w-12 text-center">ID</th>
+                <th className="py-3 px-3">TICKET CODE</th>
+                <th className="py-3 px-3">EQUIPMENT / ROOM</th>
+                <th className="py-3 px-3">ISSUE DESCRIPTION</th>
+                <th className="py-3 px-3">REPORTER</th>
+                <th className="py-3 px-3">TECHNICIAN</th>
+                <th className="py-3 px-3">PRIORITY</th>
+                <th className="py-3 px-3">STATUS</th>
+                <th className="py-3 px-3 text-right">COST</th>
+                <th className="py-3 px-3">CREATED AT</th>
+                <th className="py-3 px-4 text-center w-28">ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#232b38]">
@@ -332,7 +399,7 @@ export const IncidentManagement = () => {
         </div>
       </div>
 
-      {/* Modal Repair & Parts Deduction */}
+      {/* Modal Repair */}
       {repairModalOpen && targetIncident && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-[#181d26] border border-[#2e3748] rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-slate-200 text-xs">
