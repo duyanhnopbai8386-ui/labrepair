@@ -19,10 +19,18 @@ import {
   Layers,
   Wrench,
   ShieldCheck,
-  Building
+  Building,
+  ExternalLink
 } from 'lucide-react';
 
-export const AdminLayout = ({ activeMenu, setActiveMenu, children, incidentCount = 4, lowStockCount = 2 }) => {
+export const AdminLayout = ({
+  activeMenu,
+  setActiveMenu,
+  children,
+  incidentCount = 4,
+  lowStockCount = 2,
+  onSwitchToUserPortal
+}) => {
   const { user, logout } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -135,6 +143,23 @@ export const AdminLayout = ({ activeMenu, setActiveMenu, children, incidentCount
                 </button>
               );
             })}
+
+            {/* Shortcut to User Reporting Portal */}
+            <div className="pt-3 border-t border-[#272e3d]/80 mt-2">
+              <button
+                onClick={onSwitchToUserPortal}
+                title={sidebarCollapsed ? 'Cổng Người Dùng (Báo Hỏng)' : undefined}
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-sky-400 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 transition-all"
+              >
+                <Monitor size={18} className="text-sky-400 shrink-0" />
+                {!sidebarCollapsed && (
+                  <span className="flex-1 text-left truncate flex items-center justify-between">
+                    <span>Cổng Người Dùng</span>
+                    <ExternalLink size={13} />
+                  </span>
+                )}
+              </button>
+            </div>
           </nav>
 
           {/* Sidebar Footer */}
@@ -169,8 +194,19 @@ export const AdminLayout = ({ activeMenu, setActiveMenu, children, incidentCount
               </div>
             </div>
 
-            {/* Right Tools (Language, Search, Notifications, Profile) */}
+            {/* Right Tools (Switch to User Portal, Notifications, Profile) */}
             <div className="flex items-center gap-2 sm:gap-3">
+              {/* Switch to User Portal Button */}
+              <button
+                onClick={onSwitchToUserPortal}
+                title="Chuyển sang Cổng Người Dùng (Sơ đồ phòng máy & Gửi báo hỏng)"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white text-xs font-bold shadow-md shadow-sky-500/20 active:scale-95 transition-all"
+              >
+                <Monitor size={15} />
+                <span className="hidden sm:inline">Cổng Người Dùng (Báo Hỏng)</span>
+                <span className="sm:hidden">Cổng SV/GV</span>
+              </button>
+
               <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#272e3d] text-xs text-slate-300">
                 <Globe size={14} className="text-sky-400" />
                 <span>Tiếng Việt</span>
