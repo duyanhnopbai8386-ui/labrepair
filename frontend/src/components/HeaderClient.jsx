@@ -1,13 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   Wrench,
   Monitor,
-  AlertCircle,
   Clock,
   Send,
   LogOut,
-  User,
+  ShieldCheck,
   LayoutDashboard
 } from 'lucide-react';
 
@@ -40,7 +40,7 @@ export const HeaderClient = ({ currentTab, setCurrentTab, onOpenReportModal }) =
                   Lab<span className="text-sky-600">Repair</span>
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-sky-50 text-sky-700 rounded-full border border-sky-200/80">
-                  CỔNG NGƯỜI DÙNG (FE)
+                  CỔNG NGƯỜI DÙNG (/)
                 </span>
               </div>
               <p className="text-xs text-slate-400 font-medium hidden sm:block">
@@ -71,7 +71,7 @@ export const HeaderClient = ({ currentTab, setCurrentTab, onOpenReportModal }) =
             })}
           </nav>
 
-          {/* Right Action Tools: Report Button + User Info (NO ADMIN SWITCHER) */}
+          {/* Right Action Tools: Report Button + Admin Link + User Profile */}
           <div className="flex items-center gap-2.5 sm:gap-3">
             {/* Quick Report Button */}
             <button
@@ -82,7 +82,18 @@ export const HeaderClient = ({ currentTab, setCurrentTab, onOpenReportModal }) =
               <span>Gửi Báo Hỏng</span>
             </button>
 
-            {/* User Profile (If logged in) */}
+            {/* Link to Admin Portal (/admin) - Protected with Auth Guard */}
+            <Link
+              to="/admin"
+              title="Khu vực Quản trị viên & Kỹ thuật viên (Yêu cầu đăng nhập)"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#181d26] hover:bg-[#232b38] text-white text-xs font-bold shadow-md shadow-black/10 active:scale-95 transition-all border border-[#2e3748]"
+            >
+              <ShieldCheck size={15} className="text-sky-400" />
+              <span className="hidden lg:inline">Quản Trị (/admin)</span>
+              <span className="lg:hidden">Admin</span>
+            </Link>
+
+            {/* User Profile */}
             {isAuthenticated ? (
               <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-xl">
                 <div className="w-7 h-7 rounded-lg bg-sky-500 text-white font-bold text-xs flex items-center justify-center">

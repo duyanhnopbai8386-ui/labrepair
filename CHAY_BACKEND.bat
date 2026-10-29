@@ -1,22 +1,23 @@
 @echo off
 chcp 65001 > nul
-title LabRepair - Backend Spring Boot
+title [CỔNG 8080] LabRepair - Backend Spring Boot REST API
+color 0B
 echo ========================================================
-echo   HE THONG LABREPAIR - KHOI DONG BACKEND SPRING BOOT
+echo   HE THONG LABREPAIR - KHOI DONG BACKEND API (PORT 8080)
 echo   Sinh vien: Le Nguyen Ngoc Duy Anh - MSSV: 2124110340
 echo ========================================================
 echo.
+echo [!] Luu y: Hay dam bao ban da bat Start MySQL trong XAMPP hoac Laragon!
+echo [*] URL API: http://localhost:8080/api
+echo.
 
-cd /d "%~dp0"
+cd /d "D:\labrepair\labrepair"
 
-echo [1/2] Kiem tra file JAR dong goi...
 if exist "target\labrepair-0.0.1-SNAPSHOT.jar" (
-    echo Da tim thay file JAR san sang! Dang khoi chay tren cong 8080...
-    echo (Luu y: Hay dam bao ban da bat Start MySQL trong XAMPP/Laragon)
-    echo.
+    echo [*] Dang chay file JAR dong goi tren cong 8080...
     java -jar target\labrepair-0.0.1-SNAPSHOT.jar
 ) else (
-    echo Dang khoi dong bang Maven Wrapper...
+    echo [*] Dang chay qua Maven Wrapper tren cong 8080...
     call .\mvnw.cmd spring-boot:run
 )
 

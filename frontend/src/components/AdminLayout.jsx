@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   Home,
@@ -31,9 +32,23 @@ export const AdminLayout = ({
   lowStockCount = 2,
   onSwitchToUserPortal
 }) => {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+
+  const handleUserPortal = () => {
+    if (onSwitchToUserPortal) {
+      onSwitchToUserPortal();
+    } else {
+      navigate('/');
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -147,7 +162,7 @@ export const AdminLayout = ({
             {/* Shortcut to User Reporting Portal */}
             <div className="pt-3 border-t border-[#272e3d]/80 mt-2">
               <button
-                onClick={onSwitchToUserPortal}
+                onClick={handleUserPortal}
                 title={sidebarCollapsed ? 'Cổng Người Dùng (Báo Hỏng)' : undefined}
                 className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-sky-400 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 transition-all"
               >
@@ -165,7 +180,7 @@ export const AdminLayout = ({
           {/* Sidebar Footer */}
           <div className="p-3 border-t border-[#272e3d] bg-[#141821]">
             <button
-              onClick={logout}
+              onClick={handleLogout}
               className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 text-xs font-semibold transition-all border border-rose-500/20"
             >
               <LogOut size={16} />
@@ -198,7 +213,7 @@ export const AdminLayout = ({
             <div className="flex items-center gap-2 sm:gap-3">
               {/* Switch to User Portal Button */}
               <button
-                onClick={onSwitchToUserPortal}
+                onClick={handleUserPortal}
                 title="Chuyển sang Cổng Người Dùng (Sơ đồ phòng máy & Gửi báo hỏng)"
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white text-xs font-bold shadow-md shadow-sky-500/20 active:scale-95 transition-all"
               >

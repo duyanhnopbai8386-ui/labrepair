@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  Wrench,
   Lock,
   Mail,
   ShieldCheck,
   ArrowRight,
   AlertTriangle,
-  CheckCircle2,
-  ExternalLink,
+  ArrowLeft,
   ShieldAlert
 } from 'lucide-react';
 
-export const AdminLoginPage = ({ onLoginSuccess }) => {
+export const AdminLoginPage = () => {
   const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const redirectTarget = location.state?.from?.pathname || '/admin';
 
   // 1-Click Quick Demo Login Helper
   const fillAndLogin = async (accId, accPass) => {
@@ -31,21 +34,20 @@ export const AdminLoginPage = ({ onLoginSuccess }) => {
       const res = await login(accId, accPass);
       setLoading(false);
       if (res.success) {
-        // Kiểm tra phân quyền: Chỉ cho ADMIN hoặc TECHNICIAN
         const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
         if (loggedUser.role === 'STUDENT') {
-          setErrorMsg('Tài khoản Sinh viên không có quyền truy cập vào Cổng Quản Trị Hệ Thống!');
+          setErrorMsg('Tài khoản Sinh viên không có quyền truy cập vào Cổng Quản Trị Hệ Thống (/admin)!');
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           return;
         }
-        if (onLoginSuccess) onLoginSuccess();
+        navigate(redirectTarget, { replace: true });
       } else {
         setErrorMsg(res.message || 'Sai thông tin đăng nhập quản trị!');
       }
     } catch (err) {
       setLoading(false);
-      setErrorMsg('Lỗi kết nối máy chủ quản trị!');
+      setErrorMsg('Lỗi kết nối máy chủ quản trị (Port 8080)!');
     }
   };
 
@@ -60,12 +62,12 @@ export const AdminLoginPage = ({ onLoginSuccess }) => {
       if (res.success) {
         const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
         if (loggedUser.role === 'STUDENT') {
-          setErrorMsg('Tài khoản Sinh viên không có quyền truy cập vào Cổng Quản Trị Hệ Thống!');
+          setErrorMsg('Tài khoản Sinh viên không có quyền truy cập vào Cổng Quản Trị Hệ Thống (/admin)!');
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           return;
         }
-        if (onLoginSuccess) onLoginSuccess();
+        navigate(redirectTarget, { replace: true });
       } else {
         setErrorMsg(res.message || 'Tài khoản hoặc mật khẩu không chính xác!');
       }
@@ -95,7 +97,7 @@ export const AdminLoginPage = ({ onLoginSuccess }) => {
               </div>
             </div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30 text-[11px] font-bold tracking-wider uppercase mb-2">
-              <Lock size={12} /> Cổng Quản Trị Backend
+              <Lock size={12} /> Cổng Quản Trị Backend (/admin)
             </div>
             <h2 className="text-2xl font-black tracking-tight text-white">
               Lab<span className="text-sky-400">Repair</span> Admin
@@ -109,7 +111,7 @@ export const AdminLoginPage = ({ onLoginSuccess }) => {
           <div className="mb-6 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2.5 leading-relaxed">
             <ShieldAlert size={18} className="text-amber-400 shrink-0 mt-0.5" />
             <div>
-              <strong>Khu vực bảo mật nội bộ (Cổng 5174):</strong> Người dùng thông thường (Sinh viên) không có quyền đăng nhập vào phân hệ này.
+              <strong>Khu vực bảo mật nội bộ (/admin):</strong> Người dùng thông thường (Sinh viên) không có quyền đăng nhập vào phân hệ này.
             </div>
           </div>
 
@@ -208,15 +210,13 @@ export const AdminLoginPage = ({ onLoginSuccess }) => {
 
           {/* Link to Client Portal */}
           <div className="mt-6 pt-4 border-t border-[#272e3d]/80 text-center">
-            <a
-              href="http://localhost:5173"
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              to="/"
               className="inline-flex items-center gap-1.5 text-xs text-sky-400 hover:text-sky-300 font-medium transition-colors"
             >
-              <span>Chuyển sang Cổng Người Dùng Báo Hỏng (Cổng 5173)</span>
-              <ExternalLink size={12} />
-            </a>
+              <ArrowLeft size={13} />
+              <span>Quay về Cổng Người Dùng Báo Hỏng (/)</span>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 import { AdminLayout } from './components/AdminLayout';
-import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 
 // Admin Portal Pages
 import { AdminDashboard } from './pages/admin/AdminDashboard';
@@ -14,9 +14,7 @@ import { UserManagement } from './pages/admin/UserManagement';
 import {
   Server,
   Database,
-  ShieldCheck,
-  CheckCircle2,
-  Lock
+  CheckCircle2
 } from 'lucide-react';
 
 function SystemSettingsView() {
@@ -72,8 +70,8 @@ function SystemSettingsView() {
   );
 }
 
-function AdminAppContent() {
-  const { user, isAuthenticated, logout } = useAuth();
+export default function AppAdmin() {
+  const navigate = useNavigate();
 
   // Active Menu in Admin Portal
   const [activeAdminMenu, setActiveAdminMenu] = useState(() => {
@@ -90,17 +88,8 @@ function AdminAppContent() {
   };
 
   const handleSwitchToUserPortal = () => {
-    window.open('http://localhost:5173', '_blank');
+    navigate('/');
   };
-
-  // =========================================================================
-  // BẢO MẬT (AUTH GUARD): BẮT BUỘC ĐĂNG NHẬP ADMIN HOẶC TECHNICIAN
-  // =========================================================================
-  const isAdminOrTech = isAuthenticated && user && (user.role === 'ADMIN' || user.role === 'TECHNICIAN');
-
-  if (!isAdminOrTech) {
-    return <AdminLoginPage onLoginSuccess={() => setActiveAdminMenu('equipment')} />;
-  }
 
   return (
     <>
@@ -127,13 +116,5 @@ function AdminAppContent() {
         {activeAdminMenu === 'settings' && <SystemSettingsView />}
       </AdminLayout>
     </>
-  );
-}
-
-export default function AppAdmin() {
-  return (
-    <AuthProvider>
-      <AdminAppContent />
-    </AuthProvider>
   );
 }

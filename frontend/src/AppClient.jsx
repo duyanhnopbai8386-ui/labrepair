@@ -275,9 +275,5 @@ function ClientPortalContent() {
 }
 
 export default function AppClient() {
-  return (
-    <AuthProvider>
-      <ClientPortalContent />
-    </AuthProvider>
-  );
+  return <ClientPortalContent />;
 }

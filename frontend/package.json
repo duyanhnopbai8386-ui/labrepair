@@ -4,12 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 5173",
-    "dev:fe": "vite --port 5173",
-    "dev:admin": "vite --config vite.config.admin.js --port 5174",
-    "dev:be": "vite --config vite.config.admin.js --port 5174",
+    "dev": "vite",
     "build": "vite build",
-    "build:admin": "vite build --config vite.config.admin.js",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -19,6 +15,7 @@
     "lucide-react": "^1.61.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
