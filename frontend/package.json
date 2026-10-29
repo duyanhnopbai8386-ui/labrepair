@@ -4,8 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5173",
+    "dev:fe": "vite --port 5173",
+    "dev:admin": "vite --config vite.config.admin.js --port 5174",
+    "dev:be": "vite --config vite.config.admin.js --port 5174",
     "build": "vite build",
+    "build:admin": "vite build --config vite.config.admin.js",
     "lint": "oxlint",
     "preview": "vite preview"
   },
