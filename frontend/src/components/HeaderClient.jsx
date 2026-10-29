@@ -1,23 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   Wrench,
   Monitor,
   Clock,
   Send,
-  LogOut,
-  ShieldCheck,
-  LayoutDashboard
+  LogOut
 } from 'lucide-react';
 
 export const HeaderClient = ({ currentTab, setCurrentTab, onOpenReportModal }) => {
   const { user, isAuthenticated, logout } = useAuth();
 
+  // Ở Cổng Người Dùng CHỈ CÓ 2 chức năng của sinh viên & giảng viên:
+  // 1. Xem sơ đồ phòng máy và máy trạm
+  // 2. Theo dõi tiến độ các phiếu báo hỏng sự cố
   const navItems = [
     { id: 'rooms', label: 'Sơ đồ Phòng máy & Thiết bị', icon: Monitor },
-    { id: 'incidents', label: 'Theo dõi Tiến độ Sửa chữa', icon: Clock },
-    { id: 'dashboard', label: 'Tổng quan Phòng máy', icon: LayoutDashboard },
+    { id: 'incidents', label: 'Theo dõi Phiếu Báo Hỏng', icon: Clock },
   ];
 
   return (
@@ -40,7 +39,7 @@ export const HeaderClient = ({ currentTab, setCurrentTab, onOpenReportModal }) =
                   Lab<span className="text-sky-600">Repair</span>
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-sky-50 text-sky-700 rounded-full border border-sky-200/80">
-                  CỔNG NGƯỜI DÙNG (/)
+                  CỔNG NGƯỜI DÙNG
                 </span>
               </div>
               <p className="text-xs text-slate-400 font-medium hidden sm:block">
@@ -58,7 +57,7 @@ export const HeaderClient = ({ currentTab, setCurrentTab, onOpenReportModal }) =
                 <button
                   key={item.id}
                   onClick={() => setCurrentTab(item.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 ${
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 ${
                     isActive
                       ? 'bg-white text-sky-600 shadow-[0_2px_10px_rgba(0,0,0,0.06)] font-bold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
@@ -71,34 +70,26 @@ export const HeaderClient = ({ currentTab, setCurrentTab, onOpenReportModal }) =
             })}
           </nav>
 
-          {/* Right Action Tools: Report Button + Admin Link + User Profile */}
+          {/* Right Action Tools: Quick Report Button + User Profile (NO ADMIN BUTTON) */}
           <div className="flex items-center gap-2.5 sm:gap-3">
             {/* Quick Report Button */}
             <button
               onClick={onOpenReportModal}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold text-xs shadow-md shadow-rose-500/20 active:scale-95 transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold text-xs shadow-md shadow-rose-500/20 active:scale-95 transition-all"
             >
-              <Send size={14} className="stroke-[2.5]" />
-              <span>Gửi Báo Hỏng</span>
+              <Send size={15} className="stroke-[2.5]" />
+              <span>Gửi Báo Hỏng Máy</span>
             </button>
 
-            {/* Link to Admin Portal (/admin) - Protected with Auth Guard */}
-            <Link
-              to="/admin"
-              title="Khu vực Quản trị viên & Kỹ thuật viên (Yêu cầu đăng nhập)"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#181d26] hover:bg-[#232b38] text-white text-xs font-bold shadow-md shadow-black/10 active:scale-95 transition-all border border-[#2e3748]"
-            >
-              <ShieldCheck size={15} className="text-sky-400" />
-              <span className="hidden lg:inline">Quản Trị (/admin)</span>
-              <span className="lg:hidden">Admin</span>
-            </Link>
-
-            {/* User Profile */}
+            {/* User Profile (If logged in as student/user) */}
             {isAuthenticated ? (
-              <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-xl">
+              <div className="flex items-center gap-2 p-1.5 bg-slate-100 rounded-xl">
                 <div className="w-7 h-7 rounded-lg bg-sky-500 text-white font-bold text-xs flex items-center justify-center">
                   {user?.fullName?.charAt(0) || 'U'}
                 </div>
+                <span className="text-xs font-semibold text-slate-700 hidden sm:inline px-1">
+                  {user?.fullName}
+                </span>
                 <button
                   onClick={logout}
                   title="Đăng xuất"
@@ -120,7 +111,7 @@ export const HeaderClient = ({ currentTab, setCurrentTab, onOpenReportModal }) =
               <button
                 key={item.id}
                 onClick={() => setCurrentTab(item.id)}
-                className={`flex items-center gap-1.5 py-1 px-3 text-xs font-semibold rounded-lg ${
+                className={`flex items-center gap-1.5 py-1.5 px-3 text-xs font-semibold rounded-lg ${
                   isActive ? 'bg-sky-50 text-sky-600 font-bold' : 'text-slate-500'
                 }`}
               >

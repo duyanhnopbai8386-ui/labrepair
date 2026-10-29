@@ -21,7 +21,9 @@ export const AdminLoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const redirectTarget = location.state?.from?.pathname || '/admin';
+  const redirectTarget = (location.state?.from?.pathname && location.state.from.pathname !== '/login')
+    ? location.state.from.pathname
+    : '/admin';
 
   // 1-Click Quick Demo Login Helper
   const fillAndLogin = async (accId, accPass) => {

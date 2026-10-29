@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 import { HeaderClient } from './components/HeaderClient';
 import { GlassModal } from './components/GlassModal';
 
-// User Portal Pages (iOS Frosted Glass Style)
+// User Portal Pages (Chỉ có Sơ đồ phòng máy và Phiếu báo hỏng sự cố)
 import { ComputerRoomsPage } from './pages/ComputerRoomsPage';
 import { IncidentReportsPage } from './pages/IncidentReportsPage';
-import { DashboardPage } from './pages/DashboardPage';
 
 import {
   Send,
   AlertTriangle,
   CheckCircle2,
-  Lock,
-  ExternalLink
+  ShieldCheck
 } from 'lucide-react';
 
-function ClientPortalContent() {
+export default function AppClient() {
   const { user } = useAuth();
 
-  // Active Tab in User Portal
+  // Active Tab: Chỉ có 'rooms' hoặc 'incidents'
   const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem('labrepair_client_tab') || 'rooms';
+    const saved = localStorage.getItem('labrepair_client_tab');
+    return (saved === 'rooms' || saved === 'incidents') ? saved : 'rooms';
   });
 
   // Modal Báo Hỏng Nhanh
@@ -119,14 +119,14 @@ function ClientPortalContent() {
         </div>
       )}
 
-      {/* iOS Frosted Glass Header (Chỉ dành cho Cổng Người Dùng) */}
+      {/* iOS Frosted Glass Header (Chỉ chứa chức năng người dùng) */}
       <HeaderClient
         currentTab={activeTab}
         setCurrentTab={handleSelectTab}
         onOpenReportModal={() => setQuickReportModalOpen(true)}
       />
 
-      {/* Main Content Area */}
+      {/* Main Content Area: Chỉ có Sơ đồ phòng máy và Phiếu sự cố */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
         {activeTab === 'rooms' && (
           <ComputerRoomsPage onReportIssue={handleReportFromWorkstation} />
@@ -138,10 +138,6 @@ function ClientPortalContent() {
             prefillData={null}
           />
         )}
-
-        {activeTab === 'dashboard' && (
-          <DashboardPage onNavigate={handleSelectTab} />
-        )}
       </main>
 
       {/* Footer */}
@@ -150,13 +146,24 @@ function ClientPortalContent() {
           <div className="flex items-center gap-2">
             <span className="font-bold text-slate-700">LabRepair Client Portal</span>
             <span>•</span>
-            <span className="text-sky-600 font-semibold">Cổng Người Dùng (Cổng 5173)</span>
+            <span className="text-sky-600 font-semibold">Cổng Dành Cho Sinh Viên & Giảng Viên</span>
           </div>
-          <div className="flex items-center gap-1.5 font-medium">
-            <span>Sinh viên thực hiện:</span>
-            <strong className="text-sky-700">Lê Nguyễn Ngọc Duy Anh</strong>
-            <span>• MSSV: 2124110340</span>
-            <span>• Lớp CCQ2411E (HITC)</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 font-medium">
+              <span>Sinh viên:</span>
+              <strong className="text-sky-700">Lê Nguyễn Ngọc Duy Anh</strong>
+              <span>• MSSV: 2124110340</span>
+              <span>• Lớp CCQ2411E (HITC)</span>
+            </div>
+            <span>|</span>
+            <Link
+              to="/admin"
+              className="text-slate-400 hover:text-sky-600 flex items-center gap-1 transition-colors"
+              title="Đăng nhập dành cho Kỹ thuật viên & Quản trị viên"
+            >
+              <ShieldCheck size={14} />
+              <span>Dành cho KTV (/admin)</span>
+            </Link>
           </div>
         </div>
       </footer>
@@ -272,8 +279,4 @@ function ClientPortalContent() {
       </GlassModal>
     </div>
   );
-}
-
-export default function AppClient() {
-  return <ClientPortalContent />;
 }

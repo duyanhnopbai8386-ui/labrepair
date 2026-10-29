@@ -49,23 +49,34 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Chỉ khởi tạo nếu chưa có tài khoản nào
-        if (userRepository.count() > 0) {
-            return;
+        System.out.println("========== [DataInitializer] KIỂM TRA VÀ KHỞI TẠO TÀI KHOẢN MẪU ==========");
+
+        // 1. Luôn đảm bảo tài khoản Admin và Technician tồn tại với mật khẩu BCrypt chính xác
+        if (userRepository.findByEmail("admin@school.edu").isEmpty()) {
+            User admin = new User(null, "AD001", "admin@school.edu", passwordEncoder.encode("admin123"), "Quản trị viên Hệ thống", "0901234567", "Phòng CNTT", "ADMIN", "ACTIVE", LocalDateTime.now());
+            userRepository.save(admin);
+            System.out.println("-> Đã tạo tài khoản Admin: admin@school.edu / admin123");
         }
 
-        System.out.println("========== [DataInitializer] BẮT ĐẦU KHỞI TẠO DỮ LIỆU MẪU BAN ĐẦU ==========");
+        if (userRepository.findByEmail("tech@school.edu").isEmpty()) {
+            User tech = new User(null, "KT001", "tech@school.edu", passwordEncoder.encode("tech123"), "Kỹ thuật viên Nguyễn Văn Trực", "0912345678", "Tổ Kỹ thuật", "TECHNICIAN", "ACTIVE", LocalDateTime.now());
+            userRepository.save(tech);
+            System.out.println("-> Đã tạo tài khoản Technician: tech@school.edu / tech123");
+        }
 
-        // 1. Khởi tạo Users
-        User admin = new User(null, "AD001", "admin@school.edu", passwordEncoder.encode("admin123"), "Quản trị viên Hệ thống", "0901234567", "Phòng CNTT", "ADMIN", "ACTIVE", LocalDateTime.now());
-        User tech = new User(null, "KT001", "tech@school.edu", passwordEncoder.encode("tech123"), "Kỹ thuật viên Nguyễn Văn Trực", "0912345678", "Tổ Kỹ thuật", "TECHNICIAN", "ACTIVE", LocalDateTime.now());
-        User teacher = new User(null, "GV001", "teacher@school.edu", passwordEncoder.encode("teacher123"), "Thầy Nguyễn Minh Tuấn", "0923456789", "Khoa CNTT", "TEACHER", "ACTIVE", LocalDateTime.now());
-        User student = new User(null, "2124110340", "student@school.edu", passwordEncoder.encode("student123"), "Lê Nguyễn Ngọc Duy Anh", "0934567890", "Lớp CCQ2411E", "STUDENT", "ACTIVE", LocalDateTime.now());
+        if (userRepository.findByEmail("student@school.edu").isEmpty()) {
+            User student = new User(null, "2124110340", "student@school.edu", passwordEncoder.encode("student123"), "Lê Nguyễn Ngọc Duy Anh", "0934567890", "Lớp CCQ2411E", "STUDENT", "ACTIVE", LocalDateTime.now());
+            userRepository.save(student);
+            System.out.println("-> Đã tạo tài khoản Student: student@school.edu / student123");
+        }
 
-        admin = userRepository.save(admin);
-        tech = userRepository.save(tech);
-        teacher = userRepository.save(teacher);
-        student = userRepository.save(student);
+        // Cập nhật mật khẩu cho các tài khoản cũ bị NULL
+        userRepository.findAll().forEach(u -> {
+            if (u.getPassword() == null || u.getPassword().isBlank()) {
+                u.setPassword(passwordEncoder.encode(u.getRole().equalsIgnoreCase("ADMIN") ? "admin123" : "tech123"));
+                userRepository.save(u);
+            }
+        });
 
         // 2. Khởi tạo Danh mục thiết bị
         if (categoryRepository.findAll().isEmpty()) {
@@ -136,13 +147,19 @@ public class DataInitializer implements CommandLineRunner {
         if (incidentRepository.count() == 0) {
             Equipment brokenEq = equipmentRepository.findByEquipmentCode("PC-PM01-02").orElse(null);
             if (brokenEq != null) {
+                User student = userRepository.findByEmail("student@school.edu").orElse(null);
+                User tech = userRepository.findByEmail("tech@school.edu").orElse(null);
                 IncidentReport inc = new IncidentReport();
                 inc.setEquipmentId(brokenEq.getId());
                 inc.setEquipment(brokenEq);
-                inc.setReportedByUserId(student.getId());
-                inc.setReportedByUser(student);
-                inc.setAssignedTechnicianId(tech.getId());
-                inc.setAssignedTechnician(tech);
+                if (student != null) {
+                    inc.setReportedByUserId(student.getId());
+                    inc.setReportedByUser(student);
+                }
+                if (tech != null) {
+                    inc.setAssignedTechnicianId(tech.getId());
+                    inc.setAssignedTechnician(tech);
+                }
                 inc.setDescription("Máy tính 02 phòng máy 1 bật không lên nguồn, quạt nguồn không quay.");
                 inc.setPriority("CAO");
                 inc.setStatus("DA_TIEP_NHAN");

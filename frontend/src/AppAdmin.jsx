@@ -73,9 +73,9 @@ function SystemSettingsView() {
 export default function AppAdmin() {
   const navigate = useNavigate();
 
-  // Active Menu in Admin Portal
+  // Active Menu in Admin Portal (mặc định là 'dashboard')
   const [activeAdminMenu, setActiveAdminMenu] = useState(() => {
-    return localStorage.getItem('labrepair_admin_menu') || 'equipment';
+    return localStorage.getItem('labrepair_admin_menu') || 'dashboard';
   });
 
   const [notification, setNotification] = useState(null);
