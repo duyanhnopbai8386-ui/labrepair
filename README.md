@@ -19,7 +19,7 @@ Hệ thống **LabRepair** giải quyết bài toán quản lý tài sản, tran
 | **Tuần 1** | **Khảo sát yêu cầu, Thiết kế hệ thống & Khởi tạo dự án**<br>- Chốt đề tài, phân tích vai trò người dùng (Admin, Technician, Teacher, Student).<br>- Thiết kế mô hình CSDL (ERD) và quan hệ kế thừa (Equipment, Computer, Monitor, Projector).<br>- Khởi tạo Spring Boot 3, cấu hình Maven, kết nối MySQL và Hibernate ddl-auto. | - Sơ đồ ERD (`erd.mmd` / Mermaid)<br>- Domain Model UML kế thừa<br>- Project skeleton kết nối MySQL thành công | **100%** |  Hoàn thành |
 | **Tuần 2** | **Xây dựng thực thể cơ sở & CRUD các tài nguyên chính**<br>- Thiết kế Entity, Repository, Service, Controller cho `Equipment`, `ComputerRoom`, `EquipmentCategory`, `User`.<br>- Triển khai đầy đủ các phương thức GET, POST, PUT, DELETE.<br>- Cấu hình lưu trữ dữ liệu bền vững trên MySQL qua Spring Data JPA. | - API CRUD Phòng máy (`/api/rooms`)<br>- API CRUD Danh mục (`/api/categories`)<br>- API CRUD Thiết bị (`/api/equipments`)<br>- API CRUD Người dùng (`/api/users`) | **100%** |  Hoàn thành |
 | **Tuần 3** | **Xử lý nghiệp vụ Báo cáo sự cố & Bắt lỗi tập trung**<br>- Xây dựng module `IncidentReport`: Tạo phiếu báo hỏng, phân công kỹ thuật viên.<br>- Luồng chuyển đổi trạng thái: `MOI_TIEP_NHAN` -> `DANG_XU_LY` -> `HOAN_THANH` / `HUY`.<br>- Xây dựng bộ bắt lỗi tập trung `GlobalExceptionHandler` (chặn trùng mã, bắt NotFound, validate dữ liệu). | - API Báo cáo & điều phối sự cố (`/api/incidents`)<br>- Chuẩn hóa định dạng lỗi `ErrorResponse`<br>- Xử lý ngoại lệ `DuplicateResource`, `ResourceNotFound`, `BadRequest` | **100%** |  Hoàn thành |
-| **Tuần 4** | **Kiểm thử toàn diện, Hoàn thiện tài liệu & Báo cáo**<br>- Kiểm thử toàn bộ API bằng Postman (kiểm tra các ca thành công và biên lỗi).<br>- Xuất file Postman Collection lưu vào thư mục `docs/`.<br>- Chụp ảnh minh chứng kết quả chạy API, viết báo cáo tổng kết.<br>- Hoàn thiện tài liệu `README.md`, đẩy toàn bộ mã nguồn lên GitHub. | - Postman Collection & Test Case đầy đủ<br>- Báo cáo đồ án có kèm ảnh minh chứng<br>- GitHub repository chuẩn chỉ, sẵn sàng nộp | **90%** | 🔄 Đang hoàn thiện |
+| **Tuần 4** | **Kiểm thử toàn diện, Hoàn thiện tài liệu & Báo cáo**<br>- Kiểm thử toàn bộ API bằng Postman (kiểm tra các ca thành công và biên lỗi).<br>- Xuất file Postman Collection lưu vào thư mục `docs/`.<br>- Hoàn thiện Cổng Người Dùng (FE `/`) và Cổng Quản Trị Backend (CMS `/admin`) với Auth Guard.<br>- Hoàn thiện tài liệu `README.md`, đẩy toàn bộ mã nguồn lên GitHub. | - Postman Collection & Test Case đầy đủ<br>- Hệ thống Web hoàn chỉnh 2 phân hệ (/ và /admin)<br>- GitHub repository chuẩn chỉ, sẵn sàng nộp | **100%** |  Hoàn thành |
 
 ---
 
@@ -223,26 +223,42 @@ labrepair/
 
 ---
 
-## 🎨 7. Giao diện Người Dùng Hiện Đại (Web Frontend SPA)
+## 🎨 7. Kiến Trúc Phân Hệ Web Frontend (Tách Biệt / và /admin)
 
-Giao diện hệ thống được thiết kế theo phong cách **iOS Frosted Glass (Kính mờ Apple Glassmorphism)** kết hợp tông màu **Trắng Tinh Khiết & Xanh Nước Biển (Aqua Blue)**:
+Giao diện được xây dựng bằng **React 19 + Vite 6 + Tailwind CSS**, phân tách rõ ràng 2 phân hệ độc lập qua React Router DOM trên cổng `http://localhost:5173`:
 
-- **Công nghệ nền tảng:** React 19 + Vite 6 + Tailwind CSS + Lucide Icons.
-- **Phong cách thị giác (Visual Language):**
-  - Hiệu ứng kính mờ chiều sâu (`backdrop-blur-2xl`, viền phát sáng `border-white/60`, đổ bóng mềm `shadow-sky-500/10`).
-  - Nút bấm và thẻ bo góc lớn mềm mại đặc trưng iOS (`rounded-2xl`, `rounded-3xl`, viền bóng mượt).
-  - Badge trạng thái thông minh phát sáng: Đèn xanh (Hoạt động), Đèn vàng/đỏ (Chờ sửa/Hỏng), Đèn xanh dương (Đang bảo trì).
-- **Các phân hệ màn hình chính:**
-  1. **Trung tâm Điều hành (Dashboard):** 4 thẻ widget thống kê tổng quan (Máy hoạt động, Sự cố đang xử lý, Chi phí sửa chữa lũy kế, Cảnh báo vật tư chạm ngưỡng), biểu đồ phân bổ kinh phí theo phòng máy và danh sách sự cố khẩn cấp.
-  2. **Phòng máy & Sơ đồ Máy trạm (Computer Rooms):** Chuyển đổi linh hoạt giữa PM01, PM02, PM03; xem sơ đồ trực quan từng vị trí máy tính; click xem cấu hình phần cứng chi tiết và nút 1-click báo hỏng.
-  3. **Phiếu Báo Hỏng & Quản Lý Sửa Chữa (Incidents):** Luồng tạo phiếu báo hỏng; Kỹ thuật viên tiếp nhận; modal sửa chữa chọn linh kiện từ kho tự động tính chi phí, xuất kho và chuyển máy về trạng thái hoạt động.
-  4. **Kho Linh Kiện & Vật Tư (Spare Parts):** Quản lý tồn kho linh kiện, cảnh báo đỏ khi chạm mức tồn tối thiểu, tính năng nhập thêm hàng nhanh chóng.
-  5. **Đăng nhập & Trải nghiệm Nhanh (1-Click Demo):** 4 nút bấm đăng nhập tức thì cho Quản trị viên (Admin), Kỹ thuật viên (Technician), Giảng viên (Teacher) và Sinh viên Duy Anh (CCQ2411E).
+### 🌐 Phân Hệ 1: Cổng Người Dùng (Client Portal - URL: `/`)
+- **Đối tượng:** Sinh viên & Giảng viên trường HITC.
+- **Phong cách:** iOS Frosted Glass (Trắng Tinh Khiết & Aqua Blue).
+- **Chức năng:**
+  - Xem trực quan sơ đồ phòng máy thực hành (PM01, PM02, PM03).
+  - Click vào từng máy trạm để xem cấu hình phần cứng (CPU, RAM, VGA, Màn hình).
+  - Nút **"Gửi Báo Hỏng Máy"** trực tiếp gửi thông tin sự cố đến Kỹ thuật viên.
+  - Theo dõi tiến độ xử lý phiếu báo hỏng (Mới tạo -> Đang sửa -> Đã sửa xong).
+- **Bảo mật:** Không hiển thị bất kỳ tính năng quản trị, giá tiền linh kiện hay chức năng xóa sửa phòng máy.
 
-### 🚀 Hướng Dẫn Khởi Chạy Frontend:
-```bash
-cd frontend
-npm install
-npm run dev
-# Ứng dụng chạy tại: http://localhost:5173
-```
+### 🛡️ Phân Hệ 2: Cổng Quản Trị Hệ Thống (Back-Office CMS - URL: `/admin`)
+- **Đối tượng:** Ban Quản Trị (Admin) & Kỹ Thuật Viên (Technician).
+- **Phong cách:** Dark Enterprise EzyPlatform Sidebar.
+- **Bảo mật (Auth Guard - `ProtectedRoute`):** Người dùng chưa đăng nhập hoặc có vai trò Sinh viên (`STUDENT`) khi vào `/admin` sẽ bị **chặn 100%** và chuyển hướng về `/login`.
+- **Tài khoản đăng nhập quản trị:**
+  - 👑 **Quản trị viên (Admin):** `admin@school.edu` / `admin123`
+  - 🔧 **Kỹ thuật viên (Technician):** `tech@school.edu` / `tech123`
+- **Chức năng:**
+  1. **Dashboard:** Thống kê tổng số thiết bị, tỷ lệ máy hoạt động, số sự cố đang xử lý và tổng chi phí lũy kế.
+  2. **Quản lý Thiết bị (Equipments):** CRUD thông tin máy tính, số serial, cấu hình, phòng máy.
+  3. **Quản lý Phòng máy (Rooms):** CRUD phòng thực hành, sức chứa, vị trí tòa nhà.
+  4. **Phiếu Sự cố & Sửa chữa (Incidents):** Tiếp nhận sự cố từ sinh viên, điều phối kỹ thuật viên, nghiệm thu sửa chữa.
+  5. **Kho Linh kiện & Vật tư (Spare Parts):** Quản lý định mức tồn kho an toàn, cảnh báo sắp hết hàng và **tự động trừ kho** khi thay linh kiện vào máy.
+  6. **Quản lý Người dùng (Users):** Danh sách tài khoản, phân quyền RBAC (`ADMIN`, `TECHNICIAN`, `TEACHER`, `STUDENT`).
+  7. **Cài đặt Hệ thống (Settings):** Cấu hình RESTful API Spring Boot (`8080`) & MySQL Database (`3306`).
+
+---
+
+## 🚀 8. Hướng Dẫn Khởi Chạy 1-Click Cực Nhanh
+
+Trong thư mục gốc `D:\labrepair`, bạn chỉ cần chạy:
+- **`CHAY_TAT_CA.bat`**: Tự động bật đồng thời cả Backend Spring Boot (cổng `8080`) và Frontend React (cổng `5173`).
+- Hoặc mở riêng:
+  - `CHAY_BACKEND.bat` $\rightarrow$ REST API Server tại `http://localhost:8080/api`
+  - `CHAY_FRONTEND.bat` $\rightarrow$ Web App tại `http://localhost:5173`
