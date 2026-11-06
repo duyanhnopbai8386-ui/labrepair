@@ -115,52 +115,55 @@ public class DataInitializer implements CommandLineRunner {
             categoryRepository.save(new EquipmentCategory(null, "PROJECTOR", "Máy chiếu", "Máy chiếu phòng thực hành"));
         }
 
-        // 3. Khởi tạo Phòng máy
-        if (roomRepository.findAll().isEmpty()) {
-            roomRepository.save(new ComputerRoom(null, "PM01", "Phòng máy 1 (Lập trình Java)", "Tòa H, Tầng 3, Phòng H301", 45));
-            roomRepository.save(new ComputerRoom(null, "PM02", "Phòng máy 2 (Mạng & Hệ thống)", "Tòa A, Tầng 2, Phòng A204", 40));
+        // 3. Khởi tạo Phòng máy thực hành (Khu A, Khu B, Khu D theo đúng sơ đồ HITC)
+        List<ComputerRoom> initialRooms = List.of(
+            new ComputerRoom(null, "A101", "Phòng máy thực hành A101 (Lập trình Cơ sở)", "Khu A Tầng 1 - HITC", 40),
+            new ComputerRoom(null, "A204", "Phòng máy thực hành A204 (Lập trình Java & Spring Boot)", "Khu A Tầng 2 - HITC", 40),
+            new ComputerRoom(null, "A302", "Phòng máy thực hành A302 (Web & Mobile App)", "Khu A Tầng 3 - HITC", 35),
+            new ComputerRoom(null, "A404", "Phòng máy thực hành A404 (Trí tuệ nhân tạo & Data Science)", "Khu A Tầng 4 - HITC", 30),
+            new ComputerRoom(null, "B102", "Phòng máy thực hành B102 (Mạng máy tính Cisco Lab)", "Khu B Tầng 1 - HITC", 35),
+            new ComputerRoom(null, "B201", "Phòng máy thực hành B201 (An toàn thông tin & Quản trị Linux)", "Khu B Tầng 2 - HITC", 30),
+            new ComputerRoom(null, "D-06", "Phòng máy thực hành D-06 (Đồ họa & Thiết kế 3D)", "Khu D Tầng Trệt - HITC", 35),
+            new ComputerRoom(null, "D5-12", "Phòng máy thực hành D5-12 (IoT & Lập trình vi điều khiển)", "Khu D Tầng 5 - HITC", 30),
+            new ComputerRoom(null, "D5-36", "Phòng máy thực hành D5-36 (Cloud Computing & DevOps)", "Khu D Tầng 5 - HITC", 30)
+        );
+
+        for (ComputerRoom r : initialRooms) {
+            if (!roomRepository.existsByCode(r.getRoomCode())) {
+                roomRepository.save(r);
+                System.out.println("-> [DataInitializer] Đã tạo phòng máy: " + r.getRoomCode() + " - " + r.getRoomName());
+            }
         }
 
-        // 4. Khởi tạo Thiết bị mẫu
-        if (equipmentRepository.count() == 0) {
-            Equipment eq1 = new Equipment();
-            eq1.setEquipmentCode("PC-PM01-01");
-            eq1.setName("Dell OptiPlex 7090 - Máy 01");
-            eq1.setType("PC");
-            eq1.setRoomCode("PM01");
-            eq1.setSerialNumber("SN-DELL-7090-001");
-            eq1.setManufacturer("Dell");
-            eq1.setModel("OptiPlex 7090");
-            eq1.setPurchaseDate(LocalDate.of(2025, 9, 1));
-            eq1.setWarrantyExpiry(LocalDate.of(2028, 9, 1));
-            eq1.setStatus("HOAT_DONG");
-            equipmentRepository.save(eq1);
+        // 4. Khởi tạo Thiết bị máy trạm cho từng phòng
+        for (ComputerRoom r : roomRepository.findAll()) {
+            if (equipmentRepository.countByRoomCode(r.getRoomCode()) == 0) {
+                int count = 15;
+                for (int i = 1; i <= count; i++) {
+                    String cleanCode = r.getRoomCode().replace("-", "");
+                    String numStr = String.format("%02d", i);
+                    String eqCode = "PC-" + cleanCode + "-" + numStr;
+                    String status = (i == 5) ? "CHO_SUA" : (i == 9) ? "DANG_SUA" : "HOAT_DONG";
 
-            Equipment eq2 = new Equipment();
-            eq2.setEquipmentCode("PC-PM01-02");
-            eq2.setName("Dell OptiPlex 7090 - Máy 02");
-            eq2.setType("PC");
-            eq2.setRoomCode("PM01");
-            eq2.setSerialNumber("SN-DELL-7090-002");
-            eq2.setManufacturer("Dell");
-            eq2.setModel("OptiPlex 7090");
-            eq2.setPurchaseDate(LocalDate.of(2025, 9, 1));
-            eq2.setWarrantyExpiry(LocalDate.of(2028, 9, 1));
-            eq2.setStatus("CHO_SUA");
-            eq2 = equipmentRepository.save(eq2);
-
-            Equipment eq3 = new Equipment();
-            eq3.setEquipmentCode("PRJ-PM01");
-            eq3.setName("Máy chiếu Epson EB-X06");
-            eq3.setType("PROJECTOR");
-            eq3.setRoomCode("PM01");
-            eq3.setSerialNumber("SN-EPSON-X06");
-            eq3.setManufacturer("Epson");
-            eq3.setModel("EB-X06");
-            eq3.setPurchaseDate(LocalDate.of(2025, 8, 15));
-            eq3.setWarrantyExpiry(LocalDate.of(2027, 8, 15));
-            eq3.setStatus("HOAT_DONG");
-            equipmentRepository.save(eq3);
+                    Equipment eq = new Equipment();
+                    eq.setEquipmentCode(eqCode);
+                    eq.setName("Máy trạm " + eqCode);
+                    eq.setType("COMPUTER");
+                    eq.setRoomCode(r.getRoomCode());
+                    eq.setRoom(r);
+                    eq.setSerialNumber("SN-HITC-" + cleanCode + "-" + numStr + "98");
+                    eq.setManufacturer("Dell");
+                    eq.setModel(r.getRoomCode().startsWith("D") ? "Dell Precision 3640 Tower" : "Dell OptiPlex 7090 MFF");
+                    eq.setPurchaseDate(LocalDate.of(2024, 9, 1));
+                    eq.setWarrantyExpiry(LocalDate.of(2027, 9, 1));
+                    eq.setStatus(status);
+                    eq.setConditionNote(r.getRoomCode().startsWith("D")
+                        ? "Core i9-10900K / 32GB RAM / SSD 1TB / RTX 3060 12GB"
+                        : "Intel Core i7-10700 / 16GB DDR4 / SSD 512GB / Dell 24\" FHD");
+                    equipmentRepository.save(eq);
+                }
+                System.out.println("-> [DataInitializer] Đã khởi tạo 15 máy trạm cho phòng: " + r.getRoomCode());
+            }
         }
 
         // 5. Khởi tạo Kho linh kiện thay thế

@@ -147,26 +147,28 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
     loadData();
   }, []);
 
-  useEffect(() => {
-    // When changing room, if we don't have real backend data, reload mock for room
-    if (!equipments.some(e => e.roomId === selectedRoomId)) {
-      setEquipments(generateMockEquipmentsForRoom(selectedRoomId));
-    }
-  }, [selectedRoomId]);
-
   const currentRoom = rooms.find(r => r.id === selectedRoomId) || rooms[0];
 
+  const isRoomMatch = (e) => {
+    if (!currentRoom) return false;
+    if (e.roomId && e.roomId === currentRoom.id) return true;
+    if (e.room && e.room.id === currentRoom.id) return true;
+    if (e.roomCode && currentRoom.roomCode && e.roomCode.trim().toLowerCase() === currentRoom.roomCode.trim().toLowerCase()) return true;
+    return false;
+  };
+
   const currentRoomEquipments = equipments.filter(e => {
-    const matchRoom = (e.roomId === selectedRoomId || (e.room && e.room.id === selectedRoomId));
+    const matchRoom = isRoomMatch(e);
+    const nameStr = e.equipmentName || e.name || '';
     const matchSearch = e.equipmentCode?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        e.equipmentName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        nameStr.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         e.serialNumber?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchStatus = statusFilter === 'ALL' || e.status === statusFilter;
     return matchRoom && matchSearch && matchStatus;
   });
 
-  const activeCount = equipments.filter(e => (e.roomId === selectedRoomId || (e.room && e.room.id === selectedRoomId)) && e.status === 'HOAT_DONG').length;
-  const brokenCount = equipments.filter(e => (e.roomId === selectedRoomId || (e.room && e.room.id === selectedRoomId)) && (e.status === 'CHO_SUA' || e.status === 'DANG_SUA' || e.status === 'HONG')).length;
+  const activeCount = equipments.filter(e => isRoomMatch(e) && e.status === 'HOAT_DONG').length;
+  const brokenCount = equipments.filter(e => isRoomMatch(e) && (e.status === 'CHO_SUA' || e.status === 'DANG_SUA' || e.status === 'HONG')).length;
 
   const handleOpenDetail = (pc) => {
     setSelectedPc(pc);
