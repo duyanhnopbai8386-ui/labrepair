@@ -74,6 +74,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/incidents/**").hasAnyRole("ADMIN", "TECHNICIAN")
                         .requestMatchers("/api/repair-histories/**").hasAnyRole("ADMIN", "TECHNICIAN")
                         .requestMatchers(HttpMethod.GET, "/api/spare-parts/**").hasAnyRole("ADMIN", "TECHNICIAN")
+                        .requestMatchers(HttpMethod.POST, "/api/spare-parts/*/deduct").hasAnyRole("ADMIN", "TECHNICIAN")
 
                         // 5. Quản trị hệ thống, kho linh kiện, dashboard báo cáo, quản lý users: Chỉ ADMIN
                         .requestMatchers("/api/dashboard/**").hasRole("ADMIN")

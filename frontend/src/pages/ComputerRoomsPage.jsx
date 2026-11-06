@@ -28,36 +28,102 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
   const [rooms, setRooms] = useState([
     {
       id: 1,
-      roomCode: 'PM01',
-      roomName: 'Phòng Máy 01 (Thực hành Web)',
-      location: 'Tầng 3 - Tòa Nhà A (HITC)',
+      roomCode: 'A101',
+      roomName: 'Phòng máy thực hành A101 (Lập trình Cơ sở)',
+      location: 'Khu A Tầng 1 - HITC',
       capacity: 40,
-      description: 'Phục vụ các môn Công nghệ phần mềm, Lập trình React, Spring Boot, Web nâng cao',
+      description: 'Phục vụ các môn Nhập môn lập trình C/C++, Cấu trúc dữ liệu, OOP căn bản',
       status: 'HOAT_DONG',
-      managerName: 'Thầy Trần Quang Minh',
+      managerName: 'ThS. Nguyễn Minh Tuấn',
       contactPhone: '0908.123.456',
     },
     {
-      id: 2,
-      roomCode: 'PM02',
-      roomName: 'Phòng Máy 02 (Mạng Máy Tính & An Ninh)',
-      location: 'Tầng 3 - Tòa Nhà B (HITC)',
+      id: 3,
+      roomCode: 'A204',
+      roomName: 'Phòng máy thực hành A204 (Lập trình Java & Spring Boot)',
+      location: 'Khu A Tầng 2 - HITC',
+      capacity: 40,
+      description: 'Phục vụ các môn Lập trình Java, Kiến trúc phần mềm, Spring Boot, React nâng cao',
+      status: 'HOAT_DONG',
+      managerName: 'ThS. Nguyễn Minh Tuấn',
+      contactPhone: '0908.123.456',
+    },
+    {
+      id: 4,
+      roomCode: 'A302',
+      roomName: 'Phòng máy thực hành A302 (Web & Mobile App)',
+      location: 'Khu A Tầng 3 - HITC',
       capacity: 35,
-      description: 'Phục vụ các môn Mạng máy tính, Cisco, Quản trị hệ thống Linux, An toàn thông tin',
+      description: 'Phục vụ các môn Công nghệ Web, Node.js, Lập trình ứng dụng di động Flutter/Android',
       status: 'HOAT_DONG',
       managerName: 'Cô Lê Thị Kim Yến',
       contactPhone: '0912.888.999',
     },
     {
-      id: 3,
-      roomCode: 'PM03',
-      roomName: 'Phòng Máy 03 (Đồ Họa & Đa Phương Tiện)',
-      location: 'Tầng 4 - Tòa Nhà A (HITC)',
+      id: 5,
+      roomCode: 'A404',
+      roomName: 'Phòng máy thực hành A404 (Trí tuệ nhân tạo & Data Science)',
+      location: 'Khu A Tầng 4 - HITC',
       capacity: 30,
-      description: 'Cấu hình mạnh trang bị GPU rời cho Photoshop, Blender, AI Rendering',
+      description: 'Phục vụ nghiên cứu Trí tuệ nhân tạo, Machine Learning, Python Data Analysis',
+      status: 'HOAT_DONG',
+      managerName: 'ThS. Trần Quang Minh',
+      contactPhone: '0933.555.777',
+    },
+    {
+      id: 6,
+      roomCode: 'B102',
+      roomName: 'Phòng máy thực hành B102 (Mạng máy tính Cisco Lab)',
+      location: 'Khu B Tầng 1 - HITC',
+      capacity: 35,
+      description: 'Phục vụ môn Mạng máy tính căn bản, Quản trị hệ thống mạng Cisco CCNA',
       status: 'HOAT_DONG',
       managerName: 'Thầy Nguyễn Văn Hoàng',
-      contactPhone: '0933.555.777',
+      contactPhone: '0912.333.444',
+    },
+    {
+      id: 7,
+      roomCode: 'B201',
+      roomName: 'Phòng máy thực hành B201 (An toàn thông tin & Quản trị Linux)',
+      location: 'Khu B Tầng 2 - HITC',
+      capacity: 30,
+      description: 'Thực hành Bảo mật mạng, Quản trị máy chủ Linux RedHat/Ubuntu, An toàn hệ thống',
+      status: 'HOAT_DONG',
+      managerName: 'Thầy Nguyễn Văn Hoàng',
+      contactPhone: '0912.333.444',
+    },
+    {
+      id: 8,
+      roomCode: 'D-06',
+      roomName: 'Phòng máy thực hành D-06 (Đồ họa & Thiết kế 3D)',
+      location: 'Khu D Tầng Trệt - HITC',
+      capacity: 35,
+      description: 'Trang bị GPU rời cấu hình mạnh phục vụ Photoshop, Illustrator, Blender 3D, Premiere Pro',
+      status: 'HOAT_DONG',
+      managerName: 'KTV Nguyễn Văn Trực',
+      contactPhone: '0912.345.678',
+    },
+    {
+      id: 9,
+      roomCode: 'D5-12',
+      roomName: 'Phòng máy thực hành D5-12 (IoT & Lập trình vi điều khiển)',
+      location: 'Khu D Tầng 5 - HITC',
+      capacity: 30,
+      description: 'Phòng Lab vi điều khiển STM32, ESP32, Arduino, Raspberry Pi kết nối IoT',
+      status: 'HOAT_DONG',
+      managerName: 'KTV Nguyễn Văn Trực',
+      contactPhone: '0912.345.678',
+    },
+    {
+      id: 10,
+      roomCode: 'D5-36',
+      roomName: 'Phòng máy thực hành D5-36 (Cloud Computing & DevOps)',
+      location: 'Khu D Tầng 5 - HITC',
+      capacity: 30,
+      description: 'Phòng thực hành Điện toán đám mây, Docker, Kubernetes, CI/CD Pipeline',
+      status: 'HOAT_DONG',
+      managerName: 'KTV Nguyễn Văn Trực',
+      contactPhone: '0912.345.678',
     }
   ]);
 
@@ -77,38 +143,40 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
     equipmentCode: '',
     equipmentName: '',
     serialNumber: '',
-    model: 'Dell OptiPlex 7080',
-    specification: 'Intel Core i7-10700 / 16GB DDR4 / SSD NVMe 512GB / Monitor Dell 24"',
+    model: 'Dell OptiPlex 7090',
+    specification: 'Intel Core i7-10700 / 16GB DDR4 / SSD NVMe 512GB / Dell IPS 24" FHD',
     status: 'HOAT_DONG',
     categoryId: 1,
   });
 
   // Mock generator cho máy phòng nếu API chưa có đủ
-  const generateMockEquipmentsForRoom = (roomId) => {
-    const prefix = roomId === 1 ? 'PC-PM01' : roomId === 2 ? 'PC-PM02' : 'PC-PM03';
-    const total = roomId === 1 ? 25 : roomId === 2 ? 20 : 15;
+  const generateMockEquipmentsForRoom = (roomObj) => {
+    const code = roomObj?.roomCode || 'A101';
+    const cleanCode = code.replace('-', '');
+    const isGraphic = code.startsWith('D');
+    const total = 15;
     const items = [];
 
     for (let i = 1; i <= total; i++) {
       const numStr = i < 10 ? `0${i}` : `${i}`;
       let status = 'HOAT_DONG';
-      if (roomId === 1 && (i === 8 || i === 15)) status = 'CHO_SUA';
-      if (roomId === 1 && i === 12) status = 'DANG_SUA';
-      if (roomId === 2 && i === 3) status = 'CHO_SUA';
+      if (i === 5) status = 'CHO_SUA';
+      if (i === 9) status = 'DANG_SUA';
 
       items.push({
-        id: roomId * 100 + i,
-        roomId: roomId,
-        equipmentCode: `${prefix}-${numStr}`,
-        equipmentName: `Máy trạm ${prefix}-${numStr}`,
-        serialNumber: `SN-DL-${roomId}${numStr}928`,
-        model: roomId === 3 ? 'Dell Precision 3640' : 'Dell OptiPlex 7080 MFF',
-        specification: roomId === 3
+        id: (roomObj?.id || 1) * 100 + i,
+        roomId: roomObj?.id || 1,
+        roomCode: code,
+        equipmentCode: `PC-${cleanCode}-${numStr}`,
+        equipmentName: `Máy trạm PC-${cleanCode}-${numStr}`,
+        serialNumber: `SN-HITC-${cleanCode}-${numStr}98`,
+        model: isGraphic ? 'Dell Precision 3640 Tower' : 'Dell OptiPlex 7090 MFF',
+        specification: isGraphic
           ? 'Core i9-10900K / 32GB RAM / SSD 1TB / RTX 3060 12GB'
-          : 'Core i7-10700 / 16GB DDR4 / SSD NVMe 512GB / IPS 24" FHD',
+          : 'Intel Core i7-10700 / 16GB DDR4 / SSD 512GB / Dell 24" FHD',
         status: status,
-        installationDate: '2023-09-01',
-        warrantyExpiryDate: '2026-09-01',
+        installationDate: '2024-09-01',
+        warrantyExpiryDate: '2027-09-01',
         categoryName: 'Máy tính để bàn',
       });
     }
@@ -117,16 +185,18 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
 
   const loadData = async () => {
     setLoading(true);
+    let loadedRooms = rooms;
     try {
       const roomRes = await roomApi.getAll();
       if (roomRes.data && roomRes.data.length > 0) {
+        loadedRooms = roomRes.data;
         setRooms(roomRes.data);
         if (!roomRes.data.some(r => r.id === selectedRoomId)) {
           setSelectedRoomId(roomRes.data[0].id);
         }
       }
     } catch (err) {
-      console.warn('Load rooms fallback to mock');
+      console.warn('Load rooms fallback to state default');
     }
 
     try {
@@ -134,10 +204,12 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
       if (eqRes.data && eqRes.data.length > 0) {
         setEquipments(eqRes.data);
       } else {
-        setEquipments(generateMockEquipmentsForRoom(selectedRoomId));
+        const cur = loadedRooms.find(r => r.id === selectedRoomId) || loadedRooms[0];
+        setEquipments(generateMockEquipmentsForRoom(cur));
       }
     } catch (err) {
-      setEquipments(generateMockEquipmentsForRoom(selectedRoomId));
+      const cur = loadedRooms.find(r => r.id === selectedRoomId) || loadedRooms[0];
+      setEquipments(generateMockEquipmentsForRoom(cur));
     } finally {
       setLoading(false);
     }
@@ -157,18 +229,23 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
     return false;
   };
 
-  const currentRoomEquipments = equipments.filter(e => {
+  // Nếu trong danh sách chưa có máy nào khớp phòng hiện tại, tự động sinh máy cho phòng đó
+  const currentEquipmentsList = equipments.some(e => isRoomMatch(e))
+    ? equipments
+    : [...equipments, ...generateMockEquipmentsForRoom(currentRoom)];
+
+  const currentRoomEquipments = currentEquipmentsList.filter(e => {
     const matchRoom = isRoomMatch(e);
     const nameStr = e.equipmentName || e.name || '';
-    const matchSearch = e.equipmentCode?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchSearch = (e.equipmentCode || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                         nameStr.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        e.serialNumber?.toLowerCase().includes(searchQuery.toLowerCase());
+                        (e.serialNumber || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchStatus = statusFilter === 'ALL' || e.status === statusFilter;
     return matchRoom && matchSearch && matchStatus;
   });
 
-  const activeCount = equipments.filter(e => isRoomMatch(e) && e.status === 'HOAT_DONG').length;
-  const brokenCount = equipments.filter(e => isRoomMatch(e) && (e.status === 'CHO_SUA' || e.status === 'DANG_SUA' || e.status === 'HONG')).length;
+  const activeCount = currentEquipmentsList.filter(e => isRoomMatch(e) && e.status === 'HOAT_DONG').length;
+  const brokenCount = currentEquipmentsList.filter(e => isRoomMatch(e) && (e.status === 'CHO_SUA' || e.status === 'DANG_SUA' || e.status === 'HONG')).length;
 
   const handleOpenDetail = (pc) => {
     setSelectedPc(pc);
@@ -191,6 +268,7 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
         ...newPcForm,
         id: Date.now(),
         roomId: selectedRoomId,
+        roomCode: currentRoom.roomCode,
         categoryName: 'Máy tính để bàn',
         installationDate: new Date().toISOString().split('T')[0],
       };
@@ -219,7 +297,7 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
                 <Monitor size={17} className={isSelected ? 'text-white' : 'text-sky-600'} />
                 <span>{room.roomCode}</span>
                 <span className={`text-xs px-2 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'}`}>
-                  {room.capacity} máy
+                  {room.capacity || 35} máy
                 </span>
               </button>
             );
@@ -243,23 +321,23 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 rounded-xl bg-sky-500/10 text-sky-600 text-xs font-bold border border-sky-500/20">
-                {currentRoom.roomCode}
+                {currentRoom?.roomCode}
               </span>
               <h2 className="text-xl sm:text-2xl font-bold text-slate-800">
-                {currentRoom.roomName}
+                {currentRoom?.roomName}
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              {currentRoom.description}
+              {currentRoom?.description}
             </p>
             <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-slate-500 font-medium">
               <span className="flex items-center gap-1.5">
                 <MapPin size={14} className="text-sky-500" />
-                {currentRoom.location}
+                {currentRoom?.location}
               </span>
               <span className="flex items-center gap-1.5">
                 <User size={14} className="text-sky-500" />
-                Quản lý: <strong className="text-slate-700">{currentRoom.managerName}</strong>
+                Quản lý: <strong className="text-slate-700">{currentRoom?.managerName || 'ThS. Nguyễn Minh Tuấn'}</strong>
               </span>
             </div>
           </div>
@@ -393,7 +471,7 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
                 {/* Bottom Status Badge */}
                 <div className="mt-3 pt-2.5 border-t border-slate-100/80 flex items-center justify-between">
                   <span className="text-[10px] font-semibold text-slate-500">
-                    {isBroken ? '⚠️ Sự cố' : isRepairing ? '🛠 Đang sửa' : '✓ Hoạt động'}
+                    {isBroken ? '⚠️ Sự cố' : isRepairing ? '🔧 Đang sửa' : '✓ Hoạt động'}
                   </span>
                   <span className="text-[10px] text-sky-600 font-bold group-hover:underline">
                     Chi tiết &rarr;
@@ -420,7 +498,7 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
                   <Monitor size={24} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-800 text-base">{selectedPc.equipmentName}</h4>
+                  <h4 className="font-bold text-slate-800 text-base">{selectedPc.equipmentName || selectedPc.name}</h4>
                   <p className="text-xs text-slate-400 font-mono">Serial: {selectedPc.serialNumber || 'N/A'}</p>
                 </div>
               </div>
@@ -435,19 +513,19 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
               <div className="p-4 rounded-2xl bg-white/70 border border-slate-200/70 space-y-2 text-xs">
                 <div className="flex items-center justify-between py-1 border-b border-slate-100">
                   <span className="text-slate-500 flex items-center gap-1.5"><Cpu size={14} /> Dòng máy (Model):</span>
-                  <strong className="text-slate-800">{selectedPc.model}</strong>
+                  <strong className="text-slate-800">{selectedPc.model || 'Dell OptiPlex'}</strong>
                 </div>
                 <div className="flex items-center justify-between py-1 border-b border-slate-100">
                   <span className="text-slate-500 flex items-center gap-1.5"><HardDrive size={14} /> Thông số chi tiết:</span>
-                  <span className="text-slate-700 font-medium text-right max-w-xs">{selectedPc.specification}</span>
+                  <span className="text-slate-700 font-medium text-right max-w-xs">{selectedPc.specification || selectedPc.conditionNote || 'Intel Core i7-10700 / 16GB RAM / SSD 512GB'}</span>
                 </div>
                 <div className="flex items-center justify-between py-1 border-b border-slate-100">
                   <span className="text-slate-500 flex items-center gap-1.5"><Calendar size={14} /> Ngày đưa vào sử dụng:</span>
-                  <span className="text-slate-700">{selectedPc.installationDate || '2023-09-01'}</span>
+                  <span className="text-slate-700">{selectedPc.installationDate || selectedPc.purchaseDate || '2024-09-01'}</span>
                 </div>
                 <div className="flex items-center justify-between py-1">
                   <span className="text-slate-500 flex items-center gap-1.5"><Activity size={14} /> Hạn bảo hành nhà sản xuất:</span>
-                  <span className="text-emerald-600 font-semibold">{selectedPc.warrantyExpiryDate || '2026-09-01'}</span>
+                  <span className="text-emerald-600 font-semibold">{selectedPc.warrantyExpiryDate || selectedPc.warrantyExpiry || '2027-09-01'}</span>
                 </div>
               </div>
             </div>
@@ -467,10 +545,10 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
                   setDetailModalOpen(false);
                   onReportIssue({
                     roomId: selectedRoomId,
-                    roomName: currentRoom.roomName,
+                    roomName: currentRoom?.roomName,
                     equipmentId: selectedPc.id,
                     equipmentCode: selectedPc.equipmentCode,
-                    equipmentName: selectedPc.equipmentName
+                    equipmentName: selectedPc.equipmentName || selectedPc.name
                   });
                 }}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-semibold text-xs shadow-md shadow-rose-500/20 hover:shadow-lg transition-all active:scale-95"
@@ -487,7 +565,7 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
       <GlassModal
         isOpen={addPcModalOpen}
         onClose={() => setAddPcModalOpen(false)}
-        title={`Thêm máy tính vào ${currentRoom.roomCode}`}
+        title={`Thêm máy tính vào ${currentRoom?.roomCode}`}
         maxWidth="max-w-lg"
       >
         <form onSubmit={handleCreateNewPc} className="space-y-4">
@@ -496,7 +574,7 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
             <input
               type="text"
               required
-              placeholder="VD: PC-PM01-26"
+              placeholder="VD: PC-A101-16"
               value={newPcForm.equipmentCode}
               onChange={(e) => setNewPcForm({ ...newPcForm, equipmentCode: e.target.value })}
               className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
@@ -508,7 +586,7 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
             <input
               type="text"
               required
-              placeholder="VD: Máy trạm PC-PM01-26"
+              placeholder="VD: Máy trạm PC-A101-16"
               value={newPcForm.equipmentName}
               onChange={(e) => setNewPcForm({ ...newPcForm, equipmentName: e.target.value })}
               className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
@@ -519,7 +597,7 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
             <label className="block text-xs font-semibold text-slate-600 mb-1">Số Serial máy</label>
             <input
               type="text"
-              placeholder="VD: SN-DL-7080-9921"
+              placeholder="VD: SN-HITC-A101-1698"
               value={newPcForm.serialNumber}
               onChange={(e) => setNewPcForm({ ...newPcForm, serialNumber: e.target.value })}
               className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
@@ -542,13 +620,13 @@ export const ComputerRoomsPage = ({ onReportIssue }) => {
               onClick={() => setAddPcModalOpen(false)}
               className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs"
             >
-              Hủy bỏ
+              Hủy
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-md shadow-sky-600/20 active:scale-95 transition-all"
+              className="px-6 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-md shadow-sky-600/20 active:scale-95 transition-all"
             >
-              Thêm thiết bị
+              Lưu máy mới
             </button>
           </div>
         </form>

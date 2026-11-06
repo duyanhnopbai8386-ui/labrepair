@@ -16,42 +16,120 @@ const STORAGE_KEY = 'labrepair_rooms_v2';
 const DEFAULT_ROOMS = [
   {
     id: 1,
-    roomCode: 'PM01',
-    roomName: 'Phòng Máy 01 (Thực hành Web & App)',
-    location: 'Tầng 3 - Tòa Nhà A (HITC)',
+    roomCode: 'A101',
+    roomName: 'Phòng máy thực hành A101 (Lập trình Cơ sở)',
+    location: 'Khu A Tầng 1 - HITC',
     capacity: 40,
-    activeComputers: 37,
-    brokenComputers: 3,
-    managerName: 'Thầy Trần Quang Minh',
+    activeComputers: 38,
+    brokenComputers: 2,
+    managerName: 'ThS. Nguyễn Minh Tuấn',
     contactPhone: '0908.123.456',
     status: 'HOAT_DONG',
-    createdAt: '2024-06-15 09:00:00'
-  },
-  {
-    id: 2,
-    roomCode: 'PM02',
-    roomName: 'Phòng Máy 02 (Mạng Máy Tính & An Ninh)',
-    location: 'Tầng 3 - Tòa Nhà B (HITC)',
-    capacity: 35,
-    activeComputers: 34,
-    brokenComputers: 1,
-    managerName: 'Cô Lê Thị Kim Yến',
-    contactPhone: '0912.888.999',
-    status: 'HOAT_DONG',
-    createdAt: '2024-06-15 09:30:00'
+    createdAt: '2026-11-06 08:00:00'
   },
   {
     id: 3,
-    roomCode: 'PM03',
-    roomName: 'Phòng Máy 03 (Đồ Họa & Đa Phương Tiện)',
-    location: 'Tầng 4 - Tòa Nhà A (HITC)',
+    roomCode: 'A204',
+    roomName: 'Phòng máy thực hành A204 (Lập trình Java & Spring Boot)',
+    location: 'Khu A Tầng 2 - HITC',
+    capacity: 40,
+    activeComputers: 39,
+    brokenComputers: 1,
+    managerName: 'ThS. Nguyễn Minh Tuấn',
+    contactPhone: '0908.123.456',
+    status: 'HOAT_DONG',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 4,
+    roomCode: 'A302',
+    roomName: 'Phòng máy thực hành A302 (Web & Mobile App)',
+    location: 'Khu A Tầng 3 - HITC',
+    capacity: 35,
+    activeComputers: 35,
+    brokenComputers: 0,
+    managerName: 'Cô Lê Thị Kim Yến',
+    contactPhone: '0912.888.999',
+    status: 'HOAT_DONG',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 5,
+    roomCode: 'A404',
+    roomName: 'Phòng máy thực hành A404 (Trí tuệ nhân tạo & Data Science)',
+    location: 'Khu A Tầng 4 - HITC',
+    capacity: 30,
+    activeComputers: 30,
+    brokenComputers: 0,
+    managerName: 'ThS. Trần Quang Minh',
+    contactPhone: '0933.555.777',
+    status: 'HOAT_DONG',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 6,
+    roomCode: 'B102',
+    roomName: 'Phòng máy thực hành B102 (Mạng máy tính Cisco Lab)',
+    location: 'Khu B Tầng 1 - HITC',
+    capacity: 35,
+    activeComputers: 34,
+    brokenComputers: 1,
+    managerName: 'Thầy Nguyễn Văn Hoàng',
+    contactPhone: '0912.333.444',
+    status: 'HOAT_DONG',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 7,
+    roomCode: 'B201',
+    roomName: 'Phòng máy thực hành B201 (An toàn thông tin & Quản trị Linux)',
+    location: 'Khu B Tầng 2 - HITC',
     capacity: 30,
     activeComputers: 30,
     brokenComputers: 0,
     managerName: 'Thầy Nguyễn Văn Hoàng',
-    contactPhone: '0933.555.777',
+    contactPhone: '0912.333.444',
     status: 'HOAT_DONG',
-    createdAt: '2024-06-20 14:15:00'
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 8,
+    roomCode: 'D-06',
+    roomName: 'Phòng máy thực hành D-06 (Đồ họa & Thiết kế 3D)',
+    location: 'Khu D Tầng Trệt - HITC',
+    capacity: 35,
+    activeComputers: 34,
+    brokenComputers: 1,
+    managerName: 'KTV Nguyễn Văn Trực',
+    contactPhone: '0912.345.678',
+    status: 'HOAT_DONG',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 9,
+    roomCode: 'D5-12',
+    roomName: 'Phòng máy thực hành D5-12 (IoT & Lập trình vi điều khiển)',
+    location: 'Khu D Tầng 5 - HITC',
+    capacity: 30,
+    activeComputers: 30,
+    brokenComputers: 0,
+    managerName: 'KTV Nguyễn Văn Trực',
+    contactPhone: '0912.345.678',
+    status: 'HOAT_DONG',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 10,
+    roomCode: 'D5-36',
+    roomName: 'Phòng máy thực hành D5-36 (Cloud Computing & DevOps)',
+    location: 'Khu D Tầng 5 - HITC',
+    capacity: 30,
+    activeComputers: 30,
+    brokenComputers: 0,
+    managerName: 'KTV Nguyễn Văn Trực',
+    contactPhone: '0912.345.678',
+    status: 'HOAT_DONG',
+    createdAt: '2026-11-06 08:00:00'
   }
 ];
 
@@ -62,10 +140,13 @@ export const RoomManagement = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map((item, idx) => ({
-            ...item,
-            id: Number(item.id) > 100000 ? idx + 1 : Number(item.id) || idx + 1
-          }));
+          const hasMojibake = parsed.some(r => (r.roomName || '').includes('?') || (r.roomName || '').includes('Ã'));
+          if (!hasMojibake) {
+            return parsed.map((item, idx) => ({
+              ...item,
+              id: Number(item.id) || idx + 1
+            }));
+          }
         }
       }
     } catch (e) {}
@@ -97,7 +178,20 @@ export const RoomManagement = () => {
       try {
         const res = await roomApi.getAll();
         if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-          saveRooms(res.data);
+          const mapped = res.data.map(r => ({
+            id: r.id,
+            roomCode: r.roomCode,
+            roomName: r.roomName,
+            location: r.location,
+            capacity: r.capacity || 40,
+            activeComputers: Math.max(0, (r.capacity || 40) - 1),
+            brokenComputers: 1,
+            managerName: r.manager?.fullName || 'ThS. Nguyễn Minh Tuấn',
+            contactPhone: '0908.123.456',
+            status: r.isActive !== false ? 'HOAT_DONG' : 'TAM_DUNG',
+            createdAt: (r.createdAt || '').slice(0, 19).replace('T', ' ') || '2026-11-06'
+          }));
+          saveRooms(mapped);
         }
       } catch (err) {}
     };
@@ -120,14 +214,13 @@ export const RoomManagement = () => {
 
   const handleOpenAdd = () => {
     setEditingRoom(null);
-    const nextId = getNextCleanId();
     setFormData({
-      roomCode: `PM0${nextId}`,
-      roomName: `Phòng Máy 0${nextId}`,
-      location: 'Tầng 4 - Tòa Nhà B (HITC)',
+      roomCode: '',
+      roomName: '',
+      location: 'Khu A Tầng 1 - HITC',
       capacity: 35,
-      managerName: 'Giảng viên Phụ trách',
-      contactPhone: '0909.111.222',
+      managerName: 'ThS. Nguyễn Minh Tuấn',
+      contactPhone: '0908.123.456',
       status: 'HOAT_DONG'
     });
     setModalOpen(true);
@@ -135,14 +228,24 @@ export const RoomManagement = () => {
 
   const handleOpenEdit = (room) => {
     setEditingRoom(room);
-    setFormData({ ...room });
+    setFormData({
+      roomCode: room.roomCode,
+      roomName: room.roomName,
+      location: room.location,
+      capacity: room.capacity,
+      managerName: room.managerName,
+      contactPhone: room.contactPhone,
+      status: room.status
+    });
     setModalOpen(true);
   };
 
-  const handleSave = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingRoom) {
-      const updated = rooms.map((r) => (r.id === editingRoom.id ? { ...r, ...formData } : r));
+      const updated = rooms.map((r) =>
+        r.id === editingRoom.id ? { ...r, ...formData } : r
+      );
       saveRooms(updated);
 
       try {
@@ -151,7 +254,7 @@ export const RoomManagement = () => {
     } else {
       const cleanId = getNextCleanId();
       const newRoom = {
-        id: cleanId, // ID chuẩn: 4, 5, 6...
+        id: cleanId,
         ...formData,
         activeComputers: formData.capacity,
         brokenComputers: 0,
@@ -205,7 +308,7 @@ export const RoomManagement = () => {
             placeholder="Tìm theo mã phòng, tên, vị trí..."
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
-            className="bg-[#272e3d] text-slate-200 text-xs px-3 py-2 rounded-lg border border-[#384256] focus:outline-none focus:ring-1 focus:ring-sky-500 w-64"
+            className="bg-[#272e3d] text-slate-200 text-xs px-3 py-2 rounded-lg border border-[#384256] focus:outline-none focus:ring-1 focus:ring-sky-500 w-72"
           />
         </div>
         <div className="text-xs text-slate-400">
@@ -250,30 +353,28 @@ export const RoomManagement = () => {
                     {room.capacity} máy
                   </td>
                   <td className="py-3.5 px-3 text-center">
-                    <span className="text-emerald-400 font-bold">{room.activeComputers || room.capacity} tốt</span>
-                    {room.brokenComputers > 0 && (
-                      <span className="text-rose-400 font-bold ml-1.5">({room.brokenComputers} hỏng)</span>
-                    )}
+                    <span className="text-emerald-400 font-bold">{room.activeComputers || room.capacity}</span>
+                    <span className="text-slate-500"> / </span>
+                    <span className="text-rose-400 font-bold">{room.brokenComputers || 0}</span>
                   </td>
-                  <td className="py-3.5 px-3 text-slate-300">
-                    <div>{room.managerName}</div>
-                    <div className="text-[11px] text-slate-500 font-mono">{room.contactPhone}</div>
+                  <td className="py-3.5 px-3 text-slate-300 font-medium">
+                    {room.managerName}
                   </td>
                   <td className="py-3.5 px-3 font-mono text-slate-400 text-[11px]">
                     {room.createdAt}
                   </td>
                   <td className="py-3.5 px-4 text-center">
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex items-center justify-center gap-1.5">
                       <button
                         onClick={() => handleOpenEdit(room)}
-                        title="Sửa phòng máy"
+                        title="Chỉnh sửa"
                         className="p-1.5 rounded bg-sky-500/10 hover:bg-sky-500/20 text-sky-400"
                       >
                         <Edit2 size={14} />
                       </button>
                       <button
                         onClick={() => handleDelete(room.id)}
-                        title="Xóa phòng máy"
+                        title="Xóa phòng"
                         className="p-1.5 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400"
                       >
                         <Trash2 size={14} />
@@ -287,39 +388,41 @@ export const RoomManagement = () => {
         </div>
 
         <div className="p-3.5 bg-[#151922] border-t border-[#272e3d] flex items-center justify-between text-xs text-slate-400">
-          <div>{filtered.length} of {rooms.length} rooms</div>
+          <div>{filtered.length} of {rooms.length} phòng máy</div>
           <div className="flex items-center gap-1.5">
-            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300"><ChevronLeft size={14} /> Prev</button>
-            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300">Next <ChevronRight size={14} /></button>
+            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300 flex items-center gap-1"><ChevronLeft size={14} /> Prev</button>
+            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300 flex items-center gap-1">Next <ChevronRight size={14} /></button>
           </div>
         </div>
       </div>
 
-      {/* Modal Add / Edit */}
+      {/* Modal Add / Edit Room */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-[#181d26] border border-[#2e3748] rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-slate-200 text-xs">
             <h3 className="text-lg font-bold text-white border-b border-[#272e3d] pb-3">
-              {editingRoom ? `Cập nhật Phòng Máy [${editingRoom.roomCode}]` : 'Thêm Phòng Máy Mới Vào CSDL'}
+              {editingRoom ? `Chỉnh Sửa Phòng Máy [${editingRoom.roomCode}]` : 'Thêm Phòng Máy Mới'}
             </h3>
 
-            <form onSubmit={handleSave} className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-3.5">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Mã phòng (Code) *</label>
+                  <label className="block text-slate-300 font-semibold mb-1">Mã phòng *</label>
                   <input
                     type="text"
                     required
+                    placeholder="VD: A101, B102, D-06..."
                     value={formData.roomCode}
                     onChange={(e) => setFormData({ ...formData, roomCode: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white font-mono"
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white font-mono uppercase"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Sức chứa (Máy tính) *</label>
+                  <label className="block text-slate-300 font-semibold mb-1">Sức chứa (Số máy)</label>
                   <input
                     type="number"
-                    required
+                    min="10"
+                    max="80"
                     value={formData.capacity}
                     onChange={(e) => setFormData({ ...formData, capacity: Number(e.target.value) })}
                     className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
@@ -328,11 +431,11 @@ export const RoomManagement = () => {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Tên phòng máy đầy đủ *</label>
+                <label className="block text-slate-300 font-semibold mb-1">Tên phòng máy *</label>
                 <input
                   type="text"
                   required
-                  placeholder="VD: Phòng Máy 04 (Thực hành AI)..."
+                  placeholder="VD: Phòng máy thực hành A101 (Lập trình Cơ sở)"
                   value={formData.roomName}
                   onChange={(e) => setFormData({ ...formData, roomName: e.target.value })}
                   className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
@@ -340,11 +443,11 @@ export const RoomManagement = () => {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Vị trí / Tòa nhà *</label>
+                <label className="block text-slate-300 font-semibold mb-1">Vị trí phòng (Tòa nhà / Tầng) *</label>
                 <input
                   type="text"
                   required
-                  placeholder="VD: Tầng 4 - Tòa Nhà A (HITC)..."
+                  placeholder="VD: Khu A Tầng 1 - HITC"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                   className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
@@ -353,7 +456,7 @@ export const RoomManagement = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Người quản lý</label>
+                  <label className="block text-slate-300 font-semibold mb-1">Giảng viên / KTV quản lý</label>
                   <input
                     type="text"
                     value={formData.managerName}
@@ -364,7 +467,7 @@ export const RoomManagement = () => {
                 <div>
                   <label className="block text-slate-300 font-semibold mb-1">Số điện thoại liên hệ</label>
                   <input
-                    type="text"
+                    type="tel"
                     value={formData.contactPhone}
                     onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
                     className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
@@ -378,13 +481,13 @@ export const RoomManagement = () => {
                   onClick={() => setModalOpen(false)}
                   className="px-4 py-2 rounded-lg bg-[#272e3d] text-slate-300 font-semibold"
                 >
-                  Hủy bỏ
+                  Hủy
                 </button>
                 <button
                   type="submit"
                   className="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold"
                 >
-                  Lưu Phòng Máy
+                  {editingRoom ? 'Lưu Thay Đổi' : 'Tạo Phòng'}
                 </button>
               </div>
             </form>

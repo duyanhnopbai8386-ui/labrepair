@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { incidentApi } from '../../api/incidentApi';
+import { sparePartApi } from '../../api/sparePartApi';
 import {
   Plus,
   Search,
@@ -9,68 +10,123 @@ import {
   UserCheck,
   Package,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  CheckCircle2
 } from 'lucide-react';
 
 const STORAGE_KEY = 'labrepair_incidents_v2';
+const SPARE_PARTS_STORAGE_KEY = 'labrepair_spare_parts_v2';
+const EQUIPMENTS_STORAGE_KEY = 'labrepair_equipments_v2';
 
 const DEFAULT_INCIDENTS = [
   {
     id: 1,
     ticketCode: 'SC-2024-001',
-    equipmentCode: 'PC-PM01-08',
-    equipmentName: 'Máy trạm Dell OptiPlex 7080',
-    roomName: 'Phòng Máy 01',
-    description: 'Lỗi dump xanh (BSOD WHEA_UNCORRECTABLE), nghi hỏng RAM',
-    reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV)',
-    technicianName: 'Nguyễn Văn Kỹ Thuật (KTV Trưởng)',
-    priority: 'KHAN_CAP',
-    status: 'DANG_SUA',
-    totalCost: 450000,
-    createdAt: '2024-07-23 08:30:15'
+    equipmentCode: 'PC-A101-01',
+    equipmentName: 'Máy trạm PC-A101-01',
+    roomName: 'Phòng A101 (Lập trình Cơ sở)',
+    description: 'Máy tính không lên nguồn và màn hình đen',
+    reporterName: 'Lê Nguyễn Ngọc Duy Anh',
+    technicianName: 'Kỹ thuật viên Nguyễn Văn Trực',
+    priority: 'CAO',
+    status: 'DA_TIEP_NHAN',
+    totalCost: 0,
+    createdAt: '2026-11-06 08:15:00'
   },
   {
     id: 2,
     ticketCode: 'SC-2024-002',
-    equipmentCode: 'PC-PM02-03',
-    equipmentName: 'Máy trạm HP ProDesk 400',
-    roomName: 'Phòng Máy 02',
-    description: 'Bật nguồn không lên đèn, quạt nguồn CPU không quay',
-    reporterName: 'Thầy Nguyễn Văn Hoàng (GV)',
-    technicianName: 'Lê Kỹ Thuật Viên',
+    equipmentCode: 'PC-A101-05',
+    equipmentName: 'Máy trạm PC-A101-05',
+    roomName: 'Phòng A101 (Lập trình Cơ sở)',
+    description: 'Máy bật nguồn không lên, đèn nguồn nhấp nháy màu cam liên tục.',
+    reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
+    technicianName: null,
     priority: 'CAO',
-    status: 'DA_TIEP_NHAN',
+    status: 'MOI_TAO',
     totalCost: 0,
-    createdAt: '2024-07-22 14:15:20'
+    createdAt: '2026-11-06 08:30:15'
   },
   {
     id: 3,
     ticketCode: 'SC-2024-003',
-    equipmentCode: 'PC-PM01-12',
-    equipmentName: 'Máy trạm Dell OptiPlex 7080',
-    roomName: 'Phòng Máy 01',
-    description: 'Liệt phím Enter và Space, chuột quang bị giật con trỏ',
-    reporterName: 'Sinh viên CCQ2411E',
-    technicianName: null,
+    equipmentCode: 'PC-A101-12',
+    equipmentName: 'Máy trạm PC-A101-12',
+    roomName: 'Phòng A101 (Lập trình Cơ sở)',
+    description: 'Bàn phím bị kẹt cứng phím Enter và liệt hàng phím số F1-F12.',
+    reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
+    technicianName: 'Kỹ thuật viên Nguyễn Văn Trực',
     priority: 'TRUNG_BINH',
-    status: 'MOI_TAO',
+    status: 'DA_TIEP_NHAN',
     totalCost: 0,
-    createdAt: '2024-07-22 10:45:00'
+    createdAt: '2026-11-06 09:15:20'
   },
   {
     id: 4,
     ticketCode: 'SC-2024-004',
-    equipmentCode: 'PC-PM01-15',
-    equipmentName: 'Máy trạm Dell OptiPlex 7080',
-    roomName: 'Phòng Máy 01',
-    description: 'Ổ cứng SSD báo lỗi Disk Read Error, đã thay thế SSD mới',
-    reporterName: 'Cô Lê Thị Kim Yến',
-    technicianName: 'Nguyễn Văn Kỹ Thuật',
+    equipmentCode: 'PC-A101-18',
+    equipmentName: 'Máy trạm PC-A101-18',
+    roomName: 'Phòng A101 (Lập trình Cơ sở)',
+    description: 'Máy đang sử dụng thì xuất hiện màn hình xanh chết chóc (BSOD) tự khởi động lại.',
+    reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
+    technicianName: null,
     priority: 'CAO',
+    status: 'MOI_TAO',
+    totalCost: 0,
+    createdAt: '2026-11-06 10:45:00'
+  },
+  {
+    id: 5,
+    ticketCode: 'SC-2024-005',
+    equipmentCode: 'PC-A204-03',
+    equipmentName: 'Máy trạm PC-A204-03',
+    roomName: 'Phòng A204 (Java & Spring Boot)',
+    description: 'Chuột máy tính chập chờn, cổng USB phía trước thùng máy bị lỏng.',
+    reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
+    technicianName: null,
+    priority: 'TRUNG_BINH',
+    status: 'MOI_TAO',
+    totalCost: 0,
+    createdAt: '2026-11-06 11:30:00'
+  },
+  {
+    id: 6,
+    ticketCode: 'SC-2024-006',
+    equipmentCode: 'PC-B102-05',
+    equipmentName: 'Máy trạm PC-B102-05',
+    roomName: 'Phòng B102 (Mạng Cisco Lab)',
+    description: 'Mất kết nối mạng Internet, kiểm tra dây cáp mạng LAN thấy gãy lẫy tiếp xúc.',
+    reporterName: 'Thầy Nguyễn Văn Hoàng',
+    technicianName: 'Kỹ thuật viên Nguyễn Văn Trực',
+    priority: 'TRUNG_BINH',
     status: 'HOAN_THANH',
-    totalCost: 850000,
-    createdAt: '2024-07-20 09:00:00'
+    totalCost: 120000,
+    createdAt: '2026-11-05 14:00:00'
+  },
+  {
+    id: 7,
+    ticketCode: 'SC-2024-007',
+    equipmentCode: 'PC-D06-05',
+    equipmentName: 'Máy trạm PC-D06-05',
+    roomName: 'Phòng D-06 (Đồ họa 3D)',
+    description: 'Màn hình bị sọc ngang mờ và chớp tắt khi mở các phần mềm đồ họa nặng.',
+    reporterName: 'KTV Nguyễn Văn Trực',
+    technicianName: 'Kỹ thuật viên Nguyễn Văn Trực',
+    priority: 'CAO',
+    status: 'DA_TIEP_NHAN',
+    totalCost: 0,
+    createdAt: '2026-11-05 15:30:00'
   }
+];
+
+const DEFAULT_PARTS_LIST = [
+  { id: 1, partCode: 'RAM-DDR4-8G', partName: 'RAM Kingston Fury 8GB DDR4 3200MHz', unitPrice: 450000, stockQuantity: 15, unit: 'Thanh' },
+  { id: 2, partCode: 'SSD-256G', partName: 'SSD Kingston A400 256GB SATA3', unitPrice: 550000, stockQuantity: 12, unit: 'Ổ' },
+  { id: 3, partCode: 'PSU-500W', partName: 'Nguồn máy tính Cooler Master 500W', unitPrice: 680000, stockQuantity: 8, unit: 'Cái' },
+  { id: 4, partCode: 'MOUSE-LOGI', partName: 'Chuột có dây Logitech B100', unitPrice: 95000, stockQuantity: 25, unit: 'Con' },
+  { id: 5, partCode: 'KB-DAREU', partName: 'Bàn phím DareU LK145 USB', unitPrice: 180000, stockQuantity: 2, unit: 'Cái' },
+  { id: 7, partCode: 'RAM-DDR4-16G', partName: 'RAM Corsair Vengeance 16GB DDR4 3200MHz', unitPrice: 850000, stockQuantity: 8, unit: 'Thanh' },
+  { id: 9, partCode: 'SSD-NVME-512G', partName: 'SSD Samsung 980 512GB NVMe M.2', unitPrice: 980000, stockQuantity: 10, unit: 'Ổ' },
 ];
 
 export const IncidentManagement = () => {
@@ -80,27 +136,41 @@ export const IncidentManagement = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map((item, idx) => ({
-            ...item,
-            id: Number(item.id) > 100000 ? idx + 1 : Number(item.id) || idx + 1
-          }));
+          const hasMojibake = parsed.some(i => (i.description || '').includes('?') || (i.description || '').includes('Ã'));
+          if (!hasMojibake) {
+            return parsed.map((item, idx) => ({
+              ...item,
+              id: Number(item.id) || idx + 1
+            }));
+          }
         }
       }
     } catch (e) {}
     return DEFAULT_INCIDENTS;
   });
 
+  const [availableParts, setAvailableParts] = useState(() => {
+    try {
+      const saved = localStorage.getItem(SPARE_PARTS_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return DEFAULT_PARTS_LIST;
+  });
+
   const [searchKeyword, setSearchKeyword] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [toastMessage, setToastMessage] = useState(null);
 
   // Repair Modal
   const [repairModalOpen, setRepairModalOpen] = useState(false);
   const [targetIncident, setTargetIncident] = useState(null);
   const [repairForm, setRepairForm] = useState({
     actionType: 'THAY_THE',
-    sparePartName: 'RAM Kingston 8GB DDR4 Bus 3200',
+    selectedPartId: '1',
     quantity: 1,
-    unitPrice: 450000,
     note: '',
     markCompleted: true
   });
@@ -108,9 +178,9 @@ export const IncidentManagement = () => {
   // Create Modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [createForm, setCreateForm] = useState({
-    equipmentCode: 'PC-PM01-05',
-    equipmentName: 'Máy trạm Dell OptiPlex 7080',
-    roomName: 'Phòng Máy 01',
+    equipmentCode: 'PC-A101-05',
+    equipmentName: 'Máy trạm PC-A101-05',
+    roomName: 'Phòng A101 (Lập trình Cơ sở)',
     description: '',
     priority: 'TRUNG_BINH',
     reporterName: 'Lê Nguyễn Ngọc Duy Anh'
@@ -123,6 +193,38 @@ export const IncidentManagement = () => {
     } catch (err) {}
   };
 
+  // Tải danh sách linh kiện từ API hoặc LocalStorage
+  const loadParts = async () => {
+    try {
+      const res = await sparePartApi.getAll();
+      if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+        setAvailableParts(res.data);
+        return;
+      }
+    } catch (err) {}
+
+    try {
+      const saved = localStorage.getItem(SPARE_PARTS_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setAvailableParts(parsed);
+        }
+      }
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    loadParts();
+
+    const handlePartsUpdated = () => {
+      loadParts();
+    };
+
+    window.addEventListener('spare-parts-updated', handlePartsUpdated);
+    return () => window.removeEventListener('spare-parts-updated', handlePartsUpdated);
+  }, []);
+
   useEffect(() => {
     const fetchApi = async () => {
       try {
@@ -130,7 +232,21 @@ export const IncidentManagement = () => {
         if (res.data) {
           const list = res.data.content || res.data;
           if (Array.isArray(list) && list.length > 0) {
-            saveIncidents(list);
+            const mapped = list.map(item => ({
+              id: item.id,
+              ticketCode: item.ticketCode || `SC-2024-${item.id < 10 ? '00' + item.id : '0' + item.id}`,
+              equipmentCode: item.equipmentCode || item.equipment?.equipmentCode || 'PC-A101-01',
+              equipmentName: item.equipmentName || item.equipment?.name || 'Máy trạm',
+              roomName: item.roomName || item.equipment?.roomName || 'Phòng A101',
+              description: item.description,
+              reporterName: item.reporterName || item.reportedByUser?.fullName || 'Lê Nguyễn Ngọc Duy Anh',
+              technicianName: item.technicianName || item.assignedTechnician?.fullName || null,
+              priority: item.priority || 'CAO',
+              status: item.status || 'MOI_TAO',
+              totalCost: item.actualCost || item.costEstimate || 0,
+              createdAt: (item.createdAt || '').slice(0, 19).replace('T', ' ')
+            }));
+            saveIncidents(mapped);
           }
         }
       } catch (err) {}
@@ -180,7 +296,7 @@ export const IncidentManagement = () => {
   const handleAssignMe = async (inc) => {
     const updated = incidents.map((i) =>
       i.id === inc.id
-        ? { ...i, status: 'DA_TIEP_NHAN', technicianName: 'Nguyễn Văn Kỹ Thuật (KTV Trưởng)' }
+        ? { ...i, status: 'DA_TIEP_NHAN', technicianName: 'Kỹ thuật viên Nguyễn Văn Trực' }
         : i
     );
     saveIncidents(updated);
@@ -192,50 +308,117 @@ export const IncidentManagement = () => {
 
   const handleOpenRepair = (inc) => {
     setTargetIncident(inc);
+    const defaultPartId = availableParts[0]?.id ? String(availableParts[0].id) : '1';
     setRepairForm({
       actionType: 'THAY_THE',
-      sparePartName: 'RAM Kingston 8GB DDR4 Bus 3200',
+      selectedPartId: defaultPartId,
       quantity: 1,
-      unitPrice: 450000,
       note: 'Đã thay thế linh kiện lỗi và kiểm tra thiết bị hoạt động ổn định',
       markCompleted: true
     });
     setRepairModalOpen(true);
   };
 
+  // XỬ LÝ SỬA CHỮA VÀ TRỪ LINH KIỆN TRONG KHO (CẢ LOCALSTORAGE VÀ DATABASE)
   const handleSaveRepair = async (e) => {
     e.preventDefault();
     if (!targetIncident) return;
-    const addedCost = repairForm.unitPrice * repairForm.quantity;
-    const updated = incidents.map((i) =>
-      i.id === targetIncident.id
-        ? {
-            ...i,
-            status: repairForm.markCompleted ? 'HOAN_THANH' : 'DANG_SUA',
-            totalCost: (i.totalCost || 0) + addedCost
-          }
-        : i
-    );
-    saveIncidents(updated);
 
+    const chosenPart = availableParts.find(p => p.id === Number(repairForm.selectedPartId)) || availableParts[0];
+    const qtyUsed = Math.max(1, Number(repairForm.quantity) || 1);
+    const addedCost = chosenPart ? (Number(chosenPart.unitPrice) || 0) * qtyUsed : 0;
+    const isCompleted = repairForm.markCompleted;
+    const nextStatus = isCompleted ? 'HOAN_THANH' : 'DANG_SUA';
+
+    // 1. TRỪ SỐ LƯỢNG LINH KIỆN TRONG LOCALSTORAGE
+    if (repairForm.actionType === 'THAY_THE' && chosenPart) {
+      try {
+        const savedParts = localStorage.getItem(SPARE_PARTS_STORAGE_KEY);
+        let partList = savedParts ? JSON.parse(savedParts) : availableParts;
+        const updatedParts = partList.map(p => {
+          if (p.id === chosenPart.id || p.partCode === chosenPart.partCode) {
+            const currentStock = Number(p.stockQuantity) || 0;
+            const newStock = Math.max(0, currentStock - qtyUsed);
+            return { ...p, stockQuantity: newStock };
+          }
+          return p;
+        });
+        localStorage.setItem(SPARE_PARTS_STORAGE_KEY, JSON.stringify(updatedParts));
+        setAvailableParts(updatedParts);
+
+        // Phát event thông báo để trang Kho linh kiện tự động reload
+        window.dispatchEvent(new Event('spare-parts-updated'));
+      } catch (err) {
+        console.error('Lỗi khi trừ kho trong localStorage:', err);
+      }
+
+      // 2. TRỪ SỐ LƯỢNG QUA API BACKEND NẾU CÓ
+      try {
+        await sparePartApi.deduct(chosenPart.id, qtyUsed);
+      } catch (err) {
+        console.warn('API deductStock failed, fallback to local deduction');
+      }
+    }
+
+    // 3. GHI NHẬN LỊCH SỬ SỬA CHỮA & CẬP NHẬT TRẠNG THÁI PHIẾU
     try {
       await incidentApi.recordHistory({
         incidentId: targetIncident.id,
-        actionType: repairForm.actionType,
-        note: repairForm.note,
-        durationMinutes: 30
+        actionType: isCompleted ? 'HOAN_THANH' : repairForm.actionType,
+        note: repairForm.note || (chosenPart ? `Đã thay thế ${chosenPart.partName} và kiểm tra hoàn tất.` : 'Đã sửa chữa thiết bị.'),
+        durationMinutes: 30,
+        markCompleted: isCompleted,
+        partsUsed: (repairForm.actionType === 'THAY_THE' && chosenPart) ? [{
+          sparePartId: chosenPart.id,
+          quantityUsed: qtyUsed
+        }] : []
       });
-    } catch (err) {}
+
+      if (isCompleted) {
+        await incidentApi.updateStatus(targetIncident.id, 'HOAN_THANH');
+      }
+    } catch (err) {
+      console.warn('API recordHistory failed, optimistic state used');
+    }
+
+    // 4. CẬP NHẬT TRẠNG THÁI PHIẾU TRONG DANH SÁCH STATE & LOCALSTORAGE
+    const updatedIncidents = incidents.map((i) =>
+      i.id === targetIncident.id
+        ? {
+            ...i,
+            status: nextStatus,
+            totalCost: (Number(i.totalCost) || 0) + addedCost,
+            technicianName: i.technicianName || 'Kỹ thuật viên Nguyễn Văn Trực'
+          }
+        : i
+    );
+    saveIncidents(updatedIncidents);
+
+    // 5. NẾU HOÀN THÀNH, PHỤC HỒI MÁY TÍNH VỀ TRẠNG THÁI 'HOAT_DONG' TRONG LOCALSTORAGE
+    if (isCompleted && targetIncident.equipmentCode) {
+      try {
+        const savedEq = localStorage.getItem(EQUIPMENTS_STORAGE_KEY);
+        if (savedEq) {
+          const eqList = JSON.parse(savedEq);
+          const updatedEq = eqList.map(eq =>
+            eq.equipmentCode === targetIncident.equipmentCode ? { ...eq, status: 'HOAT_DONG' } : eq
+          );
+          localStorage.setItem(EQUIPMENTS_STORAGE_KEY, JSON.stringify(updatedEq));
+        }
+      } catch (err) {}
+    }
 
     setRepairModalOpen(false);
+    setToastMessage(`Đã xuất kho thành công: Trừ ${qtyUsed}x ${chosenPart?.partName || 'Linh kiện'}! Phiếu ${targetIncident.ticketCode} đã chuyển sang ${isCompleted ? 'Hoàn thành' : 'Đang sửa'}.`);
+    setTimeout(() => setToastMessage(null), 5000);
   };
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     const cleanId = getNextCleanId();
     const newInc = {
-      id: cleanId, // ID chuẩn: 5, 6, 7...
-      ticketCode: `SC-2024-00${cleanId}`,
+      id: cleanId,
+      ticketCode: `SC-2024-${cleanId < 10 ? '00' + cleanId : cleanId < 100 ? '0' + cleanId : cleanId}`,
       ...createForm,
       technicianName: null,
       status: 'MOI_TAO',
@@ -253,7 +436,7 @@ export const IncidentManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Xóa phiếu sự cố này?')) {
+    if (confirm('Bạn có chắc chắn muốn xóa phiếu sự cố này?')) {
       const updated = incidents.filter((i) => i.id !== id);
       saveIncidents(updated);
 
@@ -265,6 +448,14 @@ export const IncidentManagement = () => {
 
   return (
     <div className="space-y-5 animate-fade-in text-slate-200">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 animate-bounce bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-bold border border-emerald-400">
+          <CheckCircle2 size={18} />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -290,7 +481,7 @@ export const IncidentManagement = () => {
             placeholder="Tìm theo mã sự cố, thiết bị, người báo..."
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
-            className="bg-[#272e3d] text-slate-200 text-xs px-3 py-2 rounded-lg border border-[#384256] focus:outline-none focus:ring-1 focus:ring-sky-500 w-64"
+            className="bg-[#272e3d] text-slate-200 text-xs px-3 py-2 rounded-lg border border-[#384256] focus:outline-none focus:ring-1 focus:ring-sky-500 w-72"
           />
         </div>
 
@@ -303,7 +494,7 @@ export const IncidentManagement = () => {
           >
             <option value="ALL">All Status</option>
             <option value="MOI_TAO">Mới tạo (Open)</option>
-            <option value="DA_TIEP_NHAN">Đã tiếp nhận (Assigned)</option>
+            <option value="DA_TIEP_NHAN">Đã nhận (Assigned)</option>
             <option value="DANG_SUA">Đang sửa chữa (Repairing)</option>
             <option value="HOAN_THANH">Đã hoàn thành (Closed)</option>
           </select>
@@ -393,13 +584,13 @@ export const IncidentManagement = () => {
         <div className="p-3.5 bg-[#151922] border-t border-[#272e3d] flex items-center justify-between text-xs text-slate-400">
           <div>{filtered.length} of {incidents.length} incident tickets</div>
           <div className="flex items-center gap-1.5">
-            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300"><ChevronLeft size={14} /> Prev</button>
-            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300">Next <ChevronRight size={14} /></button>
+            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300 flex items-center gap-1"><ChevronLeft size={14} /> Prev</button>
+            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300 flex items-center gap-1">Next <ChevronRight size={14} /></button>
           </div>
         </div>
       </div>
 
-      {/* Modal Repair */}
+      {/* Modal Repair & Deduct Stock */}
       {repairModalOpen && targetIncident && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-[#181d26] border border-[#2e3748] rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-slate-200 text-xs">
@@ -408,7 +599,7 @@ export const IncidentManagement = () => {
             </h3>
 
             <div className="p-3 rounded-lg bg-[#272e3d]/60 border border-[#384256] space-y-1">
-              <div>Thiết bị: <strong className="text-white">{targetIncident.equipmentName} ({targetIncident.roomName})</strong></div>
+              <div>Thiết bị: <strong className="text-white">{targetIncident.equipmentCode} ({targetIncident.roomName})</strong></div>
               <div>Hiện tượng lỗi: <span className="text-slate-300">{targetIncident.description}</span></div>
             </div>
 
@@ -434,15 +625,15 @@ export const IncidentManagement = () => {
                   <div className="grid grid-cols-3 gap-2.5">
                     <div className="col-span-2">
                       <select
-                        value={repairForm.sparePartName}
-                        onChange={(e) => setRepairForm({ ...repairForm, sparePartName: e.target.value })}
-                        className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-2.5 py-2 text-white"
+                        value={repairForm.selectedPartId}
+                        onChange={(e) => setRepairForm({ ...repairForm, selectedPartId: e.target.value })}
+                        className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-2.5 py-2 text-white text-xs"
                       >
-                        <option value="RAM Kingston 8GB DDR4 Bus 3200">RAM Kingston 8GB DDR4 (450.000 đ)</option>
-                        <option value="SSD Kingston NVMe 512GB M.2">SSD Kingston NVMe 512GB (850.000 đ)</option>
-                        <option value="Nguồn Cooler Master 500W">Nguồn Cooler Master 500W (650.000 đ)</option>
-                        <option value="Bàn phím Logitech K120 USB">Bàn phím Logitech K120 (180.000 đ)</option>
-                        <option value="Chuột quang Logitech B100">Chuột quang Logitech B100 (110.000 đ)</option>
+                        {availableParts.map((part) => (
+                          <option key={part.id} value={part.id}>
+                            {part.partName} (Còn: {part.stockQuantity} {part.unit} - {formatCurrency(part.unitPrice)})
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
@@ -453,6 +644,7 @@ export const IncidentManagement = () => {
                         value={repairForm.quantity}
                         onChange={(e) => setRepairForm({ ...repairForm, quantity: Number(e.target.value) })}
                         className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-2.5 py-2 text-white text-center font-bold"
+                        title="Số lượng xuất"
                       />
                     </div>
                   </div>
@@ -464,6 +656,7 @@ export const IncidentManagement = () => {
                 <textarea
                   rows={2}
                   value={repairForm.note}
+                  placeholder="VD: Đã thay thế linh kiện lỗi và test Windows hoạt động tốt"
                   onChange={(e) => setRepairForm({ ...repairForm, note: e.target.value })}
                   className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                 />
@@ -475,7 +668,7 @@ export const IncidentManagement = () => {
                   id="markCompleteCheck"
                   checked={repairForm.markCompleted}
                   onChange={(e) => setRepairForm({ ...repairForm, markCompleted: e.target.checked })}
-                  className="rounded text-emerald-500 focus:ring-0 cursor-pointer"
+                  className="rounded text-emerald-500 focus:ring-0 cursor-pointer w-4 h-4"
                 />
                 <label htmlFor="markCompleteCheck" className="font-semibold cursor-pointer">
                   Đánh dấu hoàn thành phiếu và khôi phục máy tính về trạng thái "Hoạt Động"
@@ -529,9 +722,15 @@ export const IncidentManagement = () => {
                     onChange={(e) => setCreateForm({ ...createForm, roomName: e.target.value })}
                     className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                   >
-                    <option value="Phòng Máy 01">Phòng Máy 01 (Web)</option>
-                    <option value="Phòng Máy 02">Phòng Máy 02 (Mạng)</option>
-                    <option value="Phòng Máy 03">Phòng Máy 03 (Đồ họa)</option>
+                    <option value="Phòng A101 (Lập trình Cơ sở)">Phòng A101 (Lập trình Cơ sở)</option>
+                    <option value="Phòng A204 (Java & Spring Boot)">Phòng A204 (Java & Spring Boot)</option>
+                    <option value="Phòng A302 (Web & Mobile)">Phòng A302 (Web & Mobile)</option>
+                    <option value="Phòng A404 (AI & Data Science)">Phòng A404 (AI & Data Science)</option>
+                    <option value="Phòng B102 (Mạng Cisco Lab)">Phòng B102 (Mạng Cisco Lab)</option>
+                    <option value="Phòng B201 (Quản trị Linux)">Phòng B201 (Quản trị Linux)</option>
+                    <option value="Phòng D-06 (Đồ họa 3D)">Phòng D-06 (Đồ họa 3D)</option>
+                    <option value="Phòng D5-12 (IoT & Vi điều khiển)">Phòng D5-12 (IoT & Vi điều khiển)</option>
+                    <option value="Phòng D5-36 (Cloud DevOps)">Phòng D5-36 (Cloud DevOps)</option>
                   </select>
                 </div>
               </div>
@@ -546,18 +745,29 @@ export const IncidentManagement = () => {
                   <option value="THAP">Thấp</option>
                   <option value="TRUNG_BINH">Trung bình</option>
                   <option value="CAO">Cao</option>
-                  <option value="KHAN_CAP">Khẩn cấp (Sập nguồn, khói, cháy)</option>
+                  <option value="KHAN_CAP">Khẩn cấp</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Mô tả hiện tượng sự cố *</label>
+                <label className="block text-slate-300 font-semibold mb-1">Mô tả sự cố chi tiết *</label>
                 <textarea
                   required
                   rows={3}
-                  placeholder="Mô tả cụ thể hiện tượng: màn hình xanh, máy tính kêu bíp, liệt phím..."
                   value={createForm.description}
+                  placeholder="Mô tả hiện tượng hỏng hóc..."
                   onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-300 font-semibold mb-1">Người báo *</label>
+                <input
+                  type="text"
+                  required
+                  value={createForm.reporterName}
+                  onChange={(e) => setCreateForm({ ...createForm, reporterName: e.target.value })}
                   className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                 />
               </div>
@@ -574,7 +784,7 @@ export const IncidentManagement = () => {
                   type="submit"
                   className="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold"
                 >
-                  Gửi Báo Hỏng
+                  Tạo Phiếu
                 </button>
               </div>
             </form>

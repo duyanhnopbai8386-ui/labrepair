@@ -68,15 +68,15 @@ export const AdminLayout = ({
       case 'incidents': return 'Sự cố & Sửa chữa / Quản lý Phiếu báo hỏng';
       case 'spare-parts': return 'Kho linh kiện / Danh mục Vật tư thay thế';
       case 'users': return 'Người dùng / Danh sách Tài khoản & Phân quyền';
-      case 'settings': return 'Cài đặt / Cấu hình Hệ thống';
-      default: return 'Quản trị Hệ thống';
+      case 'settings': return 'Cấu hình & Giới thiệu Hệ thống';
+      default: return 'Bảng điều khiển';
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#1c222d] text-slate-200 flex flex-col font-sans antialiased">
-      <div className="flex flex-1">
-        {/* ================= LEFT DARK SIDEBAR (Style EzyPlatform / Admin Portal) ================= */}
+    <div className="min-h-screen bg-[#1a1f2c] text-slate-100 flex flex-col font-sans antialiased">
+      <div className="flex-1 flex overflow-hidden">
+        {/* ================= SIDEBAR ================= */}
         <aside
           className={`bg-[#181d26] border-r border-[#272e3d] flex flex-col transition-all duration-300 z-30 shrink-0 ${
             sidebarCollapsed ? 'w-20' : 'w-64'
@@ -108,12 +108,12 @@ export const AdminLayout = ({
               </div>
               {!sidebarCollapsed && (
                 <div className="overflow-hidden">
-                  <div className="text-sm font-bold text-white truncate">
+                  <div className="text-sm font-bold text-white truncate" title={user?.fullName}>
                     {user?.fullName || 'Lê Nguyễn Ngọc Duy Anh'}
                   </div>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[11px] text-slate-400 font-medium">
+                    <span className="text-[11px] text-slate-400 font-medium truncate">
                       {user?.role ? `Vai trò: ${user.role}` : 'Super Admin (CCQ2411E)'}
                     </span>
                   </div>
@@ -248,7 +248,7 @@ export const AdminLayout = ({
                     {user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'A'}
                   </div>
                   <span className="text-xs font-semibold text-slate-200 hidden md:block">
-                    {user?.fullName || 'Admin'}
+                    {user?.fullName || 'Lê Nguyễn Ngọc Duy Anh'}
                   </span>
                   <ChevronDown size={14} className="text-slate-400" />
                 </button>
@@ -281,19 +281,11 @@ export const AdminLayout = ({
           </header>
 
           {/* PAGE CONTENT CONTAINER */}
-          <main className="flex-1 p-6 overflow-y-auto">
-            {children}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <div className="max-w-7xl mx-auto space-y-6">
+              {children}
+            </div>
           </main>
-
-          {/* FOOTER */}
-          <footer className="h-12 border-t border-[#272e3d] bg-[#181d26] px-6 flex items-center justify-between text-[11px] text-slate-400">
-            <div>
-              <strong className="text-slate-300">LabRepair Backend System</strong> • Cao đẳng Công Thương TP.HCM (HITC)
-            </div>
-            <div>
-              Sinh viên thực hiện: <strong className="text-sky-400">Lê Nguyễn Ngọc Duy Anh</strong> • Lớp CCQ2411E
-            </div>
-          </footer>
         </div>
       </div>
     </div>

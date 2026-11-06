@@ -19,9 +19,9 @@ export const AdminDashboard = ({ onNavigate }) => {
   };
 
   const roomCosts = [
-    { name: 'Phòng Máy 01 (Thực hành Web)', cost: 2450000, percent: 50 },
-    { name: 'Phòng Máy 02 (Mạng Máy Tính)', cost: 1600000, percent: 33 },
-    { name: 'Phòng Server Trung Tâm', cost: 800000, percent: 17 }
+    { name: 'Phòng A101 (Lập trình Cơ sở)', cost: 2450000, percent: 50 },
+    { name: 'Phòng A204 (Lập trình Java & Spring Boot)', cost: 1600000, percent: 33 },
+    { name: 'Phòng D-06 (Đồ họa & Thiết kế 3D)', cost: 800000, percent: 17 }
   ];
 
   return (
@@ -31,7 +31,7 @@ export const AdminDashboard = ({ onNavigate }) => {
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Dashboard Overview</h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            Trung tâm điều phối & Giám sát dữ liệu phòng máy thời gian thực
+            Trung tâm điều phối & Giám sát dữ liệu phòng máy thời gian thực (HITC)
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -56,10 +56,10 @@ export const AdminDashboard = ({ onNavigate }) => {
             </div>
           </div>
           <div className="text-2xl font-extrabold text-white">
-            79 <span className="text-xs font-normal text-slate-400">/ 85 máy</span>
+            135 <span className="text-xs font-normal text-slate-400">/ 140 máy</span>
           </div>
           <div className="mt-2 text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
-            <CheckCircle2 size={13} /> 93% Đang hoạt động tốt
+            <CheckCircle2 size={13} /> 96% Đang hoạt động tốt
           </div>
         </div>
 
@@ -94,7 +94,7 @@ export const AdminDashboard = ({ onNavigate }) => {
             {formatCurrency(4850000)}
           </div>
           <div className="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
-            <TrendingUp size={13} className="text-emerald-400" /> Ngân sách tháng 10/2026
+            <TrendingUp size={13} className="text-emerald-400" /> Ngân sách kỳ học 2026
           </div>
         </div>
 
@@ -110,10 +110,10 @@ export const AdminDashboard = ({ onNavigate }) => {
             </div>
           </div>
           <div className="text-2xl font-extrabold text-white">
-            2 <span className="text-xs font-normal text-slate-400">vật tư sắp hết</span>
+            1 <span className="text-xs font-normal text-slate-400">vật tư sắp hết</span>
           </div>
           <div className="mt-2 text-[11px] text-amber-400 font-semibold flex items-center gap-1">
-            <AlertTriangle size={13} /> SSD 512GB & Nguồn 500W
+            <AlertTriangle size={13} /> Bàn phím DareU (Còn 2 chiếc)
           </div>
         </div>
       </div>
@@ -139,11 +139,11 @@ export const AdminDashboard = ({ onNavigate }) => {
               <div key={idx} className="space-y-1.5 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-slate-300">{room.name}</span>
-                  <span className="font-bold text-emerald-400">{formatCurrency(room.cost)}</span>
+                  <span className="font-mono text-emerald-400 font-bold">{formatCurrency(room.cost)}</span>
                 </div>
                 <div className="w-full h-2.5 rounded-full bg-[#272e3d] overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-sky-500 to-cyan-400"
+                    className="h-full rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-500"
                     style={{ width: `${room.percent}%` }}
                   />
                 </div>
@@ -152,31 +152,32 @@ export const AdminDashboard = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Right 1 Col: Backend Tech Stack & Security */}
-        <div className="bg-[#181d26] p-5 rounded-xl border border-[#272e3d] shadow-lg space-y-3">
+        {/* Right 1 Col: Quick Tech Info */}
+        <div className="bg-[#181d26] p-5 rounded-xl border border-[#272e3d] shadow-lg space-y-4">
           <div className="border-b border-[#272e3d] pb-3">
             <h2 className="text-sm font-bold text-white uppercase tracking-wider">
-              Kiến Trúc Backend Hệ Thống
+              Thông Tin Sinh Viên Báo Cáo
             </h2>
-            <p className="text-[11px] text-slate-400 mt-0.5">Spring Boot 3.4 & MySQL JPA</p>
+            <p className="text-[11px] text-slate-400 mt-0.5">Trường Cao Đẳng Công Thương TP.HCM</p>
           </div>
 
-          <div className="space-y-2.5 text-xs">
-            <div className="p-2.5 rounded-lg bg-[#212734] border border-[#2e3748] flex items-center justify-between">
-              <span className="text-slate-400">Framework:</span>
-              <strong className="text-white">Spring Boot 3.4.x</strong>
+          <div className="space-y-3 text-xs">
+            <div className="p-3 rounded-lg bg-[#272e3d]/50 border border-[#384256] space-y-1">
+              <div className="text-slate-400">Họ và tên sinh viên:</div>
+              <div className="font-bold text-sky-400 text-sm">Lê Nguyễn Ngọc Duy Anh</div>
+              <div className="text-slate-300">MSSV: <span className="font-mono font-bold text-white">2124110340</span></div>
+              <div className="text-slate-300">Lớp: <span className="font-bold text-white">CCQ2411E</span></div>
             </div>
-            <div className="p-2.5 rounded-lg bg-[#212734] border border-[#2e3748] flex items-center justify-between">
-              <span className="text-slate-400">Security:</span>
-              <strong className="text-emerald-400">Spring Security 6 + JJWT</strong>
+
+            <div className="p-3 rounded-lg bg-[#272e3d]/50 border border-[#384256] space-y-1">
+              <div className="text-slate-400">Giáo viên hướng dẫn:</div>
+              <div className="font-bold text-emerald-400 text-sm">ThS. Nguyễn Minh Tuấn</div>
+              <div className="text-slate-400 text-[11px]">Đồ án cuối kỳ môn Lập trình Java</div>
             </div>
-            <div className="p-2.5 rounded-lg bg-[#212734] border border-[#2e3748] flex items-center justify-between">
-              <span className="text-slate-400">Database:</span>
-              <strong className="text-sky-400">MySQL 8.0 (8 Entities)</strong>
-            </div>
-            <div className="p-2.5 rounded-lg bg-[#212734] border border-[#2e3748] flex items-center justify-between">
-              <span className="text-slate-400">Kỹ sư thực hiện:</span>
-              <strong className="text-amber-400">Duy Anh (2124110340)</strong>
+
+            <div className="p-3 rounded-lg bg-[#272e3d]/50 border border-[#384256] space-y-1 text-[11px] text-slate-400">
+              <div>Backend: <span className="text-sky-300 font-mono">Spring Boot 3.4.0 + MySQL</span></div>
+              <div>Frontend: <span className="text-cyan-300 font-mono">React 19 + Tailwind CSS</span></div>
             </div>
           </div>
         </div>

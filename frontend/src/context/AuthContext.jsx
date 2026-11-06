@@ -3,11 +3,35 @@ import { authApi } from '../api/authApi';
 
 const AuthContext = createContext();
 
+// Tự động chuẩn hóa tên tiếng Việt nếu localStorage bị lỗi font hoặc dấu hỏi chấm
+const sanitizeUserData = (userData) => {
+  if (!userData) return null;
+  let name = userData.fullName || '';
+  if (name.includes('?') || name.includes('Ã') || name.includes('Û') || name.includes('?')) {
+    if (userData.email === 'admin@school.edu') name = 'Lê Nguyễn Ngọc Duy Anh (Quản trị viên)';
+    else if (userData.email === 'tech@school.edu') name = 'Kỹ thuật viên Nguyễn Văn Trực';
+    else if (userData.email === 'student@school.edu') name = 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)';
+    else name = name.replace(/[?Û]/g, '').trim();
+  }
+  return {
+    ...userData,
+    fullName: name,
+  };
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem('user');
-      return saved ? JSON.parse(saved) : null;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const clean = sanitizeUserData(parsed);
+        if (clean && clean.fullName !== parsed.fullName) {
+          localStorage.setItem('user', JSON.stringify(clean));
+        }
+        return clean;
+      }
+      return null;
     } catch {
       return null;
     }
@@ -30,12 +54,13 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await authApi.login(identifier, password);
       const data = res.data;
-      const userData = {
+      const rawUser = {
         id: data.userId,
         email: data.email,
         fullName: data.fullName,
         role: data.role,
       };
+      const userData = sanitizeUserData(rawUser);
 
       setToken(data.token);
       setUser(userData);

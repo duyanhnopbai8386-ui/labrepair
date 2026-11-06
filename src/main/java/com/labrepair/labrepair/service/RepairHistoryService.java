@@ -76,7 +76,7 @@ public class RepairHistoryService {
         history.setTechnician(technician);
         history.setActionType(request.getActionType().toUpperCase());
         history.setNote(request.getNote());
-        history.setDurationMinutes(request.getDurationMinutes());
+        history.setDurationMinutes(request.getDurationMinutes() != null ? request.getDurationMinutes() : 30);
         history.setPerformedAt(LocalDateTime.now());
         history = historyRepository.save(history);
 
@@ -85,29 +85,33 @@ public class RepairHistoryService {
 
         if (request.getPartsUsed() != null && !request.getPartsUsed().isEmpty()) {
             for (RepairPartItemRequest item : request.getPartsUsed()) {
-                SparePart part = sparePartService.getEntityById(item.getSparePartId());
-                sparePartService.deductStock(part.getId(), item.getQuantityUsed());
+                if (item.getSparePartId() != null) {
+                    SparePart part = sparePartService.getEntityById(item.getSparePartId());
+                    int qty = item.getQuantityUsed() != null ? item.getQuantityUsed() : 1;
+                    sparePartService.deductStock(part.getId(), qty);
 
-                BigDecimal unitPrice = part.getUnitPrice() != null ? part.getUnitPrice() : BigDecimal.ZERO;
-                BigDecimal itemCost = unitPrice.multiply(BigDecimal.valueOf(item.getQuantityUsed()));
-                additionalCost = additionalCost.add(itemCost);
+                    BigDecimal unitPrice = part.getUnitPrice() != null ? part.getUnitPrice() : BigDecimal.ZERO;
+                    BigDecimal itemCost = unitPrice.multiply(BigDecimal.valueOf(qty));
+                    additionalCost = additionalCost.add(itemCost);
 
-                RepairPart rp = new RepairPart();
-                rp.setRepairHistory(history);
-                rp.setSparePart(part);
-                rp.setQuantityUsed(item.getQuantityUsed());
-                rp.setTotalCost(itemCost);
-                rp.setNote(item.getNote());
-                partsList.add(repairPartRepository.save(rp));
+                    RepairPart rp = new RepairPart();
+                    rp.setRepairHistory(history);
+                    rp.setSparePart(part);
+                    rp.setQuantityUsed(qty);
+                    rp.setTotalCost(itemCost);
+                    rp.setNote(item.getNote());
+                    partsList.add(repairPartRepository.save(rp));
+                }
             }
         }
         history.setRepairParts(partsList);
 
         BigDecimal currentActualCost = incident.getActualCost() != null ? incident.getActualCost() : BigDecimal.ZERO;
-
         incident.setActualCost(currentActualCost.add(additionalCost));
 
-        if ("HOAN_THANH".equalsIgnoreCase(request.getActionType())) {
+        boolean isCompleted = "HOAN_THANH".equalsIgnoreCase(request.getActionType()) || Boolean.TRUE.equals(request.getMarkCompleted());
+
+        if (isCompleted) {
             incident.setStatus("HOAN_THANH");
             incident.setResolvedAt(LocalDateTime.now());
             if (request.getNote() != null && !request.getNote().isBlank()) {

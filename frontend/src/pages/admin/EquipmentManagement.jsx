@@ -16,69 +16,69 @@ const STORAGE_KEY = 'labrepair_equipments_v2';
 const DEFAULT_EQUIPMENTS = [
   {
     id: 1,
-    equipmentCode: 'PC-PM01-01',
-    equipmentName: 'Máy trạm Dell OptiPlex 7080 SFF',
+    equipmentCode: 'PC-A101-01',
+    equipmentName: 'Máy trạm Dell OptiPlex 7090 MFF',
     categoryName: 'Máy tính để bàn',
-    roomName: 'Phòng Máy 01',
-    serialNumber: 'SN-DL-7080-01',
-    specification: 'Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor 24"',
+    roomName: 'Phòng A101 (Lập trình Cơ sở)',
+    serialNumber: 'SN-HITC-A101-0198',
+    specification: 'Intel Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor Dell 24"',
     status: 'HOAT_DONG',
-    createdAt: '2024-07-23 12:19:32'
+    createdAt: '2026-11-06 08:00:00'
   },
   {
     id: 2,
-    equipmentCode: 'PC-PM01-08',
-    equipmentName: 'Máy trạm Dell OptiPlex 7080 SFF',
+    equipmentCode: 'PC-A101-05',
+    equipmentName: 'Máy trạm Dell OptiPlex 7090 MFF',
     categoryName: 'Máy tính để bàn',
-    roomName: 'Phòng Máy 01',
-    serialNumber: 'SN-DL-7080-08',
-    specification: 'Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor 24"',
+    roomName: 'Phòng A101 (Lập trình Cơ sở)',
+    serialNumber: 'SN-HITC-A101-0598',
+    specification: 'Intel Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor Dell 24"',
     status: 'CHO_SUA',
-    createdAt: '2024-07-23 12:14:19'
+    createdAt: '2026-11-06 08:30:15'
   },
   {
     id: 3,
-    equipmentCode: 'PC-PM01-12',
-    equipmentName: 'Máy trạm Dell OptiPlex 7080 SFF',
+    equipmentCode: 'PC-A101-09',
+    equipmentName: 'Máy trạm Dell OptiPlex 7090 MFF',
     categoryName: 'Máy tính để bàn',
-    roomName: 'Phòng Máy 01',
-    serialNumber: 'SN-DL-7080-12',
-    specification: 'Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor 24"',
+    roomName: 'Phòng A101 (Lập trình Cơ sở)',
+    serialNumber: 'SN-HITC-A101-0998',
+    specification: 'Intel Core i7-10700 / 16GB DDR4 / SSD 512GB NVMe / Monitor Dell 24"',
     status: 'DANG_SUA',
-    createdAt: '2024-07-22 09:53:57'
+    createdAt: '2026-11-06 09:15:20'
   },
   {
     id: 4,
-    equipmentCode: 'PC-PM02-03',
-    equipmentName: 'Máy trạm HP ProDesk 400 G7',
+    equipmentCode: 'PC-A204-03',
+    equipmentName: 'Máy trạm Dell OptiPlex 7090 MFF',
     categoryName: 'Máy tính để bàn',
-    roomName: 'Phòng Máy 02',
-    serialNumber: 'SN-HP-400-03',
-    specification: 'Core i5-10500 / 16GB RAM / SSD 256GB / Monitor HP 22"',
+    roomName: 'Phòng A204 (Java & Spring Boot)',
+    serialNumber: 'SN-HITC-A204-0398',
+    specification: 'Intel Core i7-10700 / 16GB RAM / SSD 512GB / Monitor Dell 24"',
     status: 'CHO_SUA',
-    createdAt: '2024-07-11 16:51:29'
+    createdAt: '2026-11-06 10:45:00'
   },
   {
     id: 5,
-    equipmentCode: 'SW-PM02-01',
-    equipmentName: 'Switch Cisco Catalyst 2960 24-Port',
-    categoryName: 'Thiết bị mạng',
-    roomName: 'Phòng Máy 02',
-    serialNumber: 'SN-CS-2960-01',
-    specification: '24 x 10/100/1000 PoE+ Ports, 2 x SFP Uplink',
+    equipmentCode: 'PC-D06-01',
+    equipmentName: 'Máy trạm đồ họa Dell Precision 3640',
+    categoryName: 'Máy tính để bàn',
+    roomName: 'Phòng D-06 (Đồ họa 3D)',
+    serialNumber: 'SN-HITC-D06-0198',
+    specification: 'Intel Core i9-10900K / 32GB RAM / SSD 1TB / RTX 3060 12GB',
     status: 'HOAT_DONG',
-    createdAt: '2024-07-10 14:20:11'
+    createdAt: '2026-11-06 08:00:00'
   },
   {
     id: 6,
-    equipmentCode: 'PRJ-PM01-01',
-    equipmentName: 'Máy chiếu Epson EB-E01 XGA 3300 Lumens',
-    categoryName: 'Thiết bị hiển thị',
-    roomName: 'Phòng Máy 01',
-    serialNumber: 'SN-EP-E01-99',
-    specification: 'Độ sáng 3300 Lumens, HDMI, Tuổi thọ bóng 12,000 giờ',
+    equipmentCode: 'SW-B102-01',
+    equipmentName: 'Switch Cisco Catalyst 2960 24-Port',
+    categoryName: 'Thiết bị mạng & Server',
+    roomName: 'Phòng B102 (Mạng Cisco Lab)',
+    serialNumber: 'SN-CS-2960-99',
+    specification: '24 x 10/100/1000 Gigabit PoE+ Ports, 2 x SFP Uplink',
     status: 'HOAT_DONG',
-    createdAt: '2024-06-30 08:30:00'
+    createdAt: '2026-11-06 08:00:00'
   }
 ];
 
@@ -89,10 +89,13 @@ export const EquipmentManagement = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map((item, idx) => ({
-            ...item,
-            id: Number(item.id) > 100000 ? idx + 1 : Number(item.id) || idx + 1
-          }));
+          const hasMojibake = parsed.some(e => (e.equipmentName || '').includes('?') || (e.equipmentName || '').includes('Ã'));
+          if (!hasMojibake) {
+            return parsed.map((item, idx) => ({
+              ...item,
+              id: Number(item.id) || idx + 1
+            }));
+          }
         }
       }
     } catch (e) {}
@@ -110,7 +113,7 @@ export const EquipmentManagement = () => {
   const [formData, setFormData] = useState({
     equipmentCode: '',
     equipmentName: '',
-    roomName: 'Phòng Máy 01',
+    roomName: 'Phòng A101 (Lập trình Cơ sở)',
     categoryName: 'Máy tính để bàn',
     serialNumber: '',
     specification: '',
@@ -129,7 +132,18 @@ export const EquipmentManagement = () => {
       try {
         const res = await equipmentApi.getAll();
         if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-          saveEquipments(res.data);
+          const mapped = res.data.map(item => ({
+            id: item.id,
+            equipmentCode: item.equipmentCode,
+            equipmentName: item.name || item.equipmentName || `Máy trạm ${item.equipmentCode}`,
+            roomName: item.roomName || item.room?.roomName || `Phòng ${item.roomCode || 'A101'}`,
+            categoryName: item.categoryName || 'Máy tính để bàn',
+            serialNumber: item.serialNumber || 'SN-HITC-001',
+            specification: item.conditionNote || 'Intel Core i7 / 16GB RAM / SSD 512GB',
+            status: item.status || 'HOAT_DONG',
+            createdAt: (item.createdAt || '').slice(0, 19).replace('T', ' ') || '2026-11-06'
+          }));
+          saveEquipments(mapped);
         }
       } catch (err) {}
     };
@@ -198,11 +212,11 @@ export const EquipmentManagement = () => {
     setEditingItem(null);
     const nextId = getNextCleanId();
     setFormData({
-      equipmentCode: `PC-PM01-${nextId < 10 ? `0${nextId}` : nextId}`,
-      equipmentName: 'Máy trạm Dell OptiPlex 7080',
-      roomName: 'Phòng Máy 01',
+      equipmentCode: `PC-A101-${nextId < 10 ? `0${nextId}` : nextId}`,
+      equipmentName: 'Máy trạm Dell OptiPlex 7090 MFF',
+      roomName: 'Phòng A101 (Lập trình Cơ sở)',
       categoryName: 'Máy tính để bàn',
-      serialNumber: `SN-DL-${Math.floor(1000 + Math.random() * 9000)}`,
+      serialNumber: `SN-HITC-A101-${Math.floor(1000 + Math.random() * 9000)}`,
       specification: 'Core i7-10700 / 16GB RAM / SSD 512GB NVMe / LCD 24"',
       status: 'HOAT_DONG'
     });
@@ -214,11 +228,11 @@ export const EquipmentManagement = () => {
     setFormData({
       equipmentCode: item.equipmentCode,
       equipmentName: item.equipmentName,
-      roomName: item.roomName || 'Phòng Máy 01',
+      roomName: item.roomName || 'Phòng A101 (Lập trình Cơ sở)',
       categoryName: item.categoryName || 'Máy tính để bàn',
       serialNumber: item.serialNumber || '',
       specification: item.specification || '',
-      status: item.status || 'HOAT_DONG'
+      status: item.status
     });
     setModalOpen(true);
   };
@@ -237,7 +251,7 @@ export const EquipmentManagement = () => {
     } else {
       const cleanId = getNextCleanId();
       const newItem = {
-        id: cleanId, // ID chuẩn: 7, 8, 9...
+        id: cleanId,
         ...formData,
         createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
       };
@@ -252,7 +266,7 @@ export const EquipmentManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Bạn có chắc chắn muốn xóa thiết bị này khỏi cơ sở dữ liệu?')) {
+    if (confirm('Bạn có chắc chắn muốn xóa thiết bị này khỏi danh sách?')) {
       const updated = equipments.filter((item) => item.id !== id);
       saveEquipments(updated);
 
@@ -319,10 +333,10 @@ export const EquipmentManagement = () => {
             <span className="text-xs text-slate-400 shrink-0">Search:</span>
             <input
               type="text"
-              placeholder="Keyword..."
+              placeholder="Mã máy, phòng, serial..."
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
-              className="w-full bg-[#272e3d] text-slate-200 text-xs px-3 py-2 rounded-lg border border-[#384256] focus:outline-none focus:ring-1 focus:ring-sky-500 sm:w-56"
+              className="w-full bg-[#272e3d] text-slate-200 text-xs px-3 py-2 rounded-lg border border-[#384256] focus:outline-none focus:ring-1 focus:ring-sky-500 sm:w-64"
             />
           </div>
 
@@ -348,21 +362,21 @@ export const EquipmentManagement = () => {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-[#151922] border-b border-[#272e3d] text-slate-400 font-bold uppercase tracking-wider">
-                <th className="py-3 px-4 w-10 text-center">
+                <th className="py-3 px-3 w-8 text-center">
                   <input
                     type="checkbox"
+                    checked={selectedIds.length === filtered.length && filtered.length > 0}
                     onChange={handleSelectAll}
-                    checked={selectedIds.length > 0 && selectedIds.length === filtered.length}
-                    className="rounded bg-[#272e3d] border-[#384256] text-sky-500 focus:ring-0 cursor-pointer"
+                    className="rounded text-sky-500 focus:ring-0 cursor-pointer"
                   />
                 </th>
                 <th className="py-3 px-3 w-12 text-center">ID</th>
-                <th className="py-3 px-3 w-14 text-center">ICON</th>
-                <th className="py-3 px-3">CODE</th>
-                <th className="py-3 px-3">DISPLAY NAME</th>
+                <th className="py-3 px-3">EQUIPMENT CODE</th>
+                <th className="py-3 px-3">NAME & SPECS</th>
                 <th className="py-3 px-3">ROOM</th>
                 <th className="py-3 px-3">CATEGORY</th>
-                <th className="py-3 px-3">STATUS</th>
+                <th className="py-3 px-3">SERIAL NUMBER</th>
+                <th className="py-3 px-3 text-center">STATUS</th>
                 <th className="py-3 px-3">CREATED AT</th>
                 <th className="py-3 px-4 text-center w-24">ACTIONS</th>
               </tr>
@@ -374,63 +388,59 @@ export const EquipmentManagement = () => {
                   <tr
                     key={item.id}
                     className={`hover:bg-[#1f2633] transition-colors ${
-                      isSelected ? 'bg-[#1e2738]' : ''
+                      isSelected ? 'bg-sky-500/5' : ''
                     }`}
                   >
-                    <td className="py-3.5 px-4 text-center">
+                    <td className="py-3.5 px-3 text-center">
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => handleToggleSelect(item.id)}
-                        className="rounded bg-[#272e3d] border-[#384256] text-sky-500 focus:ring-0 cursor-pointer"
+                        className="rounded text-sky-500 focus:ring-0 cursor-pointer"
                       />
                     </td>
                     <td className="py-3.5 px-3 text-center text-slate-400 font-mono font-bold">
                       {item.id}
                     </td>
-                    <td className="py-3.5 px-3 text-center">
-                      <div className="w-8 h-8 rounded-lg bg-[#272e3d] flex items-center justify-center text-sky-400 mx-auto">
-                        <Monitor size={16} />
-                      </div>
-                    </td>
                     <td className="py-3.5 px-3 font-mono font-bold text-sky-400">
                       {item.equipmentCode}
                     </td>
                     <td className="py-3.5 px-3">
-                      <div className="font-bold text-sky-300 hover:underline cursor-pointer">
-                        {item.equipmentName}
-                      </div>
-                      <div className="text-[11px] text-slate-400 font-mono truncate max-w-xs mt-0.5">
+                      <div className="font-bold text-white">{item.equipmentName}</div>
+                      <div className="text-[11px] text-slate-400 max-w-xs truncate" title={item.specification}>
                         {item.specification}
                       </div>
                     </td>
                     <td className="py-3.5 px-3 font-medium text-slate-300">
                       {item.roomName}
                     </td>
-                    <td className="py-3.5 px-3 text-slate-400">
+                    <td className="py-3.5 px-3 text-slate-300">
                       {item.categoryName}
                     </td>
-                    <td className="py-3.5 px-3">
+                    <td className="py-3.5 px-3 font-mono text-slate-400 text-[11px]">
+                      {item.serialNumber}
+                    </td>
+                    <td className="py-3.5 px-3 text-center">
                       {getStatusBadge(item.status)}
                     </td>
                     <td className="py-3.5 px-3 font-mono text-slate-400 text-[11px]">
                       {item.createdAt}
                     </td>
                     <td className="py-3.5 px-4 text-center">
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex items-center justify-center gap-1.5">
                         <button
                           onClick={() => handleOpenEdit(item)}
-                          title="Chỉnh sửa thiết bị"
-                          className="p-1.5 rounded bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 hover:text-sky-300 transition-colors"
+                          title="Chỉnh sửa"
+                          className="p-1.5 rounded bg-sky-500/10 hover:bg-sky-500/20 text-sky-400"
                         >
-                          <Edit2 size={14} />
+                          <Edit2 size={13} />
                         </button>
                         <button
                           onClick={() => handleDelete(item.id)}
                           title="Xóa thiết bị"
-                          className="p-1.5 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 transition-colors"
+                          className="p-1.5 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={13} />
                         </button>
                       </div>
                     </td>
@@ -442,10 +452,10 @@ export const EquipmentManagement = () => {
         </div>
 
         <div className="p-3.5 bg-[#151922] border-t border-[#272e3d] flex items-center justify-between text-xs text-slate-400">
-          <div>{filtered.length} of {equipments.length} equipments</div>
+          <div>{filtered.length} of {equipments.length} thiết bị</div>
           <div className="flex items-center gap-1.5">
-            <button className="flex items-center gap-1 px-3 py-1.5 rounded bg-[#272e3d] text-slate-300"><ChevronLeft size={14} /> Prev</button>
-            <button className="flex items-center gap-1 px-3 py-1.5 rounded bg-[#272e3d] text-slate-300">Next <ChevronRight size={14} /></button>
+            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300 flex items-center gap-1"><ChevronLeft size={14} /> Prev</button>
+            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300 flex items-center gap-1">Next <ChevronRight size={14} /></button>
           </div>
         </div>
       </div>
@@ -455,10 +465,10 @@ export const EquipmentManagement = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-[#181d26] border border-[#2e3748] rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-slate-200 text-xs">
             <h3 className="text-lg font-bold text-white border-b border-[#272e3d] pb-3">
-              {editingItem ? `Chỉnh sửa Thiết bị [${editingItem.equipmentCode}]` : 'Thêm Thiết Bị Mới Vào CSDL'}
+              {editingItem ? `Chỉnh Sửa Thiết Bị [${editingItem.equipmentCode}]` : 'Thêm Thiết Bị Mới Vào Phòng'}
             </h3>
 
-            <form onSubmit={handleSave} className="space-y-3">
+            <form onSubmit={handleSave} className="space-y-3.5">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-300 font-semibold mb-1">Mã thiết bị (Code) *</label>
@@ -471,7 +481,53 @@ export const EquipmentManagement = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Số Serial</label>
+                  <label className="block text-slate-300 font-semibold mb-1">Phòng máy *</label>
+                  <select
+                    value={formData.roomName}
+                    onChange={(e) => setFormData({ ...formData, roomName: e.target.value })}
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
+                  >
+                    <option value="Phòng A101 (Lập trình Cơ sở)">Phòng A101 (Lập trình Cơ sở)</option>
+                    <option value="Phòng A204 (Java & Spring Boot)">Phòng A204 (Java & Spring Boot)</option>
+                    <option value="Phòng A302 (Web & Mobile)">Phòng A302 (Web & Mobile)</option>
+                    <option value="Phòng A404 (AI & Data)">Phòng A404 (AI & Data)</option>
+                    <option value="Phòng B102 (Mạng Cisco Lab)">Phòng B102 (Mạng Cisco Lab)</option>
+                    <option value="Phòng B201 (Quản trị Linux)">Phòng B201 (Quản trị Linux)</option>
+                    <option value="Phòng D-06 (Đồ họa 3D)">Phòng D-06 (Đồ họa 3D)</option>
+                    <option value="Phòng D5-12 (IoT & Vi điều khiển)">Phòng D5-12 (IoT & Vi điều khiển)</option>
+                    <option value="Phòng D5-36 (Cloud DevOps)">Phòng D5-36 (Cloud DevOps)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-slate-300 font-semibold mb-1">Tên thiết bị *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="VD: Máy trạm Dell OptiPlex 7090 MFF"
+                  value={formData.equipmentName}
+                  onChange={(e) => setFormData({ ...formData, equipmentName: e.target.value })}
+                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Danh mục</label>
+                  <select
+                    value={formData.categoryName}
+                    onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
+                  >
+                    <option value="Máy tính để bàn">Máy tính để bàn</option>
+                    <option value="Màn hình máy tính">Màn hình máy tính</option>
+                    <option value="Thiết bị mạng & Server">Thiết bị mạng & Server</option>
+                    <option value="Linh kiện thay thế">Linh kiện thay thế</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Số Serial máy</label>
                   <input
                     type="text"
                     value={formData.serialNumber}
@@ -482,49 +538,11 @@ export const EquipmentManagement = () => {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Tên thiết bị (Display Name) *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="VD: Máy trạm Dell OptiPlex 7080..."
-                  value={formData.equipmentName}
-                  onChange={(e) => setFormData({ ...formData, equipmentName: e.target.value })}
-                  className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Phòng máy</label>
-                  <select
-                    value={formData.roomName}
-                    onChange={(e) => setFormData({ ...formData, roomName: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
-                  >
-                    <option value="Phòng Máy 01">Phòng Máy 01 (Web)</option>
-                    <option value="Phòng Máy 02">Phòng Máy 02 (Mạng)</option>
-                    <option value="Phòng Máy 03">Phòng Máy 03 (Đồ họa)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Trạng thái</label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
-                  >
-                    <option value="HOAT_DONG">Hoạt động tốt</option>
-                    <option value="CHO_SUA">Chờ sửa chữa</option>
-                    <option value="DANG_SUA">Đang sửa chữa</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-300 font-semibold mb-1">Cấu hình kỹ thuật / Chi tiết phần cứng</label>
+                <label className="block text-slate-300 font-semibold mb-1">Thông số cấu hình chi tiết</label>
                 <textarea
                   rows={2}
                   value={formData.specification}
+                  placeholder="VD: Intel Core i7-10700 / 16GB RAM / SSD 512GB..."
                   onChange={(e) => setFormData({ ...formData, specification: e.target.value })}
                   className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                 />
@@ -536,13 +554,13 @@ export const EquipmentManagement = () => {
                   onClick={() => setModalOpen(false)}
                   className="px-4 py-2 rounded-lg bg-[#272e3d] text-slate-300 font-semibold"
                 >
-                  Hủy bỏ
+                  Hủy
                 </button>
                 <button
                   type="submit"
                   className="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold"
                 >
-                  Lưu Thiết Bị
+                  {editingItem ? 'Lưu Thay Đổi' : 'Tạo Thiết Bị'}
                 </button>
               </div>
             </form>

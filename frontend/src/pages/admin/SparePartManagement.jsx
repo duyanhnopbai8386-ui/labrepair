@@ -18,68 +18,90 @@ const DEFAULT_PARTS = [
   {
     id: 1,
     partCode: 'RAM-DDR4-8G',
-    partName: 'RAM Kingston Fury 8GB DDR4 Bus 3200',
+    partName: 'RAM Kingston Fury 8GB DDR4 3200MHz',
     category: 'Bộ nhớ RAM',
     unitPrice: 450000,
-    stockQuantity: 12,
+    stockQuantity: 15,
     minStockLevel: 5,
     unit: 'Thanh',
-    createdAt: '2024-07-23 12:19:32'
+    createdAt: '2026-11-06 08:00:00'
   },
   {
     id: 2,
+    partCode: 'SSD-256G',
+    partName: 'SSD Kingston A400 256GB SATA3',
+    category: 'Ổ cứng SSD',
+    unitPrice: 550000,
+    stockQuantity: 12,
+    minStockLevel: 4,
+    unit: 'Ổ',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 3,
+    partCode: 'PSU-500W',
+    partName: 'Nguồn máy tính Cooler Master 500W',
+    category: 'Nguồn máy tính (PSU)',
+    unitPrice: 680000,
+    stockQuantity: 8,
+    minStockLevel: 2,
+    unit: 'Cái',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 4,
+    partCode: 'MOUSE-LOGI',
+    partName: 'Chuột có dây Logitech B100',
+    category: 'Phím & Chuột',
+    unitPrice: 95000,
+    stockQuantity: 25,
+    minStockLevel: 5,
+    unit: 'Con',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 5,
+    partCode: 'KB-DAREU',
+    partName: 'Bàn phím DareU LK145 USB',
+    category: 'Phím & Chuột',
+    unitPrice: 180000,
+    stockQuantity: 2,
+    minStockLevel: 5,
+    unit: 'Cái',
+    createdAt: '2026-11-06 08:00:00'
+  },
+  {
+    id: 7,
     partCode: 'RAM-DDR4-16G',
-    partName: 'RAM Kingston Fury 16GB DDR4 Bus 3200',
+    partName: 'RAM Corsair Vengeance 16GB DDR4 3200MHz',
     category: 'Bộ nhớ RAM',
     unitPrice: 850000,
     stockQuantity: 8,
     minStockLevel: 3,
     unit: 'Thanh',
-    createdAt: '2024-07-23 12:14:19'
+    createdAt: '2026-11-06 08:00:00'
   },
   {
-    id: 3,
-    partCode: 'SSD-512G-M2',
-    partName: 'SSD Kingston NV2 512GB M.2 NVMe PCIe',
+    id: 9,
+    partCode: 'SSD-NVME-512G',
+    partName: 'SSD Samsung 980 512GB NVMe M.2',
     category: 'Ổ cứng SSD',
-    unitPrice: 850000,
-    stockQuantity: 2,
-    minStockLevel: 5,
-    unit: 'Chiếc',
-    createdAt: '2024-07-22 09:53:57'
+    unitPrice: 980000,
+    stockQuantity: 10,
+    minStockLevel: 3,
+    unit: 'Ổ',
+    createdAt: '2026-11-06 08:00:00'
   },
   {
-    id: 4,
-    partCode: 'PSU-500W-AER',
-    partName: 'Nguồn máy tính Cooler Master Elite V4 500W',
-    category: 'Nguồn máy tính (PSU)',
-    unitPrice: 650000,
-    stockQuantity: 1,
-    minStockLevel: 4,
-    unit: 'Bộ',
-    createdAt: '2024-07-11 16:51:29'
-  },
-  {
-    id: 5,
-    partCode: 'KB-LOGI-K120',
-    partName: 'Bàn phím có dây Logitech K120 USB',
-    category: 'Phím & Chuột',
-    unitPrice: 180000,
-    stockQuantity: 25,
-    minStockLevel: 10,
-    unit: 'Chiếc',
-    createdAt: '2024-07-10 11:20:00'
-  },
-  {
-    id: 6,
-    partCode: 'MS-LOGI-B100',
-    partName: 'Chuột quang Logitech B100 USB 800DPI',
-    category: 'Phím & Chuột',
-    unitPrice: 110000,
-    stockQuantity: 30,
-    minStockLevel: 10,
-    unit: 'Chiếc',
-    createdAt: '2024-07-10 11:25:00'
+    id: 13,
+    partCode: 'FAN-CPU',
+    partName: 'Quạt tản nhiệt CPU DeepCool Gammaxx',
+    category: 'Tản nhiệt & Phụ kiện',
+    unitPrice: 150000,
+    stockQuantity: 10,
+    minStockLevel: 3,
+    unit: 'Cái',
+    createdAt: '2026-11-06 08:00:00'
   }
 ];
 
@@ -90,11 +112,13 @@ export const SparePartManagement = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Normalize IDs if any was Date.now()
-          return parsed.map((item, idx) => ({
-            ...item,
-            id: Number(item.id) > 100000 ? idx + 1 : Number(item.id) || idx + 1
-          }));
+          const hasMojibake = parsed.some(p => (p.partName || '').includes('?') || (p.partName || '').includes('Ã'));
+          if (!hasMojibake) {
+            return parsed.map((item, idx) => ({
+              ...item,
+              id: Number(item.id) || idx + 1
+            }));
+          }
         }
       }
     } catch (e) {
@@ -135,19 +159,52 @@ export const SparePartManagement = () => {
     }
   };
 
-  // Sync with Backend API if available
-  useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        const res = await sparePartApi.getAll();
-        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-          saveParts(res.data);
-        }
-      } catch (err) {
-        // Fallback to local storage
+  // Sync with Backend API if available and listen for spare-parts-updated
+  const reloadFromStorageOrApi = async () => {
+    try {
+      const res = await sparePartApi.getAll();
+      if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+        const mapped = res.data.map(p => ({
+          id: p.id,
+          partCode: p.partCode,
+          partName: p.partName,
+          category: p.partName.includes('RAM') ? 'Bộ nhớ RAM' : p.partName.includes('SSD') ? 'Ổ cứng SSD' : p.partName.includes('Nguồn') ? 'Nguồn máy tính (PSU)' : 'Phím & Chuột',
+          unitPrice: p.unitPrice,
+          stockQuantity: p.stockQuantity,
+          minStockLevel: p.minStockLevel || 3,
+          unit: p.unit || 'Chiếc',
+          createdAt: '2026-11-06'
+        }));
+        saveParts(mapped);
+        return;
       }
+    } catch (err) {}
+
+    // Fallback reload from localStorage
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setParts(parsed);
+        }
+      }
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    reloadFromStorageOrApi();
+
+    const handleUpdated = () => {
+      reloadFromStorageOrApi();
     };
-    fetchApi();
+
+    window.addEventListener('spare-parts-updated', handleUpdated);
+    window.addEventListener('storage', handleUpdated);
+    return () => {
+      window.removeEventListener('spare-parts-updated', handleUpdated);
+      window.removeEventListener('storage', handleUpdated);
+    };
   }, []);
 
   const formatCurrency = (val) => {
@@ -163,7 +220,6 @@ export const SparePartManagement = () => {
     return matchSearch && matchLow;
   });
 
-  // Calculate clean, neat incremental ID (1, 2, 3, 4, 5, 6, 7...)
   const getNextCleanId = () => {
     if (!parts || parts.length === 0) return 1;
     const maxId = Math.max(...parts.map(p => Number(p.id) || 0));
@@ -202,7 +258,6 @@ export const SparePartManagement = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     if (editingPart) {
-      // SỬA LINH KIỆN
       const updated = parts.map((p) =>
         p.id === editingPart.id ? { ...p, ...formData } : p
       );
@@ -212,10 +267,9 @@ export const SparePartManagement = () => {
         await sparePartApi.update(editingPart.id, formData);
       } catch (err) {}
     } else {
-      // THÊM LINH KIỆN MỚI
       const cleanId = getNextCleanId();
       const newItem = {
-        id: cleanId, // ID chuẩn: 7, 8, 9... KHÔNG dùng Date.now()
+        id: cleanId,
         ...formData,
         createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
       };
@@ -246,7 +300,7 @@ export const SparePartManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Bạn có chắc chắn muốn xóa linh kiện này khỏi cơ sở dữ liệu?')) {
+    if (confirm('Bạn có chắc chắn muốn xóa linh kiện này khỏi kho?')) {
       const updated = parts.filter((p) => p.id !== id);
       saveParts(updated);
 
@@ -402,8 +456,8 @@ export const SparePartManagement = () => {
         <div className="p-3.5 bg-[#151922] border-t border-[#272e3d] flex items-center justify-between text-xs text-slate-400">
           <div>{filtered.length} of {parts.length} spare parts</div>
           <div className="flex items-center gap-1.5">
-            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300"><ChevronLeft size={14} /> Prev</button>
-            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300">Next <ChevronRight size={14} /></button>
+            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300 flex items-center gap-1"><ChevronLeft size={14} /> Prev</button>
+            <button className="px-3 py-1.5 rounded bg-[#272e3d] text-slate-300 flex items-center gap-1">Next <ChevronRight size={14} /></button>
           </div>
         </div>
       </div>
@@ -503,27 +557,30 @@ export const SparePartManagement = () => {
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Đơn vị tính</label>
-                  <input
-                    type="text"
-                    value={formData.unit}
-                    onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
-                  />
-                </div>
-                <div>
                   <label className="block text-slate-300 font-semibold mb-1">Đơn giá (VNĐ)</label>
                   <input
                     type="number"
+                    step="10000"
                     value={formData.unitPrice}
                     onChange={(e) => setFormData({ ...formData, unitPrice: Number(e.target.value) })}
                     className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Mức tồn tối thiểu</label>
+                  <label className="block text-slate-300 font-semibold mb-1">Số lượng tồn</label>
                   <input
                     type="number"
+                    min="0"
+                    value={formData.stockQuantity}
+                    onChange={(e) => setFormData({ ...formData, stockQuantity: Number(e.target.value) })}
+                    className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Định mức tối thiểu</label>
+                  <input
+                    type="number"
+                    min="1"
                     value={formData.minStockLevel}
                     onChange={(e) => setFormData({ ...formData, minStockLevel: Number(e.target.value) })}
                     className="w-full bg-[#272e3d] border border-[#384256] rounded-lg px-3 py-2 text-white"
@@ -531,7 +588,7 @@ export const SparePartManagement = () => {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[#272e3d] flex items-center justify-end gap-2.5">
+              <div className="pt-2 border-t border-[#272e3d] flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
@@ -543,7 +600,7 @@ export const SparePartManagement = () => {
                   type="submit"
                   className="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold"
                 >
-                  Lưu Linh Kiện
+                  {editingPart ? 'Lưu Thay Đổi' : 'Thêm Linh Kiện'}
                 </button>
               </div>
             </form>

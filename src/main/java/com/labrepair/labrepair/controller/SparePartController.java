@@ -47,6 +47,12 @@ public class SparePartController {
         return service.update(id, request);
     }
 
+    @PostMapping("/{id}/deduct")
+    public ResponseEntity<SparePartResponse> deductStock(@PathVariable Integer id, @RequestParam(defaultValue = "1") Integer quantity) {
+        service.deductStock(id, quantity);
+        return ResponseEntity.ok(service.findById(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         service.delete(id);

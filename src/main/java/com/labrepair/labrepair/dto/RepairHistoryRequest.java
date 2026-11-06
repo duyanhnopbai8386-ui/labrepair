@@ -23,6 +23,7 @@ public class RepairHistoryRequest {
 
     private String note;
     private Integer durationMinutes;
+    private Boolean markCompleted;
 
     private List<RepairPartItemRequest> partsUsed = new ArrayList<>();
 }

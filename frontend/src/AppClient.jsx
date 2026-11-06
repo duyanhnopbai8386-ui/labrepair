@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import { HeaderClient } from './components/HeaderClient';
 import { GlassModal } from './components/GlassModal';
+import { incidentApi } from './api/incidentApi';
 
 // User Portal Pages (Chỉ có Sơ đồ phòng máy và Phiếu báo hỏng sự cố)
 import { ComputerRoomsPage } from './pages/ComputerRoomsPage';
@@ -27,8 +28,8 @@ export default function AppClient() {
   // Modal Báo Hỏng Nhanh
   const [quickReportModalOpen, setQuickReportModalOpen] = useState(false);
   const [reportFormData, setReportFormData] = useState({
-    roomName: 'Phòng Máy 01 (Thực hành Web)',
-    equipmentCode: 'PC-PM01-08',
+    roomName: 'Phòng máy thực hành A101 (Lập trình Cơ sở)',
+    equipmentCode: 'PC-A101-08',
     description: '',
     priority: 'CAO',
     reporterName: user?.fullName || 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
@@ -56,7 +57,7 @@ export default function AppClient() {
   };
 
   // Xử lý gửi phiếu báo hỏng
-  const handleSubmitReport = (e) => {
+  const handleSubmitReport = async (e) => {
     e.preventDefault();
 
     // 1. Tạo phiếu sự cố mới lưu vào LocalStorage
@@ -67,17 +68,17 @@ export default function AppClient() {
       if (saved) currentIncidents = JSON.parse(saved);
     } catch (err) {}
 
-    const maxId = currentIncidents.length > 0 ? Math.max(...currentIncidents.map(i => Number(i.id) || 0)) : 4;
+    const maxId = currentIncidents.length > 0 ? Math.max(...currentIncidents.map(i => Number(i.id) || 0)) : 14;
     const cleanId = maxId + 1;
 
     const newTicket = {
       id: cleanId,
-      ticketCode: `SC-2024-00${cleanId}`,
+      ticketCode: `SC-2024-${cleanId < 10 ? '00' + cleanId : cleanId < 100 ? '0' + cleanId : cleanId}`,
       equipmentCode: reportFormData.equipmentCode,
       equipmentName: `Máy trạm ${reportFormData.equipmentCode}`,
       roomName: reportFormData.roomName,
       description: reportFormData.description,
-      reporterName: reportFormData.reporterName,
+      reporterName: reportFormData.reporterName || user?.fullName || 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
       reporterPhone: reportFormData.reporterPhone,
       technicianName: null,
       priority: reportFormData.priority,
@@ -85,6 +86,17 @@ export default function AppClient() {
       totalCost: 0,
       createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
     };
+
+    // Gửi qua API nếu có kết nối
+    try {
+      await incidentApi.create({
+        equipmentCode: reportFormData.equipmentCode,
+        description: reportFormData.description,
+        priority: reportFormData.priority
+      });
+    } catch (err) {
+      // Optimistic local update
+    }
 
     const updatedIncidents = [newTicket, ...currentIncidents];
     try {
@@ -105,7 +117,7 @@ export default function AppClient() {
     } catch (err) {}
 
     setQuickReportModalOpen(false);
-    setNotification(`✅ Đã gửi báo hỏng máy ${reportFormData.equipmentCode} thành công! Kỹ thuật viên sẽ tiếp nhận xử lý.`);
+    setNotification(`Đã gửi báo hỏng máy ${reportFormData.equipmentCode} thành công! Kỹ thuật viên sẽ tiếp nhận xử lý.`);
     setTimeout(() => setNotification(null), 5000);
   };
 
@@ -119,14 +131,14 @@ export default function AppClient() {
         </div>
       )}
 
-      {/* iOS Frosted Glass Header (Chỉ chứa chức năng người dùng) */}
+      {/* iOS Frosted Glass Header */}
       <HeaderClient
         currentTab={activeTab}
         setCurrentTab={handleSelectTab}
         onOpenReportModal={() => setQuickReportModalOpen(true)}
       />
 
-      {/* Main Content Area: Chỉ có Sơ đồ phòng máy và Phiếu sự cố */}
+      {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
         {activeTab === 'rooms' && (
           <ComputerRoomsPage onReportIssue={handleReportFromWorkstation} />
@@ -189,11 +201,17 @@ export default function AppClient() {
               <select
                 value={reportFormData.roomName}
                 onChange={(e) => setReportFormData({ ...reportFormData, roomName: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium text-xs"
               >
-                <option value="Phòng Máy 01 (Thực hành Web)">Phòng Máy 01 (Web & App)</option>
-                <option value="Phòng Máy 02 (Mạng Máy Tính)">Phòng Máy 02 (Mạng & An Ninh)</option>
-                <option value="Phòng Máy 03 (Đồ Họa)">Phòng Máy 03 (Đồ Họa)</option>
+                <option value="Phòng máy thực hành A101 (Lập trình Cơ sở)">Phòng A101 - Lập trình Cơ sở (Khu A)</option>
+                <option value="Phòng máy thực hành A204 (Lập trình Java & Spring Boot)">Phòng A204 - Lập trình Java (Khu A)</option>
+                <option value="Phòng máy thực hành A302 (Web & Mobile App)">Phòng A302 - Web & Mobile (Khu A)</option>
+                <option value="Phòng máy thực hành A404 (Trí tuệ nhân tạo & Data Science)">Phòng A404 - AI & Data (Khu A)</option>
+                <option value="Phòng máy thực hành B102 (Mạng máy tính Cisco Lab)">Phòng B102 - Mạng máy tính Cisco (Khu B)</option>
+                <option value="Phòng máy thực hành B201 (An toàn thông tin & Quản trị Linux)">Phòng B201 - Quản trị Linux & An ninh (Khu B)</option>
+                <option value="Phòng máy thực hành D-06 (Đồ họa & Thiết kế 3D)">Phòng D-06 - Đồ họa 3D (Khu D)</option>
+                <option value="Phòng máy thực hành D5-12 (IoT & Lập trình vi điều khiển)">Phòng D5-12 - IoT & Vi điều khiển (Khu D)</option>
+                <option value="Phòng máy thực hành D5-36 (Cloud Computing & DevOps)">Phòng D5-36 - Cloud & DevOps (Khu D)</option>
               </select>
             </div>
 
@@ -202,7 +220,7 @@ export default function AppClient() {
               <input
                 type="text"
                 required
-                placeholder="VD: PC-PM01-08..."
+                placeholder="VD: PC-A101-05..."
                 value={reportFormData.equipmentCode}
                 onChange={(e) => setReportFormData({ ...reportFormData, equipmentCode: e.target.value })}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono font-bold"
@@ -218,9 +236,9 @@ export default function AppClient() {
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold"
             >
               <option value="THAP">Thấp (Chưa ảnh hưởng trực tiếp đến buổi học)</option>
-              <option value="TRUNG_BINH">Trung bình (Bàn phím, chuột lỗi nhẹ)</option>
-              <option value="CAO">Cao (Máy không khởi động được / Màn hình xanh)</option>
-              <option value="KHAN_CAP">Khẩn cấp (Sập nguồn, chập điện, mất kết nối mạng toàn phòng)</option>
+              <option value="TRUNG_BINH">Trung bình (Bàn phím, chuột lỗi nhẹ, cổng USB chập chờn)</option>
+              <option value="CAO">Cao (Máy không khởi động được / Màn hình xanh BSOD)</option>
+              <option value="KHAN_CAP">Khẩn cấp (Sập nguồn, chập cháy, mất mạng toàn phòng)</option>
             </select>
           </div>
 
@@ -229,7 +247,7 @@ export default function AppClient() {
             <textarea
               required
               rows={3}
-              placeholder="Mô tả cụ thể hiện tượng: Màn hình xanh WHEA_UNCORRECTABLE, quạt nguồn không quay, kêu 3 tiếng bíp..."
+              placeholder="Mô tả cụ thể: Màn hình xanh BSOD, bật không lên nguồn, quạt kêu to, gãy lẫy mạng LAN..."
               value={reportFormData.description}
               onChange={(e) => setReportFormData({ ...reportFormData, description: e.target.value })}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 leading-relaxed"

@@ -70,7 +70,7 @@ export const HeaderClient = ({ currentTab, setCurrentTab, onOpenReportModal }) =
             })}
           </nav>
 
-          {/* Right Action Tools: Quick Report Button + User Profile (NO ADMIN BUTTON) */}
+          {/* Right Action Tools: Quick Report Button + User Profile */}
           <div className="flex items-center gap-2.5 sm:gap-3">
             {/* Quick Report Button */}
             <button

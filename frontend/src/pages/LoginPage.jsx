@@ -91,7 +91,7 @@ export const LoginPage = ({ onLoginSuccess }) => {
               {isRegisterMode ? 'Đăng ký tài khoản' : 'Đăng nhập hệ thống'}
             </h2>
             <p className="text-sm text-slate-500 mt-1.5">
-              Hệ thống Quản lý Thiết bị & Sửa chữa Phòng máy
+              Hệ thống Quản lý Thiết bị & Sửa chữa Phòng máy (HITC)
             </p>
           </div>
 
@@ -123,7 +123,7 @@ export const LoginPage = ({ onLoginSuccess }) => {
                     <input
                       type="text"
                       required
-                      placeholder="Nguyễn Văn A"
+                      placeholder="Lê Nguyễn Ngọc Duy Anh"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white/70 border border-slate-200/80 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-sky-500/10 text-sm transition-all"
@@ -172,7 +172,7 @@ export const LoginPage = ({ onLoginSuccess }) => {
                 <input
                   type="text"
                   required
-                  placeholder="admin@school.edu hoặc AD001"
+                  placeholder="admin@school.edu hoặc tech@school.edu"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white/70 border border-slate-200/80 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-sky-500/10 text-sm transition-all"
@@ -251,7 +251,7 @@ export const LoginPage = ({ onLoginSuccess }) => {
                   className="px-2.5 py-2 rounded-xl bg-slate-100/70 hover:bg-sky-50 hover:border-sky-200 border border-slate-200/60 text-xs text-slate-700 font-medium transition-all text-left flex items-center gap-2 active:scale-95"
                 >
                   <span className="w-2 h-2 rounded-full bg-sky-500 shrink-0" />
-                  <span className="truncate">🛠️ Kỹ thuật viên</span>
+                  <span className="truncate">🔧 Kỹ thuật viên</span>
                 </button>
 
                 <button

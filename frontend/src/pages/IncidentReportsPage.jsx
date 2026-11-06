@@ -31,127 +31,105 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
   const [incidents, setIncidents] = useState([
     {
       id: 1,
-      ticketCode: 'SC-202610-001',
-      roomName: 'Phòng Máy 01 (Thực hành Web)',
-      equipmentCode: 'PC-PM01-08',
-      equipmentName: 'Máy trạm PC-PM01-08 (Dell OptiPlex 7080)',
-      description: 'Máy bị dump xanh (BSOD WHEA_UNCORRECTABLE_ERROR), màn hình chớp tắt liên tục, nghi ngờ lỏng RAM hoặc khe RAM bị oxy hóa.',
-      priority: 'KHAN_CAP',
-      status: 'DANG_SUA',
-      reportedAt: '2026-10-22 08:30',
+      ticketCode: 'SC-2024-001',
+      roomName: 'Phòng máy thực hành A101 (Lập trình Cơ sở)',
+      equipmentCode: 'PC-A101-05',
+      equipmentName: 'Máy trạm PC-A101-05 (Dell OptiPlex 7090)',
+      description: 'Máy bật nguồn không lên, đèn nguồn nhấp nháy màu cam liên tục, nghi ngờ lỏng khe RAM hoặc bộ nguồn.',
+      priority: 'CAO',
+      status: 'MOI_TAO',
+      reportedAt: '2026-11-06 08:30',
       reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
       reporterPhone: '0987.654.321',
-      technicianName: 'Nguyễn Văn Kỹ Thuật (KTV Trưởng)',
-      totalCost: 450000,
-      histories: [
-        {
-          id: 101,
-          actionType: 'KHAO_SAT',
-          note: 'Đã kiểm tra lúc 09:00: Khe RAM 1 bị lỏng chân tiếp xúc, test Memtest86 phát hiện lỗi trên thanh RAM 8GB DDR4.',
-          durationMinutes: 20,
-          technicianName: 'Nguyễn Văn Kỹ Thuật',
-          createdAt: '2026-10-22 09:10',
-          partsUsed: []
-        }
-      ]
+      technicianName: 'Kỹ thuật viên Nguyễn Văn Trực',
+      totalCost: 0,
+      histories: []
     },
     {
       id: 2,
-      ticketCode: 'SC-202610-002',
-      roomName: 'Phòng Máy 02 (Mạng Máy Tính)',
-      equipmentCode: 'PC-PM02-03',
-      equipmentName: 'Máy trạm PC-PM02-03 (HP ProDesk 400)',
-      description: 'Bấm nút nguồn không có tín hiệu điện, quạt nguồn không quay, mùi khét nhẹ ở bộ nguồn PSU.',
-      priority: 'CAO',
+      ticketCode: 'SC-2024-002',
+      roomName: 'Phòng máy thực hành A101 (Lập trình Cơ sở)',
+      equipmentCode: 'PC-A101-12',
+      equipmentName: 'Máy trạm PC-A101-12 (Dell OptiPlex 7090)',
+      description: 'Bàn phím bị kẹt cứng phím Enter và liệt hàng phím số F1-F12.',
+      priority: 'TRUNG_BINH',
       status: 'DA_TIEP_NHAN',
-      reportedAt: '2026-10-22 09:15',
-      reporterName: 'Thầy Nguyễn Văn Hoàng (Giảng viên Mạng)',
-      reporterPhone: '0912.333.444',
-      technicianName: 'Lê Kỹ Thuật Viên',
+      reportedAt: '2026-11-06 09:15',
+      reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
+      reporterPhone: '0987.654.321',
+      technicianName: 'Kỹ thuật viên Nguyễn Văn Trực',
       totalCost: 0,
       histories: []
     },
     {
       id: 3,
-      ticketCode: 'SC-202610-003',
-      roomName: 'Phòng Máy 01 (Thực hành Web)',
-      equipmentCode: 'PC-PM01-12',
-      equipmentName: 'Máy trạm PC-PM01-12',
-      description: 'Bàn phím bị kẹt phím cách (Space) và liệt phím Enter, chuột quang bị giật con trỏ không di chuyển mượt mà.',
-      priority: 'TRUNG_BINH',
+      ticketCode: 'SC-2024-003',
+      roomName: 'Phòng máy thực hành A101 (Lập trình Cơ sở)',
+      equipmentCode: 'PC-A101-18',
+      equipmentName: 'Máy trạm PC-A101-18 (Dell OptiPlex 7090)',
+      description: 'Máy đang sử dụng thì xuất hiện màn hình xanh chết chóc (BSOD) tự khởi động lại.',
+      priority: 'CAO',
       status: 'MOI_TAO',
-      reportedAt: '2026-10-22 10:45',
-      reporterName: 'Trần Văn Bảo (Sinh viên)',
-      reporterPhone: '0901.222.111',
+      reportedAt: '2026-11-06 10:45',
+      reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
+      reporterPhone: '0987.654.321',
       technicianName: null,
       totalCost: 0,
       histories: []
     },
     {
       id: 4,
-      ticketCode: 'SC-202610-004',
-      roomName: 'Phòng Máy 01 (Thực hành Web)',
-      equipmentCode: 'PC-PM01-15',
-      equipmentName: 'Máy trạm PC-PM01-15',
-      description: 'Ổ cứng SSD khởi động chậm, vào Windows báo lỗi Disk Read Error.',
-      priority: 'CAO',
-      status: 'HOAN_THANH',
-      reportedAt: '2026-10-21 14:00',
-      reporterName: 'Cô Lê Thị Kim Yến',
-      reporterPhone: '0912.888.999',
-      technicianName: 'Nguyễn Văn Kỹ Thuật',
-      totalCost: 850000,
-      histories: [
-        {
-          id: 99,
-          actionType: 'THAY_THE',
-          note: 'Đã thay ổ cứng SSD Kingston NVMe 512GB mới, ghost lại bản Windows 11 Enterprise HITC chuẩn. Máy chạy cực mượt.',
-          durationMinutes: 45,
-          technicianName: 'Nguyễn Văn Kỹ Thuật',
-          createdAt: '2026-10-21 15:30',
-          partsUsed: [
-            { sparePartName: 'SSD Kingston NVMe 512GB M.2', quantity: 1, unitPrice: 850000 }
-          ]
-        }
-      ]
+      ticketCode: 'SC-2024-004',
+      roomName: 'Phòng máy thực hành A204 (Lập trình Java & Spring Boot)',
+      equipmentCode: 'PC-A204-03',
+      equipmentName: 'Máy trạm PC-A204-03',
+      description: 'Chuột máy tính chập chờn, cổng USB phía trước thùng máy bị lỏng.',
+      priority: 'TRUNG_BINH',
+      status: 'MOI_TAO',
+      reportedAt: '2026-11-06 11:30',
+      reporterName: 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
+      reporterPhone: '0987.654.321',
+      technicianName: null,
+      totalCost: 0,
+      histories: []
     }
   ]);
 
   const [spareParts, setSpareParts] = useState([
-    { id: 1, partCode: 'RAM-DDR4-8G', partName: 'RAM Kingston 8GB DDR4 Bus 3200', unitPrice: 450000, stockQuantity: 12 },
-    { id: 2, partCode: 'RAM-DDR4-16G', partName: 'RAM Kingston 16GB DDR4 Bus 3200', unitPrice: 850000, stockQuantity: 8 },
-    { id: 3, partCode: 'SSD-512G-M2', partName: 'SSD Kingston NVMe 512GB M.2', unitPrice: 850000, stockQuantity: 2 },
-    { id: 4, partCode: 'PSU-500W-AER', partName: 'Nguồn Cooler Master 500W Elite', unitPrice: 650000, stockQuantity: 1 },
-    { id: 5, partCode: 'KB-LOGI-K120', partName: 'Bàn phím có dây Logitech K120 USB', unitPrice: 180000, stockQuantity: 25 },
-    { id: 6, partCode: 'MS-LOGI-B100', partName: 'Chuột quang Logitech B100 USB', unitPrice: 110000, stockQuantity: 30 },
+    { id: 1, partCode: 'RAM-DDR4-8G', partName: 'RAM Kingston Fury 8GB DDR4 3200MHz', stockQuantity: 15, unitPrice: 450000 },
+    { id: 2, partCode: 'SSD-256G', partName: 'SSD Kingston A400 256GB SATA3', stockQuantity: 10, unitPrice: 550000 },
+    { id: 3, partCode: 'PSU-500W', partName: 'Nguồn máy tính Cooler Master 500W', stockQuantity: 8, unitPrice: 680000 },
+    { id: 4, partCode: 'MOUSE-LOGI', partName: 'Chuột có dây Logitech B100', stockQuantity: 25, unitPrice: 95000 },
+    { id: 5, partCode: 'KB-DAREU', partName: 'Bàn phím DareU LK145 USB', stockQuantity: 12, unitPrice: 180000 },
   ]);
 
   const [loading, setLoading] = useState(false);
-  const [filterStatus, setFilterStatus] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState('ALL');
 
-  // Modal Xem chi tiết & Lịch sử
-  const [selectedIncident, setSelectedIncident] = useState(null);
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
-
-  // Modal Tạo phiếu mới
+  // Modal State
   const [createModalOpen, setCreateModalOpen] = useState(initialOpenCreate);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [repairModalOpen, setRepairModalOpen] = useState(false);
+
+  // Selected State
+  const [selectedIncident, setSelectedIncident] = useState(null);
+  const [repairTargetIncident, setRepairTargetIncident] = useState(null);
+
+  // Form State
   const [createForm, setCreateForm] = useState({
-    roomName: 'Phòng Máy 01 (Thực hành Web)',
-    equipmentName: 'PC-PM01-08',
+    roomName: 'Phòng máy thực hành A101 (Lập trình Cơ sở)',
+    equipmentName: '',
     description: '',
     priority: 'TRUNG_BINH',
     reporterPhone: '0987.654.321'
   });
 
-  // Modal Xử lý sửa chữa & Thay linh kiện (KTV / Admin)
-  const [repairModalOpen, setRepairModalOpen] = useState(false);
-  const [repairTargetIncident, setRepairTargetIncident] = useState(null);
   const [repairForm, setRepairForm] = useState({
     actionType: 'THAY_THE',
     note: '',
     durationMinutes: 30,
-    selectedPartId: '',
+    selectedPartId: '1',
     quantityUsed: 1,
     markCompleted: true,
   });
@@ -217,7 +195,7 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
     e.preventDefault();
     const newTicket = {
       id: Date.now(),
-      ticketCode: `SC-202610-${Math.floor(100 + Math.random() * 900)}`,
+      ticketCode: `SC-2024-${Math.floor(100 + Math.random() * 900)}`,
       roomName: createForm.roomName,
       equipmentCode: createForm.equipmentName,
       equipmentName: `Máy trạm ${createForm.equipmentName}`,
@@ -225,7 +203,7 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
       priority: createForm.priority,
       status: 'MOI_TAO',
       reportedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
-      reporterName: user?.fullName || 'Lê Nguyễn Ngọc Duy Anh (Sinh viên)',
+      reporterName: user?.fullName || 'Lê Nguyễn Ngọc Duy Anh (SV CCQ2411E)',
       reporterPhone: createForm.reporterPhone,
       technicianName: null,
       totalCost: 0,
@@ -241,7 +219,7 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
     setIncidents([newTicket, ...incidents]);
     setCreateModalOpen(false);
     setCreateForm({
-      roomName: 'Phòng Máy 01 (Thực hành Web)',
+      roomName: 'Phòng máy thực hành A101 (Lập trình Cơ sở)',
       equipmentName: '',
       description: '',
       priority: 'TRUNG_BINH',
@@ -249,33 +227,47 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
     });
   };
 
-  // Tiếp nhận phiếu (Dành cho KTV)
+  // Kỹ thuật viên tiếp nhận xử lý
   const handleAssignToMe = async (inc) => {
-    const techName = user?.fullName || 'Nguyễn Văn Kỹ Thuật';
+    const techName = user?.fullName || 'Kỹ thuật viên Nguyễn Văn Trực';
     try {
       await incidentApi.updateStatus(inc.id, 'DA_TIEP_NHAN');
-    } catch (err) {}
+    } catch (err) {
+      console.warn('Fallback local state update');
+    }
 
-    setIncidents(incidents.map(item => {
-      if (item.id === inc.id) {
+    setIncidents(incidents.map(i => {
+      if (i.id === inc.id) {
         return {
-          ...item,
+          ...i,
           status: 'DA_TIEP_NHAN',
           technicianName: techName,
+          histories: [
+            {
+              id: Date.now(),
+              actionType: 'TIEP_NHAN',
+              note: `Kỹ thuật viên ${techName} đã tiếp nhận xử lý phiếu sự cố.`,
+              durationMinutes: 5,
+              technicianName: techName,
+              createdAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
+              partsUsed: []
+            },
+            ...(i.histories || [])
+          ]
         };
       }
-      return item;
+      return i;
     }));
   };
 
-  // Mở modal sửa chữa & thay vật tư
+  // Mở modal sửa chữa
   const handleOpenRepairModal = (inc) => {
     setRepairTargetIncident(inc);
     setRepairForm({
       actionType: 'THAY_THE',
       note: '',
       durationMinutes: 30,
-      selectedPartId: spareParts[0]?.id || '',
+      selectedPartId: spareParts[0]?.id ? String(spareParts[0].id) : '1',
       quantityUsed: 1,
       markCompleted: true,
     });
@@ -295,7 +287,7 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
       actionType: repairForm.actionType,
       note: repairForm.note || (chosenPart ? `Đã thay thế ${chosenPart.partName}` : 'Đã sửa chữa và kiểm tra thành công'),
       durationMinutes: Number(repairForm.durationMinutes),
-      technicianName: user?.fullName || 'Kỹ thuật viên HITC',
+      technicianName: user?.fullName || 'Kỹ thuật viên Nguyễn Văn Trực',
       createdAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
       partsUsed: chosenPart ? [{
         sparePartName: chosenPart.partName,
@@ -336,14 +328,23 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
 
     // Cập nhật tồn kho cục bộ nếu có dùng vật tư
     if (chosenPart) {
-      setSpareParts(spareParts.map(p => {
+      const updatedParts = spareParts.map(p => {
         if (p.id === chosenPart.id) {
           return { ...p, stockQuantity: Math.max(0, p.stockQuantity - repairForm.quantityUsed) };
         }
         return p;
-      }));
-    }
+      });
+      setSpareParts(updatedParts);
 
+      try {
+        localStorage.setItem('labrepair_spare_parts_v2', JSON.stringify(updatedParts));
+        window.dispatchEvent(new Event('spare-parts-updated'));
+      } catch (err) {}
+
+      try {
+        sparePartApi.deduct(chosenPart.id, repairForm.quantityUsed);
+      } catch (err) {}
+    }
     setRepairModalOpen(false);
   };
 
@@ -534,9 +535,15 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
               onChange={(e) => setCreateForm({ ...createForm, roomName: e.target.value })}
               className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
             >
-              <option value="Phòng Máy 01 (Thực hành Web)">Phòng Máy 01 (Thực hành Web)</option>
-              <option value="Phòng Máy 02 (Mạng Máy Tính)">Phòng Máy 02 (Mạng Máy Tính)</option>
-              <option value="Phòng Máy 03 (Đồ Họa)">Phòng Máy 03 (Đồ Họa)</option>
+              <option value="Phòng máy thực hành A101 (Lập trình Cơ sở)">Phòng A101 - Lập trình Cơ sở (Khu A)</option>
+              <option value="Phòng máy thực hành A204 (Lập trình Java & Spring Boot)">Phòng A204 - Lập trình Java (Khu A)</option>
+              <option value="Phòng máy thực hành A302 (Web & Mobile App)">Phòng A302 - Web & Mobile (Khu A)</option>
+              <option value="Phòng máy thực hành A404 (Trí tuệ nhân tạo & Data Science)">Phòng A404 - AI & Data (Khu A)</option>
+              <option value="Phòng máy thực hành B102 (Mạng máy tính Cisco Lab)">Phòng B102 - Mạng máy tính Cisco (Khu B)</option>
+              <option value="Phòng máy thực hành B201 (An toàn thông tin & Quản trị Linux)">Phòng B201 - Quản trị Linux & An ninh (Khu B)</option>
+              <option value="Phòng máy thực hành D-06 (Đồ họa & Thiết kế 3D)">Phòng D-06 - Đồ họa 3D (Khu D)</option>
+              <option value="Phòng máy thực hành D5-12 (IoT & Lập trình vi điều khiển)">Phòng D5-12 - IoT & Vi điều khiển (Khu D)</option>
+              <option value="Phòng máy thực hành D5-36 (Cloud Computing & DevOps)">Phòng D5-36 - Cloud & DevOps (Khu D)</option>
             </select>
           </div>
 
@@ -545,7 +552,7 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
             <input
               type="text"
               required
-              placeholder="VD: PC-PM01-08 hoặc Màn hình số 5"
+              placeholder="VD: PC-A101-05 hoặc Màn hình máy 05"
               value={createForm.equipmentName}
               onChange={(e) => setCreateForm({ ...createForm, equipmentName: e.target.value })}
               className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
@@ -561,8 +568,8 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
             >
               <option value="THAP">Thấp (Chưa ảnh hưởng trực tiếp giờ học)</option>
               <option value="TRUNG_BINH">Trung bình (Bàn phím, chuột lỗi nhẹ)</option>
-              <option value="CAO">Cao (Máy không khởi động được)</option>
-              <option value="KHAN_CAP">Khẩn cấp (Hỏng nguồn, bốc khói, sập mạng)</option>
+              <option value="CAO">Cao (Máy không khởi động được / Màn hình xanh BSOD)</option>
+              <option value="KHAN_CAP">Khẩn cấp (Hỏng nguồn, bốc khói, sập mạng cả phòng)</option>
             </select>
           </div>
 
@@ -571,7 +578,7 @@ export const IncidentReportsPage = ({ initialOpenCreate = false, prefillData = n
             <textarea
               required
               rows={4}
-              placeholder="Mô tả cụ thể hiện tượng: Máy có tiếng bíp, màn hình xanh mã lỗi, không kết nối được mạng LAN..."
+              placeholder="Mô tả cụ thể hiện tượng: Máy có tiếng bíp, màn hình xanh mã lỗi, quạt không quay, mất kết nối mạng..."
               value={createForm.description}
               onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
               className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"
