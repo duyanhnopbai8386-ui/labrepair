@@ -12,3 +12,4 @@ export const incidentApi = {
   getHistories: (incidentId) => api.get(`/repair-histories/incident/${incidentId}`),
   recordHistory: (data) => api.post('/repair-histories', data),
 };
+// gửi thông báo hỏng, ktv nhận việc, đổi trạng thái, lưu sửa chữa

@@ -5,3 +5,4 @@ export const authApi = {
   register: (data) => api.post('/auth/register', data),
   getMe: () => api.get('/auth/me'),
 };
+// đăng nhập tk lấy thtin người dùng

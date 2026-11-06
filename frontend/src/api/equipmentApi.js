@@ -7,3 +7,4 @@ export const equipmentApi = {
   update: (id, data) => api.put(`/equipment/${id}`, data),
   delete: (id) => api.delete(`/equipment/${id}`),
 };
+// thêm sửa xóa máy tính

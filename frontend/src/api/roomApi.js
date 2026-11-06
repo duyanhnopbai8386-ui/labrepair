@@ -7,3 +7,4 @@ export const roomApi = {
   update: (id, data) => api.put(`/rooms/${id}`, data),
   delete: (id) => api.delete(`/rooms/${id}`),
 };
+// lấy danh sách quản lý phòng máy

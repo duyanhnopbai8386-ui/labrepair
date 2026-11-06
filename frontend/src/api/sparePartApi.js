@@ -9,3 +9,4 @@ export const sparePartApi = {
   deduct: (id, quantity) => api.post(`/spare-parts/${id}/deduct?quantity=${quantity || 1}`),
   delete: (id) => api.delete(`/spare-parts/${id}`),
 };
+// xem danh mục linh kiện cảnh báo sản phẩm sắp hết kho v..v..

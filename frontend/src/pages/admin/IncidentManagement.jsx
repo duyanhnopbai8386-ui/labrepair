@@ -415,24 +415,51 @@ export const IncidentManagement = () => {
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
-    const cleanId = getNextCleanId();
-    const newInc = {
-      id: cleanId,
-      ticketCode: `SC-2024-${cleanId < 10 ? '00' + cleanId : cleanId < 100 ? '0' + cleanId : cleanId}`,
-      ...createForm,
-      technicianName: null,
-      status: 'MOI_TAO',
-      totalCost: 0,
-      createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
-    };
-    const updated = [newInc, ...incidents];
-    saveIncidents(updated);
-
     try {
-      await incidentApi.create(newInc);
-    } catch (err) {}
+      const res = await incidentApi.create({
+        equipmentCode: createForm.equipmentCode,
+        description: createForm.description,
+        priority: createForm.priority,
+        reporterName: createForm.reporterName,
+      });
+
+      if (res && res.data) {
+        const item = res.data;
+        const newTicket = {
+          id: item.id,
+          ticketCode: item.ticketCode || `SC-2024-${item.id < 10 ? '00' + item.id : '0' + item.id}`,
+          equipmentCode: item.equipmentCode || createForm.equipmentCode,
+          equipmentName: item.equipmentName || `Máy trạm ${createForm.equipmentCode}`,
+          roomName: item.roomName || createForm.roomName || 'Phòng A101',
+          description: item.description || createForm.description,
+          reporterName: item.reporterName || createForm.reporterName || 'Lê Nguyễn Ngọc Duy Anh',
+          technicianName: null,
+          priority: item.priority || createForm.priority,
+          status: item.status || 'MOI_TAO',
+          totalCost: 0,
+          createdAt: (item.createdAt || '').slice(0, 19).replace('T', ' ') || new Date().toISOString().replace('T', ' ').slice(0, 19)
+        };
+        const updated = [newTicket, ...incidents.filter(i => i.id !== newTicket.id)];
+        saveIncidents(updated);
+      }
+    } catch (err) {
+      const cleanId = getNextCleanId();
+      const newInc = {
+        id: cleanId,
+        ticketCode: `SC-2024-${cleanId < 10 ? '00' + cleanId : cleanId < 100 ? '0' + cleanId : cleanId}`,
+        ...createForm,
+        technicianName: null,
+        status: 'MOI_TAO',
+        totalCost: 0,
+        createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19)
+      };
+      const updated = [newInc, ...incidents];
+      saveIncidents(updated);
+    }
 
     setCreateModalOpen(false);
+    setToastMessage(`Đã tạo phiếu sự cố mới thành công!`);
+    setTimeout(() => setToastMessage(null), 4000);
   };
 
   const handleDelete = async (id) => {

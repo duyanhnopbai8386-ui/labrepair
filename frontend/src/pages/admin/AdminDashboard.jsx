@@ -34,12 +34,6 @@ export const AdminDashboard = ({ onNavigate }) => {
             Trung tâm điều phối & Giám sát dữ liệu phòng máy thời gian thực (HITC)
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Backend REST API (Port 8080) Online
-          </span>
-        </div>
       </div>
 
       {/* 4 Dark KPI Cards */}
@@ -153,34 +147,7 @@ export const AdminDashboard = ({ onNavigate }) => {
         </div>
 
         {/* Right 1 Col: Quick Tech Info */}
-        <div className="bg-[#181d26] p-5 rounded-xl border border-[#272e3d] shadow-lg space-y-4">
-          <div className="border-b border-[#272e3d] pb-3">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider">
-              Thông Tin Sinh Viên Báo Cáo
-            </h2>
-            <p className="text-[11px] text-slate-400 mt-0.5">Trường Cao Đẳng Công Thương TP.HCM</p>
-          </div>
-
-          <div className="space-y-3 text-xs">
-            <div className="p-3 rounded-lg bg-[#272e3d]/50 border border-[#384256] space-y-1">
-              <div className="text-slate-400">Họ và tên sinh viên:</div>
-              <div className="font-bold text-sky-400 text-sm">Lê Nguyễn Ngọc Duy Anh</div>
-              <div className="text-slate-300">MSSV: <span className="font-mono font-bold text-white">2124110340</span></div>
-              <div className="text-slate-300">Lớp: <span className="font-bold text-white">CCQ2411E</span></div>
-            </div>
-
-            <div className="p-3 rounded-lg bg-[#272e3d]/50 border border-[#384256] space-y-1">
-              <div className="text-slate-400">Giáo viên hướng dẫn:</div>
-              <div className="font-bold text-emerald-400 text-sm">ThS. Nguyễn Minh Tuấn</div>
-              <div className="text-slate-400 text-[11px]">Đồ án cuối kỳ môn Lập trình Java</div>
-            </div>
-
-            <div className="p-3 rounded-lg bg-[#272e3d]/50 border border-[#384256] space-y-1 text-[11px] text-slate-400">
-              <div>Backend: <span className="text-sky-300 font-mono">Spring Boot 3.4.0 + MySQL</span></div>
-              <div>Frontend: <span className="text-cyan-300 font-mono">React 19 + Tailwind CSS</span></div>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
   );

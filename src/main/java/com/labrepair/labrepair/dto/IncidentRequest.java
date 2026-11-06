@@ -1,7 +1,6 @@
 package com.labrepair.labrepair.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,11 +11,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IncidentRequest {
-    @NotNull(message = "ID thiết bị không được để trống")
     private Integer equipmentId;
+    private String equipmentCode;
 
-    @NotNull(message = "ID người báo không được để trống")
     private Integer reportedByUserId;
+    private String reporterName;
+    private String reporterEmail;
 
     private Integer assignedTechnicianId;
 
