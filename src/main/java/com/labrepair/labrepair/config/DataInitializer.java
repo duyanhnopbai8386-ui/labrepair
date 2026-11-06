@@ -51,30 +51,60 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         System.out.println("========== [DataInitializer] KIỂM TRA VÀ KHỞI TẠO TÀI KHOẢN MẪU ==========");
 
-        // 1. Luôn đảm bảo tài khoản Admin và Technician tồn tại với mật khẩu BCrypt chính xác
-        if (userRepository.findByEmail("admin@school.edu").isEmpty()) {
-            User admin = new User(null, "AD001", "admin@school.edu", passwordEncoder.encode("admin123"), "Quản trị viên Hệ thống", "0901234567", "Phòng CNTT", "ADMIN", "ACTIVE", LocalDateTime.now());
-            userRepository.save(admin);
-            System.out.println("-> Đã tạo tài khoản Admin: admin@school.edu / admin123");
-        }
+        // 1. Luôn cập nhật và đồng bộ mật khẩu BCrypt chuẩn cho các tài khoản mẫu
+        userRepository.findByEmail("admin@school.edu").ifPresentOrElse(
+                admin -> {
+                    admin.setPassword(passwordEncoder.encode("admin123"));
+                    admin.setRole("ADMIN");
+                    admin.setStatus("ACTIVE");
+                    userRepository.save(admin);
+                    System.out.println("-> [DataInitializer] Đã đồng bộ mật khẩu BCrypt cho Admin: admin@school.edu / admin123");
+                },
+                () -> {
+                    User admin = new User(null, "AD001", "admin@school.edu", passwordEncoder.encode("admin123"), "Quản trị viên Hệ thống", "0901234567", "Phòng CNTT", "ADMIN", "ACTIVE", LocalDateTime.now());
+                    userRepository.save(admin);
+                    System.out.println("-> [DataInitializer] Đã tạo mới tài khoản Admin: admin@school.edu / admin123");
+                }
+        );
 
-        if (userRepository.findByEmail("tech@school.edu").isEmpty()) {
-            User tech = new User(null, "KT001", "tech@school.edu", passwordEncoder.encode("tech123"), "Kỹ thuật viên Nguyễn Văn Trực", "0912345678", "Tổ Kỹ thuật", "TECHNICIAN", "ACTIVE", LocalDateTime.now());
-            userRepository.save(tech);
-            System.out.println("-> Đã tạo tài khoản Technician: tech@school.edu / tech123");
-        }
+        userRepository.findByEmail("tech@school.edu").ifPresentOrElse(
+                tech -> {
+                    tech.setPassword(passwordEncoder.encode("tech123"));
+                    tech.setRole("TECHNICIAN");
+                    tech.setStatus("ACTIVE");
+                    userRepository.save(tech);
+                    System.out.println("-> [DataInitializer] Đã đồng bộ mật khẩu BCrypt cho Technician: tech@school.edu / tech123");
+                },
+                () -> {
+                    User tech = new User(null, "KT001", "tech@school.edu", passwordEncoder.encode("tech123"), "Kỹ thuật viên Nguyễn Văn Trực", "0912345678", "Tổ Kỹ thuật", "TECHNICIAN", "ACTIVE", LocalDateTime.now());
+                    userRepository.save(tech);
+                    System.out.println("-> [DataInitializer] Đã tạo mới tài khoản Technician: tech@school.edu / tech123");
+                }
+        );
 
-        if (userRepository.findByEmail("student@school.edu").isEmpty()) {
-            User student = new User(null, "2124110340", "student@school.edu", passwordEncoder.encode("student123"), "Lê Nguyễn Ngọc Duy Anh", "0934567890", "Lớp CCQ2411E", "STUDENT", "ACTIVE", LocalDateTime.now());
-            userRepository.save(student);
-            System.out.println("-> Đã tạo tài khoản Student: student@school.edu / student123");
-        }
+        userRepository.findByEmail("student@school.edu").ifPresentOrElse(
+                student -> {
+                    student.setPassword(passwordEncoder.encode("student123"));
+                    student.setRole("STUDENT");
+                    student.setStatus("ACTIVE");
+                    userRepository.save(student);
+                    System.out.println("-> [DataInitializer] Đã đồng bộ mật khẩu BCrypt cho Student: student@school.edu / student123");
+                },
+                () -> {
+                    User student = new User(null, "2124110340", "student@school.edu", passwordEncoder.encode("student123"), "Lê Nguyễn Ngọc Duy Anh", "0934567890", "Lớp CCQ2411E", "STUDENT", "ACTIVE", LocalDateTime.now());
+                    userRepository.save(student);
+                    System.out.println("-> [DataInitializer] Đã tạo mới tài khoản Student: student@school.edu / student123");
+                }
+        );
 
-        // Cập nhật mật khẩu cho các tài khoản cũ bị NULL
+        // Chuẩn hóa mật khẩu cho mọi người dùng khác trong DB nếu bị null hoặc chưa được băm BCrypt ($2)
         userRepository.findAll().forEach(u -> {
-            if (u.getPassword() == null || u.getPassword().isBlank()) {
-                u.setPassword(passwordEncoder.encode(u.getRole().equalsIgnoreCase("ADMIN") ? "admin123" : "tech123"));
+            if (u.getPassword() == null || !u.getPassword().startsWith("$2")) {
+                String raw = "ADMIN".equalsIgnoreCase(u.getRole()) ? "admin123" :
+                             "TECHNICIAN".equalsIgnoreCase(u.getRole()) ? "tech123" : "student123";
+                u.setPassword(passwordEncoder.encode(raw));
                 userRepository.save(u);
+                System.out.println("-> [DataInitializer] Đã chuẩn hóa mật khẩu BCrypt cho: " + u.getEmail());
             }
         });
 
